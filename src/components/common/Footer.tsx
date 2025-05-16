@@ -1,14 +1,9 @@
- Tinh_Fe
+// src/components/common/Footer.tsx
 import React from 'react'
- main
 
 const Footer = () => {
   return (
- Tinh_Fe
     <div>Footer</div>
-
-    <div>footer</div>
- main
   )
 }
 
