@@ -1,11 +1,14 @@
 import React from 'react'
 
-type Props = {}
-
-const Header = (props: Props) => {
+const Header = () => {
   return (
+ Tinh_Fe
+    <div>Header</div>
+  )
+
     <div>header</div>
   );
+ main
 }
 
 export default Header

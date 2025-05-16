@@ -1,9 +1,14 @@
+ Tinh_Fe
+import React from 'react'
+ main
 
-type Props = {}
-
-const Footer = (props: Props) => {
+const Footer = () => {
   return (
+ Tinh_Fe
+    <div>Footer</div>
+
     <div>footer</div>
+ main
   )
 }
 
