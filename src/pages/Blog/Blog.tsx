@@ -3,7 +3,16 @@ import React from "react";
 const Blog = () => {
   return (
     <div className="bg-white text-gray-800">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      {/* Breadcrumb */}
+      <div className="flex items-center justify-between max-w-7xl mx-auto px-4 py-2 ">
+        <span className="text-gray-500  font-semibold  text-sm ml-11">Blog Page</span>
+      <div className="flex items-center gap-2 text-gray-500 mr-2">
+        <a href="#" className="text-sm hover:text-green-500">Home</a>
+        <span className="text-gray-400 text-sm">›</span>
+        <span className="text-green-500 font-medium text-sm">Blog Page</span>
+      </div>
+      </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-5 py-10">
         <div className="flex flex-col lg:flex-row gap-10">
           {/* Left content: blog posts grid */}
           <div className="flex-1 grid grid-cols-1 sm:grid-cols-2 gap-6 lg:gap-8">

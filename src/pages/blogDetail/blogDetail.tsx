@@ -2,11 +2,21 @@ import React from 'react'
 
 const BlogDetail = () => {
   return (
+    <div>
+       {/* Breadcrumb */}
+      <div className="flex items-center justify-between max-w-7xl mx-auto px-4 py-2 ">
+        <span className="text-gray-500  font-semibold  text-sm ml-11">Blog Page</span>
+      <div className="flex items-center gap-2 text-gray-500 mr-2">
+        <a href="#" className="text-sm hover:text-green-500">Home</a>
+        <span className="text-gray-400 text-sm">›</span>
+        <span className="text-green-500 font-medium text-sm">Blog Page</span>
+      </div>
+      </div>
     <div className="bg-white text-gray-900 font-sans text-[13px] leading-[18px] max-w-7xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-8">
        {/* Left main content */}
         <main className="flex-1 max-w-4xl">
           <img
-            src="https://storage.googleapis.com/a1aa/image/7048f2b6-504c-41b0-5254-05dff558383f.jpg"
+            src="https://img.pikbest.com/templates/20240727/luxury-leather-shoes-social-media-poster-or-banner-design-template_10683656.jpg!w700wp"
             alt="Shoe advertisement with text 'No Harm No Foul' and 40% discount, dark brown background with white shoe silhouette"
             className="w-full h-auto object-cover rounded mb-3"
             width="720"
@@ -160,6 +170,7 @@ const BlogDetail = () => {
   </form>
 </div>
       </aside>
+    </div>
     </div>
   )
 }

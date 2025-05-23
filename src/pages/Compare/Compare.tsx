@@ -2,8 +2,17 @@ import React from "react";
 
 const Compare = () => {
   return (
-    <div className="overflow-x-auto w-full max-w-7xl mx-auto mt-10 px-4">
-      <table className="w-full border border-gray-200 text-left text-xs sm:text-sm">
+    <div className="overflow-x-auto w-full max-w-7xl mx-auto">
+       <div className="flex items-center justify-between max-w-7xl mx-auto px-4 py-2 mb-10 ">
+        <span className="text-gray-500 font-semibold text-sm ml-12">Compare</span>
+      <div className="flex items-center gap-2 text-gray-500 mr-2.5">
+        <a href="#" className="text-sm hover:text-green-500">Home</a>
+        <span className="text-gray-400 text-sm">›</span>
+        <span className="text-green-500 font-medium text-sm">Compare</span>
+      </div>
+      </div>
+      <div className="px-4">
+      <table className="w-full border border-gray-200 text-left text-xs sm:text-sm px-4">
         <tbody>
           {/* Product Image Row */}
           <tr>
@@ -16,7 +25,7 @@ const Compare = () => {
                 width={100}
                 height={80}
               />
-              <button className="absolute top-1 right-1 text-gray-400 hover:text-gray-600 text-xs">X</button>
+              <p className="absolute top-1 right-2 text-gray-400 hover:text-gray-600 text-base">X</p>
             </td>
             <td className="border border-gray-200 p-3 relative">
               <img
@@ -26,7 +35,7 @@ const Compare = () => {
                 width={100}
                 height={80}
               />
-              <button className="absolute top-1 right-1 text-gray-400 hover:text-gray-600 text-xs">X</button>
+              <p className="absolute top-1 right-2 text-gray-400 hover:text-gray-600 text-base">X</p>
             </td>
             <td className="border border-gray-200 p-3 relative">
               <img
@@ -36,7 +45,7 @@ const Compare = () => {
                 width={100}
                 height={80}
               />
-              <button className="absolute top-1 right-1 text-gray-400 hover:text-gray-600 text-xs">X</button>
+              <p className="absolute top-1 right-2 text-gray-400 hover:text-gray-600 text-base">X</p>
             </td>
           </tr>
 
@@ -162,6 +171,7 @@ const Compare = () => {
           </tr>
         </tbody>
       </table>
+      </div>
     </div>
   );
 };
