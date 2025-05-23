@@ -1,5 +1,26 @@
+import type { Category } from "interface/category";
+import type { Product } from "interface/product";
+import { useEffect, useState } from "react";
 
 function Detail() {
+
+    const [selectedProduct, setSelectedProduct] = useState<Product | null>(null);
+    const [categories, setCategories] = useState<Category[]>([]);
+    const [products, setProducts] = useState<Product[]>([]);
+
+    useEffect(() => {
+        // Lấy category
+        fetch("http://localhost:8888/api/categories")
+            .then((res) => res.json())
+            .then((data) => setCategories(data))
+            .catch((err) => console.error(err));
+
+        // Lấy products
+        fetch("http://localhost:8888/api/products")
+            .then((res) => res.json())
+            .then((data) => setProducts(data))
+            .catch((err) => console.error(err));
+    }, []);
     return (
         <div>
             <div className="max-w-[1200px] mx-auto p-4">
@@ -8,56 +29,35 @@ function Detail() {
                     <aside className="flex-shrink-0 w-full md:w-[220px] space-y-6">
                         {/* Category */}
                         <div>
-                            <button aria-expanded="true" className="w-full flex justify-between items-center text-[12px] font-semibold text-[#4b4b4b] mb-2">
+                            <button
+                                aria-expanded="true"
+                                className="w-full flex justify-between items-center text-[12px] font-semibold text-[#4b4b4b] mb-2"
+                            >
                                 Category
-                                <i className="fas fa-chevron-down text-[10px]">
-                                </i>
+                                <i className="fas fa-chevron-down text-[10px]"></i>
                             </button>
+
                             <ul className="space-y-1 text-[11px] text-[#7a7a7a]">
-                                <li className="flex items-center gap-2">
-                                    <input className="w-3 h-3" id="cat1" name="category" type="radio" />
-                                    <label className="cursor-pointer" htmlFor="cat1">
-                                        Danh Cho Nam
-                                    </label>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                    <input className="w-3 h-3" id="cat2" name="category" type="radio" />
-                                    <label className="cursor-pointer" htmlFor="cat2">
-                                        Danh Cho Nữ
-                                    </label>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                    <input className="w-3 h-3" id="cat3" name="category" type="radio" />
-                                    <label className="cursor-pointer" htmlFor="cat3">
-                                        Trẻ Em
-                                    </label>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                    <input className="w-3 h-3" id="cat4" name="category" type="radio" />
-                                    <label className="cursor-pointer" htmlFor="cat4">
-                                        Người Cao Tuổi
-                                    </label>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                    <input className="w-3 h-3" id="cat5" name="category" type="radio" />
-                                    <label className="cursor-pointer" htmlFor="cat5">
-                                        Mẹ Bầu
-                                    </label>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                    <input className="w-3 h-3" id="cat6" name="category" type="radio" />
-                                    <label className="cursor-pointer" htmlFor="cat6">
-                                        Trẻ Sơ Sinh
-                                    </label>
-                                </li>
-                                <li className="flex items-center gap-2">
-                                    <input className="w-3 h-3" id="cat7" name="category" type="radio" />
-                                    <label className="cursor-pointer" htmlFor="cat7">
-                                        Unisex
-                                    </label>
-                                </li>
+                                {categories.map((cat, index) => (
+                                    <li key={cat._id || index} className="flex items-center gap-2">
+                                        <input
+                                            className="w-3 h-3"
+                                            id={`cat${index + 1}`}
+                                            name="category"
+                                            type="radio"
+                                            value={cat._id} // hoặc cat.name tùy id bạn có
+                                        />
+                                        <label className="cursor-pointer" htmlFor={`cat${index + 1}`}>
+                                            {cat.name}
+                                        </label>
+                                    </li>
+                                ))}
                             </ul>
                         </div>
+
+
+                        {/* chưa đổ dữ liệu vào */}
+
                         {/* Volume */}
                         <div>
                             <button aria-expanded="true" className="w-full flex justify-between items-center text-[12px] font-semibold text-[#4b4b4b] mb-2">
@@ -117,6 +117,8 @@ function Detail() {
                             </ul>
                         </div>
                         {/* Color */}
+
+                        {/* chưa đổ dữ liệu vào */}
                         <div>
                             <button aria-expanded="true" className="w-full flex justify-between items-center text-[12px] font-semibold text-[#4b4b4b] mb-2">
                                 Color
@@ -210,21 +212,37 @@ function Detail() {
                         <section className="flex flex-col md:flex-row gap-4">
                             <div className="flex flex-col gap-2 w-full md:w-[400px]">
                                 <div className="border border-[#e5e7eb] rounded-md p-6 bg-white flex justify-center items-center">
-                                    <img alt="White sneaker with blue swoosh side view on white background" className="max-w-full max-h-[150px] object-contain" height={150} src="https://storage.googleapis.com/a1aa/image/fd3e9e6d-0993-442a-85cb-8925b27065f9.jpg" width={400} />
+                                    <img
+                                        alt={selectedProduct?.name}
+                                        className="max-w-full max-h-[150px] object-contain"
+                                        height={150}
+                                        src={selectedProduct?.image_url}
+                                    />
+
+                                    {/* <img alt="White sneaker with blue swoosh side view on white background" className="max-w-full max-h-[150px] object-contain" height={150} src="https://storage.googleapis.com/a1aa/image/fd3e9e6d-0993-442a-85cb-8925b27065f9.jpg" width={400} /> */}
                                 </div>
                                 <div className="flex gap-2 border border-[#e5e7eb] rounded-md p-2 bg-white overflow-x-auto scrollbar-hide">
-                                    <img alt="Black sneaker side view on white background" className="w-[70px] h-[70px] object-contain cursor-pointer border border-transparent hover:border-[#3a9d7f]" height={70} src="https://storage.googleapis.com/a1aa/image/4973801e-7bc9-4723-e9f9-6ea1dec61e05.jpg" width={70} />
-                                    <img alt="White sneaker side view on white background" className="w-[70px] h-[70px] object-contain cursor-pointer border border-transparent hover:border-[#3a9d7f]" height={70} src="https://storage.googleapis.com/a1aa/image/b80b1361-fa02-43cb-f013-a01718b8c4b0.jpg" width={70} />
-                                    <img alt="Gray sneaker side view on white background" className="w-[70px] h-[70px] object-contain cursor-pointer border border-transparent hover:border-[#3a9d7f]" height={70} src="https://storage.googleapis.com/a1aa/image/8fdbf995-8cee-4f54-172a-c77bab03f901.jpg" width={70} />
-                                    <img alt="White sneaker with green swoosh side view on white background" className="w-[70px] h-[70px] object-contain cursor-pointer border border-transparent hover:border-[#3a9d7f]" height={70} src="https://storage.googleapis.com/a1aa/image/8c608289-b12e-46c4-03d8-dd349e017594.jpg" width={70} />
+                                    {products.map((product) => (
+                                        <img
+                                            key={product._id}
+                                            alt={product.name}
+                                            className={`w-[70px] h-[70px] object-contain cursor-pointer border ${selectedProduct?._id === product._id ? 'border-[#3a9d7f]' : 'border-transparent'} hover:border-[#3a9d7f]`}
+                                            height={70}
+                                            width={70}
+                                            src={product.image_url}
+                                            onClick={() => setSelectedProduct(product)}
+                                        />
+                                    ))}
+
                                 </div>
                             </div>
                             {/* Product Info */}
                             <div className="flex-1 flex flex-col gap-3">
+
                                 <h2 className="text-[14px] font-normal leading-tight">
-                                    Dầu Gội Dược Liệu Nguyễn Xuân Xanh Lá Dưỡng Tóc Và Da Đầu, Sạch Gàu
-                                    (200ml)
+                                    {selectedProduct?.name || "Chọn sản phẩm để xem chi tiết"}
                                 </h2>
+
                                 <div className="flex items-center gap-2 text-[11px] text-[#f59e0b]">
                                     <i className="fas fa-star">
                                     </i>
@@ -241,14 +259,14 @@ function Detail() {
                                     </span>
                                 </div>
                                 <div className="flex items-center gap-6 text-[14px] font-semibold text-[#111827]">
-                                    <span>
-                                        $664.00
-                                    </span>
-                                    <span className="text-[#22c55e] text-[12px] font-normal">
-                                        -78%
-                                    </span>
+                                    <span>{selectedProduct ? `$${selectedProduct.price}` : ''}</span>
                                 </div>
-                                <div className="flex items-center gap-6 text-[10px] text-[#7a7a7a] font-normal">
+
+                                <p className="text-[11px] text-[#7a7a7a] font-normal leading-snug max-w-[480px]">
+                                    {selectedProduct?.description}
+                                </p>
+
+                                {/* <div className="flex items-center gap-6 text-[10px] text-[#7a7a7a] font-normal">
                                     <span>
                                         M.R.P. : $2,989.00
                                     </span>
@@ -271,7 +289,7 @@ function Detail() {
                                     <li>
                                         Outer Material : A-Grade Standard Quality
                                     </li>
-                                </ul>
+                                </ul> */}
                                 {/* Volume Options */}
                                 <div className="flex items-center gap-2 text-[10px] font-semibold">
                                     <span className="bg-[#d1fae5] text-[#22c55e] rounded px-2 py-[2px] cursor-pointer">
@@ -313,86 +331,34 @@ function Detail() {
                             </div>
                         </section>
                         {/* Related Products */}
-                        <section className="flex flex-col md:flex-row gap-4">
-                            <div className="flex items-center gap-3 bg-white border border-[#e5e7eb] rounded-md p-3 w-full md:w-1/3">
-                                <img alt="Product 1 image showing a bottle with label" className="w-[70px] h-[50px] object-contain" height={50} src="https://storage.googleapis.com/a1aa/image/7966f97e-6e0a-4a6d-08b6-2fe00aba7fbf.jpg" width={70} />
-                                <div className="flex flex-col text-[11px] text-[#4b4b4b]">
-                                    <span>
-                                        Dầu Gội Dược Liệu
-                                    </span>
-                                    <div className="flex items-center gap-1 text-[#f59e0b]">
-                                        <i className="fas fa-star">
-                                        </i>
-                                        <i className="fas fa-star">
-                                        </i>
-                                        <i className="fas fa-star">
-                                        </i>
-                                        <i className="fas fa-star">
-                                        </i>
-                                        <i className="fas fa-star-half-alt">
-                                        </i>
+                        <section className="flex flex-col md:flex-row gap-4 flex-wrap">
+                            {products.slice(0, 2).map((product) => (
+                                <div
+                                    key={product._id}
+                                    className="flex items-center gap-3 bg-white border border-[#e5e7eb] rounded-md p-3 w-full md:w-1/3"
+                                >
+                                    <img
+                                        alt={product.name}
+                                        className="w-[70px] h-[50px] object-contain"
+                                        height={50}
+                                        src={product.image_url}
+                                        width={70}
+                                    />
+                                    <div className="flex flex-col text-[11px] text-[#4b4b4b]">
+                                        <span>{product.name}</span>
+                                        <div className="flex items-center gap-1 text-[#f59e0b]">
+                                            <i className="fas fa-star"></i>
+                                            <i className="fas fa-star"></i>
+                                            <i className="fas fa-star"></i>
+                                            <i className="fas fa-star"></i>
+                                            <i className="fas fa-star-half-alt"></i>
+                                        </div>
+                                        <span className="text-[#22c55e] font-semibold">${product.price}$</span>
                                     </div>
-                                    <span className="text-[#22c55e] font-semibold">
-                                        $32
-                                    </span>
-                                    <span className="line-through text-[#7a7a7a]">
-                                        $55
-                                    </span>
                                 </div>
-                            </div>
-                            <div className="flex items-center gap-3 bg-white border border-[#e5e7eb] rounded-md p-3 w-full md:w-1/3">
-                                <img alt="Product 2 image showing a bottle with label" className="w-[70px] h-[50px] object-contain" height={50} src="https://storage.googleapis.com/a1aa/image/a07d01cc-0a32-4673-0bba-84328aa6632d.jpg" width={70} />
-                                <div className="flex flex-col text-[11px] text-[#4b4b4b]">
-                                    <span>
-                                        Dược Liệu Tự Nhiên
-                                    </span>
-                                    <div className="flex items-center gap-1 text-[#f59e0b]">
-                                        <i className="fas fa-star">
-                                        </i>
-                                        <i className="fas fa-star">
-                                        </i>
-                                        <i className="fas fa-star">
-                                        </i>
-                                        <i className="fas fa-star">
-                                        </i>
-                                        <i className="fas fa-star-half-alt">
-                                        </i>
-                                    </div>
-                                    <span className="text-[#22c55e] font-semibold">
-                                        $56
-                                    </span>
-                                    <span className="line-through text-[#7a7a7a]">
-                                        $60
-                                    </span>
-                                </div>
-                            </div>
-                            <div className="flex items-center gap-3 bg-white border border-[#e5e7eb] rounded-md p-3 w-full md:w-1/3">
-                                <img alt="Product 3 image showing a bottle with label" className="w-[70px] h-[50px] object-contain" height={50} src="https://storage.googleapis.com/a1aa/image/c196255e-cfc6-4cd6-63a9-4431b51ac186.jpg" width={70} />
-                                <div className="flex flex-col text-[11px] text-[#4b4b4b]">
-                                    <span>
-                                        Nguyễn Xuân Vọng
-                                    </span>
-                                    <div className="flex items-center gap-1 text-[#f59e0b]">
-                                        <i className="fas fa-star">
-                                        </i>
-                                        <i className="fas fa-star">
-                                        </i>
-                                        <i className="fas fa-star">
-                                        </i>
-                                        <i className="fas fa-star-half-alt">
-                                        </i>
-                                        <i className="far fa-star">
-                                        </i>
-                                    </div>
-                                    <span className="text-[#22c55e] font-semibold">
-                                        $28
-                                    </span>
-                                    <span className="line-through text-[#7a7a7a]">
-                                        $35
-                                    </span>
-                                </div>
-                            </div>
+                            ))}
                         </section>
+
                         {/* Tabs */}
                         <section className="flex flex-wrap gap-2 border-b border-[#e5e7eb] pb-2 text-[11px] text-[#4b4b4b] font-normal">
                             <button aria-selected="true" className="bg-[#3a9d7f] text-white rounded px-3 py-1">
@@ -409,28 +375,13 @@ function Detail() {
                             </button>
                         </section>
                         {/* Product Description */}
-                        <section className="border border-[#3a9d7f] rounded p-4 text-[11px] text-[#4b4b4b] font-normal leading-snug max-w-full">
-                            <p className="font-semibold mb-1">
-                                Mô Tả Sản Phẩm
-                            </p>
-                            <p className="mb-1">
-                                Dầu gội dược liệu Xanh lô là gì?
-                                <br />
-                                Kích thước chữ
-                                <br />
-                                • Mặc định
-                                <br />
-                                • Lớn hơn
-                            </p>
-                            <p className="mb-1">
-                                Mô tả sản phẩm
-                            </p>
-                            <p>
-                                Bí quyết gội đầu cổ truyền dành cho tóc thô xơ, hư tổn
-                                <br />
-                                Dầu gội dược liệu Nguyễn Xuân Dưỡng tóc (chai xanh) dựa trên kinh nghiệm dân gian phối hợp các thành phần thảo dược phương Đông như Hà thủ ô, 8 bổ kết, Bạch quả, Hương nhu... cùng với nền tảng nghiên cứu của khoa học hiện đại, tăng cường thêm tính chất dưỡng tóc để tối ưu hiệu quả phục hồi tóc khô xơ, hư tổn. Giúp tóc mềm mượt, chắc khỏe và vào nếp
-                            </p>
-                        </section>
+                        {selectedProduct && (
+                            <section className="border border-[#3a9d7f] rounded p-4 text-[11px] text-[#4b4b4b] font-normal leading-snug max-w-full">
+                                <p className="font-semibold mb-1">Mô Tả Sản Phẩm</p>
+                                <p>{selectedProduct.description}</p>
+                            </section>
+                        )}
+
                     </main>
                 </div>
 
@@ -450,174 +401,32 @@ function Detail() {
                     </p>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
-                    {/* Product 1 */}
-                    <div className="bg-gray-50 p-4">
-                        <div className="relative">
-                            <img alt="White sneaker with blue sole on white background" className="w-full h-auto" height={100} src="https://storage.googleapis.com/a1aa/image/b7bac6f8-5e86-4a65-2cb8-bd6d3cef099e.jpg" width={260} />
-                            <span className="absolute top-2 right-2 bg-red-500 text-white text-[9px] font-semibold px-2 py-0.5 rounded">
-                                SALE
-                            </span>
+                    {products.map((product) => (
+                        <div key={product._id} className="bg-gray-50 p-4">
+                            <div className="relative">
+                                <img
+                                    alt={product.name}
+                                    className="w-full h-auto"
+                                    src={product.image_url}
+                                    width={260}
+                                    height={100}
+                                />
+                                {!product.is_available && (
+                                    <span className="absolute top-2 right-2 bg-gray-600 text-white text-[9px] font-semibold px-2 py-0.5 rounded">
+                                        Hết hàng
+                                    </span>
+                                )}
+                            </div>
+
+                            <p className="text-[11px] font-semibold text-gray-700 mt-2">{product.name}</p>
+
+                            <p className="text-[9px] text-gray-400 mt-1">Kho: {product.stock_quantity}</p>
+
+                            <p className="text-[11px] font-bold text-gray-900 mt-1">
+                                {product.price.toLocaleString()}₫
+                            </p>
                         </div>
-                        <p className="text-[9px] text-gray-400 mt-3">
-                            Dried Fruits
-                        </p>
-                        <p className="text-[11px] font-semibold text-gray-700 mt-1">
-                            Mixed Nuts Berries Pack
-                        </p>
-                        <div className="flex items-center space-x-1 mt-1 text-yellow-400 text-[10px]">
-                            <i className="fas fa-star">
-                            </i>
-                            <i className="fas fa-star">
-                            </i>
-                            <i className="fas fa-star">
-                            </i>
-                            <i className="fas fa-star-half-alt">
-                            </i>
-                            <i className="far fa-star">
-                            </i>
-                        </div>
-                        <p className="text-[11px] font-bold text-gray-900 mt-1">
-                            $56.00
-                            <span className="line-through text-gray-400 font-normal">
-                                $45.00
-                            </span>
-                        </p>
-                    </div>
-                    {/* Product 2 */}
-                    <div className="bg-gray-50 p-4">
-                        <div className="relative">
-                            <img alt="Black sneaker with yellow swoosh on white background" className="w-full h-auto" height={100} src="https://storage.googleapis.com/a1aa/image/5ca9e2b2-2b8e-4ba2-0efb-ad34068584f3.jpg" width={260} />
-                            <span className="absolute top-2 right-2 bg-red-500 text-white text-[9px] font-semibold px-2 py-0.5 rounded">
-                                SALE
-                            </span>
-                        </div>
-                        <p className="text-[9px] text-gray-400 mt-3">
-                            Cookies
-                        </p>
-                        <p className="text-[11px] font-semibold text-gray-700 mt-1">
-                            Multi Grain Combo Cookies
-                        </p>
-                        <p className="text-[9px] text-gray-400 mt-0.5">
-                            10kg
-                        </p>
-                        <div className="flex items-center space-x-1 mt-1 text-yellow-400 text-[10px]">
-                            <i className="fas fa-star">
-                            </i>
-                            <i className="fas fa-star">
-                            </i>
-                            <i className="fas fa-star-half-alt">
-                            </i>
-                            <i className="far fa-star">
-                            </i>
-                            <i className="far fa-star">
-                            </i>
-                        </div>
-                        <p className="text-[11px] font-bold text-gray-900 mt-1">
-                            $30.00
-                            <span className="line-through text-gray-400 font-normal">
-                                $25.00
-                            </span>
-                        </p>
-                    </div>
-                    {/* Product 3 */}
-                    <div className="bg-gray-50 p-4">
-                        <div className="relative">
-                            <img alt="Black sneaker with blue sole on white background" className="w-full h-auto" height={100} src="https://storage.googleapis.com/a1aa/image/73a4ca68-1dec-4b52-1c6e-232b9c2f85ac.jpg" width={260} />
-                        </div>
-                        <p className="text-[9px] text-gray-400 mt-3">
-                            Foods
-                        </p>
-                        <p className="text-[11px] font-semibold text-gray-700 mt-1">
-                            Fresh Mango Juice Pack
-                        </p>
-                        <div className="flex items-center space-x-1 mt-1 text-yellow-400 text-[10px]">
-                            <i className="fas fa-star">
-                            </i>
-                            <i className="fas fa-star">
-                            </i>
-                            <i className="fas fa-star-half-alt">
-                            </i>
-                            <i className="far fa-star">
-                            </i>
-                            <i className="far fa-star">
-                            </i>
-                        </div>
-                        <p className="text-[11px] font-bold text-gray-900 mt-1">
-                            $65.00
-                            <span className="line-through text-gray-400 font-normal">
-                                $46.00
-                            </span>
-                        </p>
-                    </div>
-                    {/* Product 4 */}
-                    <div className="bg-gray-50 p-4">
-                        <div className="relative">
-                            <img alt="White sneaker with red swoosh on white background" className="w-full h-auto" height={100} src="https://storage.googleapis.com/a1aa/image/ca5edc10-90d8-4906-ecdc-e10b7d0e92fa.jpg" width={260} />
-                            <span className="absolute top-2 right-2 bg-red-500 text-white text-[9px] font-semibold px-2 py-0.5 rounded">
-                                SALE
-                            </span>
-                        </div>
-                        <p className="text-[9px] text-gray-400 mt-3">
-                            Dried Fruits
-                        </p>
-                        <p className="text-[11px] font-semibold text-gray-700 mt-1">
-                            Dates Value Fresh Pouch
-                        </p>
-                        <div className="flex items-center space-x-1 mt-1 text-yellow-400 text-[10px]">
-                            <i className="fas fa-star">
-                            </i>
-                            <i className="fas fa-star">
-                            </i>
-                            <i className="fas fa-star-half-alt">
-                            </i>
-                            <i className="far fa-star">
-                            </i>
-                            <i className="far fa-star">
-                            </i>
-                        </div>
-                        <p className="text-[11px] font-bold text-gray-900 mt-1">
-                            $85.00
-                            <span className="line-through text-gray-400 font-normal">
-                                $78.00
-                            </span>
-                        </p>
-                    </div>
-                    {/* Product 5 */}
-                    <div className="bg-gray-50 p-4">
-                        <div className="relative">
-                            <img alt="White sneaker with red swoosh on white background" className="w-full h-auto" height={100} src="https://storage.googleapis.com/a1aa/image/ca5edc10-90d8-4906-ecdc-e10b7d0e92fa.jpg" width={260} />
-                            <span className="absolute top-2 right-2 bg-green-500 text-white text-[9px] font-semibold px-2 py-0.5 rounded">
-                                NEW
-                            </span>
-                        </div>
-                        <p className="text-[9px] text-gray-400 mt-3">
-                            Foods
-                        </p>
-                        <p className="text-[11px] font-semibold text-gray-700 mt-1">
-                            Stick Fiber Masala Magic
-                        </p>
-                        <p className="text-[9px] text-gray-400 mt-0.5">
-                            2pack
-                        </p>
-                        <div className="flex items-center space-x-1 mt-1 text-yellow-400 text-[10px]">
-                            <i className="fas fa-star">
-                            </i>
-                            <i className="fas fa-star">
-                            </i>
-                            <i className="fas fa-star-half-alt">
-                            </i>
-                            <i className="far fa-star">
-                            </i>
-                            <i className="far fa-star">
-                            </i>
-                        </div>
-                        <p className="text-[11px] font-bold text-gray-900 mt-1">
-                            $50.00
-                            <span className="line-through text-gray-400 font-normal">
-                                $45.00
-                            </span>
-                        </p>
-                    </div>
+                    ))}
                 </div>
             </div>
         </div>
@@ -627,5 +436,3 @@ function Detail() {
     )
 }
 export default Detail;
-
-
