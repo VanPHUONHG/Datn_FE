@@ -343,7 +343,15 @@ function Detail() {
                                         height={50}
                                         src={product.image_url}
                                         width={70}
+
+
                                     />
+
+                                    {/* {!product.is_available && (
+                                    <span className="absolute top-2 right-2 bg-gray-600 text-white text-[9px] font-semibold px-2 py-0.5 rounded">
+                                        Hết hàng
+                                    </span>
+                                )} */}
                                     <div className="flex flex-col text-[11px] text-[#4b4b4b]">
                                         <span>{product.name}</span>
                                         <div className="flex items-center gap-1 text-[#f59e0b]">
@@ -420,7 +428,8 @@ function Detail() {
 
                             <p className="text-[11px] font-semibold text-gray-700 mt-2">{product.name}</p>
 
-                            <p className="text-[9px] text-gray-400 mt-1">Kho: {product.stock_quantity}</p>
+                            {/* kiểm tra hàng còn trong kho kg */}
+                            {/* <p className="text-[9px] text-gray-400 mt-1">Kho: {product.stock_quantity}</p> */}
 
                             <p className="text-[11px] font-bold text-gray-900 mt-1">
                                 {product.price.toLocaleString()}₫
