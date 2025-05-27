@@ -7,9 +7,10 @@ const Footer = () => {
         {/* Logo & Description */}
         <div className="flex flex-col items-center md:items-start md:w-1/4 space-y-4">
           <img
-            src="assets/images/Logo.png"
+            src="/assets/images/Logo.png"
             alt="Velora Shoe Store"
             className="w-16 h-16 rounded-sm ml-24"
+            style={{ minWidth: '64px', minHeight: '64px' }}
           />
           <p className="text-[13px] text-center md:text-left leading-relaxed max-w-xs text-gray-600">
             Grabit is the biggest market of grocery products.
@@ -17,8 +18,8 @@ const Footer = () => {
             Get your daily needs from our store.
           </p>
           <div className="flex space-x-3">
-            <img src="assets/images/android.png.png" alt="" className='w-30 h-10'/>
-            <img src="assets/images/apple.png.png" alt="" className='w-30 h-10' />
+            <img src="/assets/images/android.png.png" alt="Android App" className="w-30 h-10 min-w-[120px]" />
+            <img src="/assets/images/apple.png.png" alt="Apple App" className="w-30 h-10 min-w-[120px]" />
           </div>
         </div>
 
@@ -94,7 +95,12 @@ const Footer = () => {
             all rights reserved. Powered by Grabit.
           </p>
           <div className="flex items-center">
-            <img src="assets/images/logo_footer.png" alt="" />
+            <img
+              src="/assets/images/logo_footer.png"
+              alt="Footer Logo"
+              className="w-auto h-6"
+              style={{ minWidth: 'auto', minHeight: '24px' }}
+            />
           </div>
         </div>
       </div>
