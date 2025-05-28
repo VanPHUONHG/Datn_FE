@@ -1,129 +1,148 @@
-import React from 'react'
-
 type Props = {}
 
 const Header = (props: Props) => {
   return (
     <div>
-      <div className="bg-white text-gray-700 text-[14px] leading-none select-none">
-        <div className="flex justify-between items-center px-6 sm:px-8 md:px-12 py-2 border-b border-gray-300">
-          <div className="flex space-x-8">
-            <div className="flex items-center space-x-2">
-              <i className="fas fa-phone-alt text-[14px]"></i>
-              <span>+91 987 654 3210</span>
-            </div>
-            <div className="flex items-center space-x-2">
-              <i className="fas fa-phone-alt text-[14px]"></i>
-              <span>+91 987 654 3210</span>
-            </div>
+      <div className="flex justify-between items-center text-gray-400 text-sm px-4 py-2 select-none max-w-7xl mx-auto">
+        <div className="flex space-x-6">
+          <div className="flex items-center space-x-2">
+            <i className="fas fa-phone-alt text-base">
+            </i>
+            <span>
+              +91 987 654 3210
+            </span>
           </div>
-          <div className="text-[14px] text-center text-gray-500 select-text">
-            "Your No.1 Online Hair Care Destination"
-          </div>
-          <div className="flex gap-x-3 text-[14px]">
-            <button className="hover:text-gray-800 focus:outline-none">
-              Help?
-            </button>
-            <button className="hover:text-gray-800 focus:outline-none">
-              Track Order?
-            </button>
-            <div className="relative group cursor-pointer">
-              <button className="flex items-center gap-x-2 hover:text-gray-800 focus:outline-none">
-                <span>English</span>
-                <i className="fas fa-chevron-down text-[10px]"></i>
-              </button>
-            </div>
+          <div className="flex items-center space-x-2">
+            <i className="fas fa-phone-alt text-base">
+            </i>
+            <span>
+              +91 987 654 3210
+            </span>
           </div>
         </div>
-        <div className="flex items-center justify-between px-6 sm:px-8 md:px-12 py-6 border-b border-gray-300">
-          <div>
-<img src="/assets/images/logo-Hair.png" alt="Logo Hair" className='h-18 rounded-md ml-13'/>
+        <div className="font-medium text-base">
+          Your No.1 Online Hair Care Destination
+        </div>
+        <div className="flex space-x-8 text-sm text-gray-400 items-center">
+          <span className="cursor-pointer hover:text-gray-600">
+            Help?
+          </span>
+          <span className="cursor-pointer hover:text-gray-600">
+            Track Order?
+          </span>
+          <div className="relative cursor-pointer hover:text-gray-600 select-none">
+            English
+            <i className="fas fa-chevron-down ml-1 text-xs">
+            </i>
           </div>
-          <div className="flex-1 max-w-lg mx-8">
+        </div>
+      </div>
+
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between py-4">
+          <div className="flex items-center space-x-2">
+            <img alt="Velora brand logo with black shoe icon and text Velora Beauty Point" className="w-14 h-14 object-contain" height="60" src="https://storage.googleapis.com/a1aa/image/1672a8dd-7ea0-4455-cb9e-bd7f28bf6572.jpg" width="60" />
+          </div>
+
+          <div className="flex-1 max-w-lg px-4">
             <form className="relative w-full">
-              <input
-                className="w-full border border-gray-300 rounded-md py-3 px-4 text-[14px] text-gray-600 focus:outline-none focus:ring-2 focus:ring-green-600"
-                placeholder="Search Products..."
-                type="text"
-              />
-              <button
-                aria-label="Search"
-                className="absolute right-4 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600"
-                type="submit"
-              >
-                <i className="fas fa-search text-[16px]"></i>
+              <input aria-label="Search Products" className="w-full border border-gray-300 rounded-md py-2 pl-4 pr-10 text-sm placeholder-gray-400 focus:outline-none focus:ring-1 focus:ring-green-600 focus:border-green-600" placeholder="Search Products..." type="text" />
+              <button aria-label="Search" className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-600" type="submit">
+                <i className="fas fa-search">
+                </i>
               </button>
             </form>
           </div>
-          <div className="flex items-center space-x-10 text-[14px] text-gray-700">
-            <div className="flex items-center space-x-2 cursor-pointer hover:text-gray-900">
-              <i className="far fa-user text-[18px]"></i>
+
+          <div className="flex items-center space-x-6">
+            <div className="flex items-center space-x-1 cursor-pointer hover:text-gray-900">
+              <i className="fas fa-user">
+              </i>
               <div className="leading-none">
-                <div>Account</div>
-                <div className="font-semibold text-[12px]">LOGIN</div>
+                <div className="font-semibold text-[10px]">
+                  Account
+                </div>
+                <div className="text-[9px] font-light">
+                  LOGIN
+                </div>
               </div>
             </div>
-            <div className="flex items-center space-x-2 cursor-pointer hover:text-gray-900">
-              <i className="far fa-heart text-[18px]"></i>
-              <div className="leading-none">
-                <div>Wishlist</div>
-                <div className="font-semibold text-[12px]">3-ITEMS</div>
+            <div className="flex items-center space-x-1 cursor-pointer hover:text-gray-900">
+              <i className="far fa-heart">
+              </i>
+              <div className="leading-none text-center">
+                <div className="font-semibold text-[10px]">
+                  Wishlist
+                </div>
+                <div className="text-[9px] font-light">
+                  3-ITEMS
+                </div>
               </div>
             </div>
-            <div className="flex items-center space-x-2 cursor-pointer hover:text-gray-900">
-              <i className="fas fa-shopping-bag text-[18px]"></i>
-              <div className="leading-none">
-                <div>Cart</div>
-                <div className="font-semibold text-[12px]">3-ITEMS</div>
+            <div className="flex items-center space-x-1 cursor-pointer hover:text-gray-900">
+              <i className="fas fa-shopping-cart">
+              </i>
+              <div className="leading-none text-center">
+                <div className="font-semibold text-[10px]">
+                  Cart
+                </div>
+                <div className="text-[9px] font-light">
+                  3-ITEMS
+                </div>
               </div>
             </div>
           </div>
         </div>
-        <div className="flex items-center justify-between px-6 sm:px-8 md:px-12 py-4 border-b border-gray-300 text-[14px] text-gray-700 select-none">
-          <button
-            aria-label="All Categories"
-            className="flex items-center space-x-3 bg-green-600 text-white rounded-md px-4 py-2 font-medium hover:bg-green-700 focus:outline-none"
-          >
-            <i className="fas fa-th-large text-[16px]"></i>
-            <span>All Categories</span>
-            <i className="fas fa-chevron-down text-[12px]"></i>
-          </button>
-        <nav className="flex gap-x-8 justify-between font-medium px-4">
-  <button className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
-    <span>Home</span>
-    <i className="fas fa-chevron-down text-[12px]"></i>
-  </button>
-  <button className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
-    <span>Categories</span>
-    <i className="fas fa-chevron-down text-[12px]"></i>
-  </button>
-  <button className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
-    <span>Products</span>
-    <i className="fas fa-chevron-down text-[12px]"></i>
-  </button>
-  <button className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
-    <span>Blog</span>
-    <i className="fas fa-chevron-down text-[12px]"></i>
-  </button>
-  <button className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
-    <span>Pages</span>
-    <i className="fas fa-chevron-down text-[12px]"></i>
-  </button>
-  <button className="hover:text-green-600 font-medium focus:outline-none">
-    Offers
-  </button>
-</nav>
 
-          <button
-            aria-label="New York location"
-            className="flex items-center space-x-3 bg-green-600 text-white rounded-md px-4 py-2 font-medium hover:bg-green-700 focus:outline-none"
-          >
-            <i className="fas fa-map-marker-alt text-[16px]"></i>
-            <span>New York</span>
-            <i className="fas fa-chevron-down text-[12px]"></i>
+        <div className="flex items-center justify-between py-4 border-t border-gray-200">
+          <button className="flex items-center bg-green-600 text-white text-xs font-semibold rounded-md px-3 py-1 hover:bg-green-700" type="button">
+            <i className="fas fa-th-large mr-2 text-[10px]">
+            </i>
+            All Categories
+            <i className="fas fa-chevron-down ml-2 text-[10px]">
+            </i>
+          </button>
+          <nav className="flex space-x-6 font-sans">
+            <div className="relative group cursor-pointer">
+              Home
+              <i className="fas fa-chevron-down ml-1 text-[10px]">
+              </i>
+              <div className="absolute left-0 top-full mt-1 w-24 bg-white border border-gray-200 rounded-md shadow-md opacity-0 group-hover:opacity-100 pointer-events-none group-hover:pointer-events-auto transition-opacity text-xs">
+
+              </div>
+            </div>
+            <div className="relative group cursor-pointer">
+              Categories
+              <i className="fas fa-chevron-down ml-1 text-[10px]">
+              </i>
+            </div>
+            <div className="relative group cursor-pointer">
+              Products
+              <i className="fas fa-chevron-down ml-1 text-[10px]">
+              </i>
+            </div>
+            <div className="relative group cursor-pointer">
+              Blog
+              <i className="fas fa-chevron-down ml-1 text-[10px]">
+              </i>
+            </div>
+            <div className="relative group cursor-pointer">
+              Pages
+              <i className="fas fa-chevron-down ml-1 text-[10px]">
+              </i>
+            </div>
+            <div className="cursor-pointer">
+              Offers
+            </div>
+          </nav>
+          <button className="flex items-center bg-green-600 text-white text-xs font-semibold rounded-md px-3 py-1 hover:bg-green-700" type="button">
+            New York
+            <i className="fas fa-chevron-down ml-2 text-[10px]">
+            </i>
           </button>
         </div>
       </div>
+
     </div>
   );
 }
