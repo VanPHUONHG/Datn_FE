@@ -1,7 +1,6 @@
+import React from 'react'
 
-type Props = {}
-
-const Footer = (props: Props) => {
+const Footer = () => {
   return (
     <div>
       <footer className ="w-full border-t border-gray-200">
