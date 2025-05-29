@@ -25,12 +25,24 @@ export const router = createBrowserRouter([
         path: "about",
         element: <About />,
       },
+      {
+        path: "detail",
+        element: <Detail />,
+      },
+      {
+        path: "checkout",
+        element: <Checkout />,
+      },
         {
-        path: "cart",     
+        path: "wishlist",
+        element: <Wishlist />,
+      },
+      {
+        path: "cart",
         element: <Cart />,
       },
-         {
-        path: "order_history",     
+      {
+        path: "order_history",
         element: <Order_History />,
       },
        {
