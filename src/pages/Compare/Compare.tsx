@@ -1,7 +1,7 @@
 import React from "react";
 
 const Compare = () => {
-  return (
+  return ( 
     <div className="overflow-x-auto w-full max-w-7xl mx-auto">
        <div className="flex items-center justify-between max-w-7xl mx-auto px-4 py-2 mb-10 ">
         <span className="text-gray-500 font-semibold text-sm ml-12">Compare</span>

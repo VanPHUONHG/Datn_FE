@@ -219,7 +219,7 @@ const Blog = () => {
               2
             </button>
             <button className="px-2 py-1 rounded bg-green-400 text-white border border-green-400">
-              Next
+              Next 
             </button>
           </nav>
         </div>

@@ -1,7 +1,7 @@
 import React from 'react'
 
 const BlogDetail = () => {
-  return (
+  return ( 
     <div>
        {/* Breadcrumb */}
       <div className="flex items-center justify-between max-w-7xl mx-auto px-4 py-2 ">
