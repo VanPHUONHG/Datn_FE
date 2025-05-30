@@ -14,7 +14,7 @@ const Compare = () => {
       <div className="px-4">
       <table className="w-full border border-gray-200 text-left text-xs sm:text-sm px-4">
         <tbody>
-          {/* Product Image Row */}
+          {/* Product Image Row */} 
           <tr>
             <td className="border border-gray-200 p-3 font-semibold text-gray-700">Product Image</td>
             <td className="border border-gray-200 p-3 relative">

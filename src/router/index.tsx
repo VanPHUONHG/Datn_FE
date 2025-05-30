@@ -58,7 +58,7 @@ export const router = createBrowserRouter([
       },
       {
         path: "compare",
-        element: <Compare />,
+        element: <Compare />, 
       },
     ],
   },

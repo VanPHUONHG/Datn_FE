@@ -224,7 +224,7 @@ const Blog = () => {
           </nav>
         </div>
       </div>
-    </div>
+    </div> 
   );
 };
 

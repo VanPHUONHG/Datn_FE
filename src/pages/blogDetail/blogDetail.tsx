@@ -60,7 +60,7 @@ const BlogDetail = () => {
           </p>
         </main>
 
-      {/* Sidebar */}
+      {/* Sidebar */} 
       <aside className="w-full max-w-xs">
         {/* Search */}
          <form className="relative text-gray-800 mb-5 flex items-center">
