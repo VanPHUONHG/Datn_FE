@@ -1,6 +1,8 @@
+
 import React from 'react'
 import { Link } from 'react-router-dom'
 type Props = {}
+
 const Header = () => {
   return (
     <div className="bg-[#FFFFFF] font-sans text-gray-700 text-sm">
