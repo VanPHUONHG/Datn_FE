@@ -1,16 +1,12 @@
+import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "components/layout/MainLayout";
-import About from "pages/About/About";
-import Blog from "pages/Blog/Blog";
-import BlogDetail from "pages/blogDetail/blogDetail";
-import Cart from "pages/Cart";
-import Compare from "pages/Compare/Compare";
 import Home from "pages/Home";
-import Order_History from "pages/Order_History";
+import About from "pages/About/About";
+import Cart from "pages/Cart/Cart";
 import Checkout from "pages/Checkout/Checkout";
-import Detail from "pages/Product_detail/Product_detail";
 import Wishlist from "pages/Wishlist/Wishlist";
-import React from "react";
-import { createBrowserRouter,} from "react-router-dom";
+import Order_History from "pages/Order_History/Order_History";
+import ProductDetail from "pages/Product_detail/Product_detail";
 
 export const router = createBrowserRouter([
   {
@@ -25,15 +21,19 @@ export const router = createBrowserRouter([
         path: "about",
         element: <About />,
       },
-      {
-        path: "detail",
-        element: <Detail />,
+         {
+        path: "/product/:id", 
+        element: <ProductDetail/>, 
       },
+      // {
+      //   path: "productdetail",
+      //   element: <ProductDetail />,
+      // },
       {
         path: "checkout",
         element: <Checkout />,
       },
-        {
+      {
         path: "wishlist",
         element: <Wishlist />,
       },
@@ -44,30 +44,6 @@ export const router = createBrowserRouter([
       {
         path: "order_history",
         element: <Order_History />,
-      },
-       {
-        path: "blog",     
-        element: <Blog />,
-      },
-      {
-        path: "blogDetail",     
-        element: <BlogDetail />,
-      },
-       {
-        path: "compare",     
-        element: <Compare />,
-       },
-      {
-        path: "detail",
-        element: <Detail />,
-      },
-      {
-        path: "checkout",
-        element: <Checkout />,
-      },
-        {
-        path: "wishlist",
-        element: <Wishlist />,
       },
     ],
   },

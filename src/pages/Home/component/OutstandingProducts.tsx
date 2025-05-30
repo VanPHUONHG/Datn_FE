@@ -3,7 +3,7 @@ import React, { memo } from 'react'
 const OutstandingProducts = () => {
   return (
     <>
-     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-6">
           <div>
             <h1 className="text-gray-800 text-lg font-semibold">
@@ -28,9 +28,9 @@ const OutstandingProducts = () => {
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-4">
 
-          <div className="bg-white border border-gray-100 rounded-md shadow-sm">
+          <div className="bg-white border border-gray-100 rounded-md shadow-sm transition duration-300 hover:border-green-500 hover:shadow-md">
             <div className="relative bg-gray-100 p-6 flex justify-center items-center">
-              <img alt="White sneaker shoe side view on light gray background" className="max-w-full h-auto" height="160" src="https://storage.googleapis.com/a1aa/image/2e2796c8-7a24-4fb6-fc30-f26230b681cc.jpg" width="240" />
+              <img alt="White sneaker shoe side view on light gray background"  className="max-w-full h-auto transition-transform duration-300 ease-in-out hover:scale-105" src="image/day1.png" width="240" />
               <div className="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-semibold rounded px-2 py-0.5">
                 SALE
               </div>
@@ -39,7 +39,7 @@ const OutstandingProducts = () => {
               <p className="text-xs text-gray-400 font-normal">
                 Dried Fruits
               </p>
-              <h2 className="text-sm font-semibold text-gray-800 mt-1 leading-tight">
+              <h2 className="text-sm font-semibold text-gray-800 mt-1 leading-tight transition-colors duration-300 ease-in-out hover:text-green-500 hover:underline">
                 Mixed Nuts Berries Pack
               </h2>
               <div className="flex items-center mt-2">
@@ -61,9 +61,9 @@ const OutstandingProducts = () => {
             </div>
           </div>
 
-          <div className="bg-white border border-gray-100 rounded-md shadow-sm">
+          <div className="bg-white border border-gray-100 rounded-md shadow-sm transition duration-300 hover:border-green-500 hover:shadow-md">
             <div className="relative bg-gray-100 p-6 flex justify-center items-center">
-              <img alt="Pink running shoe side view on light gray background" className="max-w-full h-auto" height="160" src="https://storage.googleapis.com/a1aa/image/196a7e2c-a880-45c5-1724-5b22d84289b0.jpg" width="240" />
+              <img alt="Pink running shoe side view on light gray background"  className="max-w-full h-auto transition-transform duration-300 ease-in-out hover:scale-105" src="image/day2.png" width="240" />
               <div className="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-semibold rounded px-2 py-0.5">
                 SALE
               </div>
@@ -72,7 +72,7 @@ const OutstandingProducts = () => {
               <p className="text-xs text-gray-400 font-normal">
                 Cookies
               </p>
-              <h2 className="text-sm font-semibold text-gray-800 mt-1 leading-tight">
+              <h2 className="text-sm font-semibold text-gray-800 mt-1 leading-tight transition-colors duration-300 ease-in-out hover:text-green-500 hover:underline">
                 Multi Grain Combo Cookies
               </h2>
               <div className="flex items-center mt-2">
@@ -97,15 +97,15 @@ const OutstandingProducts = () => {
             </div>
           </div>
 
-          <div className="bg-white border border-gray-100 rounded-md shadow-sm">
+          <div className="bg-white border border-gray-100 rounded-md shadow-sm transition duration-300 hover:border-green-500 hover:shadow-md">
             <div className="relative bg-gray-100 p-6 flex justify-center items-center">
-              <img alt="Black sneaker shoe side view on light gray background" className="max-w-full h-auto" height="160" src="https://storage.googleapis.com/a1aa/image/a38bc2e3-e7f2-4932-26e8-546a9ba9fd00.jpg" width="240" />
+              <img alt="Black sneaker shoe side view on light gray background"  className="max-w-full h-auto transition-transform duration-300 ease-in-out hover:scale-105" src="image/day3.png" width="240" />
             </div>
             <div className="px-4 pt-3 pb-4">
               <p className="text-xs text-gray-400 font-normal">
                 Foods
               </p>
-              <h2 className="text-sm font-semibold text-gray-800 mt-1 leading-tight">
+              <h2 className="text-sm font-semibold text-gray-800 mt-1 leading-tight transition-colors duration-300 ease-in-out hover:text-green-500 hover:underline">
                 Fresh Mango Juice Pack
               </h2>
               <div className="flex items-center mt-2">
@@ -127,9 +127,9 @@ const OutstandingProducts = () => {
             </div>
           </div>
 
-          <div className="bg-white border border-gray-100 rounded-md shadow-sm">
+          <div className="bg-white border border-gray-100 rounded-md shadow-sm transition duration-300 hover:border-green-500 hover:shadow-md">
             <div className="relative bg-gray-100 p-6 flex justify-center items-center">
-              <img alt="Blue sneaker shoe side view on light gray background" className="max-w-full h-auto" height="160" src="https://storage.googleapis.com/a1aa/image/9662529c-c415-435d-901a-1c37d74396be.jpg" width="240" />
+              <img alt="Blue sneaker shoe side view on light gray background"  className="max-w-full h-auto transition-transform duration-300 ease-in-out hover:scale-105" src="image/day4.png" width="240" />
               <div className="absolute top-2 right-2 bg-red-500 text-white text-[10px] font-semibold rounded px-2 py-0.5">
                 SALE
               </div>
@@ -138,7 +138,7 @@ const OutstandingProducts = () => {
               <p className="text-xs text-gray-400 font-normal">
                 Dried Fruits
               </p>
-              <h2 className="text-sm font-semibold text-gray-800 mt-1 leading-tight">
+              <h2 className="text-sm font-semibold text-gray-800 mt-1 leading-tight transition-colors duration-300 ease-in-out hover:text-green-500 hover:underline">
                 Dates Value Fresh Pouch
               </h2>
               <div className="flex items-center mt-2">
@@ -160,9 +160,9 @@ const OutstandingProducts = () => {
             </div>
           </div>
 
-          <div className="bg-white border border-gray-100 rounded-md shadow-sm">
+          <div className="bg-white border border-gray-100 rounded-md shadow-sm transition duration-300 hover:border-green-500 hover:shadow-md">
             <div className="relative bg-gray-100 p-6 flex justify-center items-center">
-              <img alt="White sneaker shoe with pink and yellow sole side view on light gray background" className="max-w-full h-auto" height="160" src="https://storage.googleapis.com/a1aa/image/e476c429-850b-4ca0-1ee8-7fa1df29e79f.jpg" width="240" />
+              <img alt="White sneaker shoe with pink and yellow sole side view on light gray background"  className="max-w-full h-auto transition-transform duration-300 ease-in-out hover:scale-105" src="image/day5.png" width="240" />
               <div className="absolute top-2 right-2 bg-green-500 text-white text-[10px] font-semibold rounded px-2 py-0.5">
                 NEW
               </div>
@@ -171,7 +171,7 @@ const OutstandingProducts = () => {
               <p className="text-xs text-gray-400 font-normal">
                 Foods
               </p>
-              <h2 className="text-sm font-semibold text-gray-800 mt-1 leading-tight">
+              <h2 className="text-sm font-semibold text-gray-800 mt-1 leading-tight transition-colors duration-300 ease-in-out hover:text-green-500 hover:underline">
                 Stick Fiber Masala Magic
               </h2>
               <div className="flex items-center mt-2">

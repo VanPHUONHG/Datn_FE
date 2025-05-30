@@ -1,12 +1,15 @@
 export interface Product {
-    product_id: number;
-    category_id: number;
-    name: string;
-    description: string;
-    price: number; 
-    stock_quantity: number;
-    image_url: string;
-    is_available: boolean;
-    created_at: string; 
-    updated_at: string; 
+  _id: string; 
+  category_id: string; 
+  name: string;
+  description?: string;
+  origin?: string;
+  price: number;
+  stock_quantity: number;
+  images: string[];
+  discount_price: number;
+  variation_status: boolean;
+  isDeleted: boolean;
+  createdAt: string; 
+  updatedAt: string;
 }
