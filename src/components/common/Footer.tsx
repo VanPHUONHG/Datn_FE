@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 const Footer = () => {
   return (
     <footer className="w-full bg-white text-gray-600">
@@ -7,7 +8,7 @@ const Footer = () => {
         {/* Logo & Description */}
         <div className="flex flex-col items-center md:items-start md:w-1/4 space-y-4">
           <img
-            src="/assets/images/Logo.png"
+            src="image/logo.png"
             alt="Velora Shoe Store"
             className="w-16 h-16 rounded-sm ml-24"
             style={{ minWidth: '64px', minHeight: '64px' }}
@@ -96,7 +97,7 @@ const Footer = () => {
           </p>
           <div className="flex items-center">
             <img
-              src="/assets/images/logo_footer.png"
+              src="image/image.png"
               alt="Footer Logo"
               className="w-auto h-6"
               style={{ minWidth: 'auto', minHeight: '24px' }}

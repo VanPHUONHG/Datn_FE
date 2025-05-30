@@ -1,5 +1,6 @@
 import React from 'react'
-
+import { Link } from 'react-router-dom'
+type Props = {}
 const Header = () => {
   return (
     <div className="bg-[#FFFFFF] font-sans text-gray-700 text-sm">
@@ -31,7 +32,7 @@ const Header = () => {
         {/* Logo */}
         <div className="flex-shrink-0">
           <img
-            src="/assets/images/Logo.png"
+            src="image/logo.png"
             alt="Velora Logo"
             className="h-[70px] w-[70px] rounded-md ml-10"
           />
@@ -88,17 +89,31 @@ const Header = () => {
           </button>
 
           {/* Center - Nav links */}
-          <ul className="hidden md:flex gap-6 text-gray-600 text-sm">
-            {['Home', 'Categories', 'Products', 'Blog', 'Pages'].map((item) => (
-              <li key={item} className="flex items-center text-base gap-1 hover:text-green-500 cursor-pointer">
-                {item}
-              </li>
-            ))}
-            <li className="flex items-center gap-1 hover:text-green-500 cursor-pointer">
-              <i className="fas fa-sync-alt text-sm"></i>
-              Offers
-            </li>
-          </ul>
+           <nav className="flex gap-x-8 justify-between font-medium px-4">
+      <Link to="/" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
+        <span>Home</span>
+      </Link>
+
+      <Link to="/categories" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
+        <span>Categories</span>
+      </Link>
+
+      <Link to="/products" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
+        <span>Products</span>
+      </Link>
+
+      <Link to="/blog" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
+        <span>Blog</span>
+      </Link>
+
+      <Link to="/pages" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
+        <span>Pages</span>
+      </Link>
+
+      <Link to="/offers" className="hover:text-green-600 font-medium focus:outline-none">
+        Offers
+      </Link>
+    </nav>
 
           {/* Right - Location */}
           <button className="flex items-center gap-2 bg-[#5caf90] hover:bg-green-500 text-white px-4 rounded text-sm">
