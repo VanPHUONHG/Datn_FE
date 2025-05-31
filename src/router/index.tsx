@@ -1,10 +1,14 @@
+import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "components/layout/MainLayout";
-import About from "pages/About/About";
 import Home from "pages/Home";
-import Login from "pages/Login";
+import About from "pages/About/About";
+import Cart from "pages/Cart/Cart";
+import Checkout from "pages/Checkout/Checkout";
+import Wishlist from "pages/Wishlist/Wishlist";
+import Order_History from "pages/Order_History/Order_History";
+import ProductDetail from "pages/Product_detail/Product_detail";
 import Register from "pages/Register";
-import React from "react";
-import { createBrowserRouter, Link } from "react-router-dom";
+import Login from "pages/Login";
 
 export const router = createBrowserRouter([
   {
@@ -12,16 +16,44 @@ export const router = createBrowserRouter([
     element: <MainLayout />,
     children: [
       {
-        index: true, element: <Home />,
+        index: true,
+        element: <Home />,
       },
       {
-        path: "about", element: <About />,
+        path: "about",
+        element: <About />,
       },
       {
-        path: "register", element: <Register />
+        path: "/product/:id",
+        element: <ProductDetail />,
       },
-       {
-        path: "login", element: <Login />
+      // {
+      //   path: "productdetail",
+      //   element: <ProductDetail />,
+      // },
+      {
+        path: "checkout",
+        element: <Checkout />,
+      },
+      {
+        path: "wishlist",
+        element: <Wishlist />,
+      },
+      {
+        path: "cart",
+        element: <Cart />,
+      },
+      {
+        path: "order_history",
+        element: <Order_History />,
+      },
+      {
+        path: "register",
+        element: <Register />,
+      },
+         {
+        path: "login",
+        element: <Login />,
       },
     ],
   },

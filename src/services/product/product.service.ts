@@ -1,15 +1,16 @@
-import axios from 'axios';
+import axios from "axios";
 
-const apiUrl = import.meta.env.VITE_API_URL;
+const API_URL = import.meta.env.VITE_API_URL;
 
+export const getAllProducts = async (search?: string) => {
+  try {
+    const url = `${API_URL}/products`;
+    const params = search ? { search } : {};
 
-
-export const getAllProducts = async () => {
-    try {
-        const response = await axios.get(`${apiUrl}/products`);
-        return response.data;
-    } catch (error) {
-        console.error('Error fetching products:', error);
-        throw error;
-    }
+    const response = await axios.get(url, { params });
+    return response.data.products;
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw error;
+  }
 };

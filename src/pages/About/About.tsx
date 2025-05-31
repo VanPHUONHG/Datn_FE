@@ -5,7 +5,6 @@ const About = () => {
     <div>About
     <Home />
 
-
     </div>
 
   )
