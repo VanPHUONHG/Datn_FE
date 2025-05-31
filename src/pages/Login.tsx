@@ -1,4 +1,4 @@
-// src/pages/Login.tsx
+
 import React, { useState } from 'react';
 import { login } from '../api/authAPI';
 import { useNavigate } from 'react-router-dom';
@@ -18,7 +18,7 @@ const Login: React.FC = () => {
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user)); // nếu backend trả về user
       alert('Đăng nhập thành công!');
-      navigate('/'); // Chuyển sang trang chính hoặc dashboard
+      navigate('/');
     } catch (err: any) {
       alert(err.response?.data?.message || 'Lỗi đăng nhập');
     }
