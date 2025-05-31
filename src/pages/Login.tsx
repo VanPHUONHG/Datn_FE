@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { login } from '../api/authAPI';
 import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 
 const Login: React.FC = () => {
   const [form, setForm] = useState({ username: '', password: '' });
@@ -17,10 +18,10 @@ const Login: React.FC = () => {
       const res = await login(form);
       localStorage.setItem('token', res.data.token);
       localStorage.setItem('user', JSON.stringify(res.data.user)); // nếu backend trả về user
-      alert('Đăng nhập thành công!');
+      message.success('Đăng nhập thành công!');
       navigate('/');
     } catch (err: any) {
-      alert(err.response?.data?.message || 'Lỗi đăng nhập');
+      message.error(err.response?.data?.message || 'Lỗi đăng nhập');
     }
   };
 

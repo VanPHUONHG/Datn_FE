@@ -5,6 +5,7 @@ import type { Category } from "types/category";
 import { useEffect, useState } from "react";
 import { getProductById, updateProduct } from "services/product/product.service";
 import { getAllCategories } from "services/category/category.service";
+import { message } from "antd";
 
 
 type ProductFormInput = Omit<Product, "images"| "category_id"> & {
@@ -62,10 +63,10 @@ const productData: Partial<Product> = {
 
   try {
     await updateProduct(params.id as string, productData);
-    alert("Cập nhật thành công");
+    message.success("Cập nhật thành công");
     nav("/admin/product-list");
   } catch (error: any) {
-    alert("Lỗi khi cập nhật sản phẩm: " + (error.message || error));
+    message.error("Lỗi khi cập nhật sản phẩm: " + (error.message || error));
     console.error(error);
   }
 };

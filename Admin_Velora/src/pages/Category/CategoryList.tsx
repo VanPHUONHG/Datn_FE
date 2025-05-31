@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { Button, Popconfirm } from "antd";
+import { Button, message, Popconfirm } from "antd";
 
 import type { Category } from "types/category";
 import { Link, useNavigate } from "react-router-dom";
@@ -32,13 +32,13 @@ const CategoryList = () => {
     try {
       await deleteCategory(id);
       setCategories((prev) => prev.filter((item) => item._id !== id));
-      alert("Xóa danh mục thành công!");
+      message.success("Xóa danh mục thành công!");
     } catch (error: any) {
       const message =
         error?.response?.data?.message ||
         error.message ||
         "Đã xảy ra lỗi khi xóa";
-      alert("Lỗi: " + message);
+      message.error("Lỗi: " + message);
       console.error(error);
     }
   };

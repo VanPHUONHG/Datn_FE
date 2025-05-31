@@ -5,6 +5,7 @@ import type { Category } from "types/category";
 import { useEffect, useState } from "react";
 import { getAllCategories } from "services/category/category.service";
 import { createProduct } from "services/product/product.service";
+import { message } from "antd";
 
 type ProductFormInput = Omit<Product, "images"> & {
   images: string;
@@ -39,10 +40,10 @@ const ProductAdd = () => {
     };
     try {
       await createProduct(productData);
-      alert("Thêm mới thành công");
+      message.success("Thêm mới thành công");
       nav("/admin/product-list");
     } catch (error: any) {
-      alert("Lỗi khi thêm sản phẩm: " + (error.message || error));
+      message.error("Lỗi khi thêm sản phẩm: " + (error.message || error));
       console.error(error);
     }
   };

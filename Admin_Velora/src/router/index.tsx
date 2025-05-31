@@ -7,6 +7,8 @@ import CategoryList from "../pages/Category/CategoryList";
 import ProductDelete from "pages/Product/ProductDelete";
 import ProductEdit from "pages/Product/ProductEdit";
 import ProductAdd from "pages/Product/ProductAdd";
+import CategoryEdit from "pages/Category/CategoryEdit";
+import CategoryDelete from "pages/Category/CategoryDelete";
 
 export const router = createBrowserRouter([
     {
@@ -40,6 +42,14 @@ export const router = createBrowserRouter([
             {
                 path: "category-list",
                 element: <CategoryList />,
+            },
+             {
+                path: "category-edit/:id",
+                element: <CategoryEdit />,
+            },
+              {
+                path: "category-delete",
+                element: <CategoryDelete />,
             },
         ],
     },

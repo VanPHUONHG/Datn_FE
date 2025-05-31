@@ -2,6 +2,7 @@
 import React, { useState } from 'react';
 import { signup } from '../api/authAPI';
 import { useNavigate } from 'react-router-dom';
+import { message } from 'antd';
 
 const Register: React.FC = () => {
   const [form, setForm] = useState({
@@ -22,11 +23,11 @@ const Register: React.FC = () => {
     e.preventDefault();
     try {
       const res = await signup(form);
-      alert('Đăng ký thành công!');
+       message.success('Đăng ký thành công!');
       console.log(res.data);
       navigate('/login'); // Chuyển hướng sau khi đăng ký thành công
     } catch (err: any) {
-      alert(err.response?.data?.message || 'Lỗi đăng ký');
+      message.error(err.response?.data?.message || 'Lỗi đăng ký');
     }
   };
 
