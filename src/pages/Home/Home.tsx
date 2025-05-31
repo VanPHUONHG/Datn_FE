@@ -60,10 +60,10 @@ function Home() {
 
 <div className="flex gap-2 items-center mt-1">
   <div className="text-red-600 font-bold">
-    {product.price.toLocaleString()}₫
+    {product.discount_price.toLocaleString()}₫
   </div>
   <div className="text-gray-400 line-through text-sm">
-    {product.discount_price.toLocaleString()}₫
+    {product.price.toLocaleString()}₫
   </div>
 </div>            </div>
     </Link>

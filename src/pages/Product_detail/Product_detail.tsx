@@ -103,17 +103,17 @@ const ProductDetail = () => {
           <div className="flex items-center gap-4 mb-4">
   {/* Giá khuyến mãi (giá thấp hơn, nổi bật) */}
   <div className="text-2xl font-bold text-gray-900">
-    {product.price.toLocaleString()}₫
+    {product.discount_price.toLocaleString()}₫
   </div>
 
   {/* Phần trăm giảm giá */}
-  <div className="text-red-600 font-semibold text-sm px-2 py-0.5 rounded bg-red-100">
--{Math.round(((product.discount_price - product.price) / product.discount_price) * 100)}%
-  </div>
+            <div className="text-green-700 font-semibold text-base">
+              -{Math.round(((product.price - product.discount_price) / product.price) * 100)}%
+            </div>
 
   {/* Giá gốc (cao hơn, gạch ngang) */}
   <div className="text-gray-400 line-through text-base">
-    {product.discount_price.toLocaleString()}₫
+    {product.price.toLocaleString()}₫
   </div>
 
   <div className="ml-auto text-sm font-semibold text-gray-700">
@@ -167,10 +167,10 @@ const ProductDetail = () => {
             <div className="text-sm text-gray-500">{item.origin}</div>
           <div className="flex gap-2 items-center mt-1">
   <div className="text-red-600 font-bold">
-    {item.price.toLocaleString()}₫
+    {item.discount_price.toLocaleString()}₫
   </div>
   <div className="text-gray-400 line-through text-sm">
-    {item.discount_price.toLocaleString()}₫
+    {item.price.toLocaleString()}₫
   </div>
 </div>
 
