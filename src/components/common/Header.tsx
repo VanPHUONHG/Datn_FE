@@ -141,6 +141,7 @@ const Header = () => {
       <div className="border-y border-gray-100">
         <div className="max-w-7xl mx-auto h-12 flex justify-between items-center px-4">
           {/* Left - All Categories */}
+
           <button className="flex items-center gap-2 bg-[#5caf90] hover:bg-green-500 text-white px-4 rounded text-sm">
             <i className="fas fa-th-large text-white"></i>
             <p className='text-white pt-2.5'>All Categories</p>
