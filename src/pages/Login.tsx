@@ -1,4 +1,3 @@
-
 import React, { useState } from 'react';
 import { login } from '../api/authAPI';
 import { useNavigate } from 'react-router-dom';
@@ -17,7 +16,11 @@ const Login: React.FC = () => {
     try {
       const res = await login(form);
       localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.user)); // nếu backend trả về user
+      localStorage.setItem('user', JSON.stringify(res.data.user)); // lưu user
+
+      // Phát event custom 'storageChanged' để Header hoặc các component khác lắng nghe
+      window.dispatchEvent(new Event('storageChanged'));
+
       message.success('Đăng nhập thành công!');
       navigate('/');
     } catch (err: any) {
@@ -56,7 +59,6 @@ const Login: React.FC = () => {
         Đăng nhập
       </button>
     </form>
-
   );
 };
 
