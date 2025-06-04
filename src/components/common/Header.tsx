@@ -1,9 +1,49 @@
+import React, { useEffect, useRef, useState } from 'react';
+import { Link } from 'react-router-dom';
+import { getCategories } from 'services/category/category.service';
+import type { ICategory } from 'types/category';
 
-import React from 'react'
-import { Link } from 'react-router-dom'
 type Props = {}
 
 const Header = () => {
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const dropdownRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    setLoading(true);
+    getCategories()
+      .then((data) => {
+        setCategories(data);
+      })
+      .catch((e) => {
+        console.error(e);
+      })
+      .finally(() => {
+        setLoading(false);
+      });
+  }, []);
+
+  const toggleDropdown = () => {
+    setShowDropdown(!showDropdown);
+  };
+
+  const handleClickOutside = (event: MouseEvent) => {
+    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+      setShowDropdown(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('mousedown', handleClickOutside);
+    return () => document.removeEventListener('mousedown', handleClickOutside);
+  }, []);
+
+  const handleCategoryClick = () => {
+    setShowDropdown(false);
+  };
+
   return (
     <div className="bg-[#FFFFFF] font-sans text-gray-700 text-sm">
       {/* Top Bar */}
@@ -17,7 +57,9 @@ const Header = () => {
               <i className="fab fa-whatsapp text-xs"></i> +91 987 654 3210
             </span>
           </div>
-          <div className="text-center hidden md:block">World's Fastest Online Shopping Destination</div>
+          <div className="text-center hidden md:block">
+            World's Fastest Online Shopping Destination
+          </div>
           <div className="flex items-center gap-4">
             <a href="#" className="hover:text-gray-700">Help?</a>
             <a href="#" className="hover:text-gray-700">Track Order?</a>
@@ -34,7 +76,7 @@ const Header = () => {
         {/* Logo */}
         <div className="flex-shrink-0">
           <img
-            src="image/logo.png"
+            src="/image/logo.png"
             alt="Velora Logo"
             className="h-[70px] w-[70px] rounded-md ml-10"
           />
@@ -84,50 +126,75 @@ const Header = () => {
       <div className="border-y border-gray-100">
         <div className="max-w-7xl mx-auto h-12 flex justify-between items-center px-4">
           {/* Left - All Categories */}
+          <div className="relative inline-block text-left" ref={dropdownRef}>
+            <button
+              onClick={toggleDropdown}
+              className="flex items-center gap-2 bg-[#5caf90] hover:bg-green-500 text-white px-4 rounded text-sm"
+            >
+              <i className="fas fa-th-large text-white"></i>
+              <p className="text-white pt-2.5">All Categories</p>
+              <i className="fas fa-chevron-down text-[10px] text-white"></i>
+            </button>
 
-          <button className="flex items-center gap-2 bg-[#5caf90] hover:bg-green-500 text-white px-4 rounded text-sm">
-            <i className="fas fa-th-large text-white"></i>
-            <p className='text-white pt-2.5'>All Categories</p>
-            <i className="fas fa-chevron-down text-[10px] text-white"></i>
-          </button>
+            {/* Dropdown menu */}
+            {showDropdown && (
+              <div className="absolute mt-2 w-48 bg-white rounded shadow-lg z-10">
+                {loading ? (
+                  <p className="p-2 text-center text-gray-500">Loading...</p>
+                ) : (
+                  <ul>
+                    {categories.length === 0 ? (
+                      <li className="p-2 text-gray-500">No categories found</li>
+                    ) : (
+                      categories.map((cat) => (
+                        <Link
+                          key={cat._id}
+                          to={`/categories/${cat._id}`}
+                          className="block px-4 py-2 hover:bg-green-100 text-gray-700"
+                          onClick={handleCategoryClick}
+                        >
+                          {cat.name}
+                        </Link>
+                      ))
+                    )}
+                  </ul>
+                )}
+              </div>
+            )}
+          </div>
 
-          {/* Center - Nav links */}
-           <nav className="flex gap-x-8 justify-between font-medium px-4">
-      <Link to="/" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
-        <span>Home</span>
-      </Link>
-
-      <Link to="/categories" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
-        <span>Categories</span>
-      </Link>
-
-      <Link to="/products" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
-        <span>Products</span>
-      </Link>
-
-      <Link to="/blog" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
-        <span>Blog</span>
-      </Link>
-
-      <Link to="/pages" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
-        <span>Pages</span>
-      </Link>
-
-      <Link to="/offers" className="hover:text-green-600 font-medium focus:outline-none">
-        Offers
-      </Link>
-    </nav>
+          {/* Center - Navigation Links */}
+          <nav className="flex gap-x-8 justify-between font-medium px-4">
+            <Link to="/" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
+              <span>Home</span>
+            </Link>
+            <Link to="/categories" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
+              <span>Categories</span>
+            </Link>
+            <Link to="/products" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
+              <span>Products</span>
+            </Link>
+            <Link to="/blog" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
+              <span>Blog</span>
+            </Link>
+            <Link to="/pages" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
+              <span>Pages</span>
+            </Link>
+            <Link to="/offers" className="hover:text-green-600 font-medium focus:outline-none">
+              Offers
+            </Link>
+          </nav>
 
           {/* Right - Location */}
           <button className="flex items-center gap-2 bg-[#5caf90] hover:bg-green-500 text-white px-4 rounded text-sm">
             <i className="fas fa-map-marker-alt text-white"></i>
-            <p className='text-white pt-2.5 pr-4'>New York</p>
+            <p className="text-white pt-2.5 pr-4">New York</p>
             <i className="fas fa-chevron-down text-[10px] text-white"></i>
           </button>
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default Header
+export default Header;

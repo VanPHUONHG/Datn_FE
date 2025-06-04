@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react';
 import { getAllProducts } from 'services/product/product.service';
-import type { Product } from 'types/product';
 import Banner from './component/Banner';
 import OutstandingProducts from './component/OutstandingProducts';
 import Menu from './component/Menu';
@@ -8,6 +7,7 @@ import NewArrivals from './component/NewArrivals';
 import ServicesRow from './component/ServicesRow';
 import Trending from './component/Trending';
 import { Link } from 'react-router-dom';
+import type { Product } from 'interface/product';
 
 function Home() {
   const [data, setData] = useState<Product[] | null>(null);
