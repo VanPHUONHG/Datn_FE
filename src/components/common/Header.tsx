@@ -1,15 +1,16 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { getCategories } from 'services/category/category.service';
 import type { ICategory } from 'types/category';
-
-type Props = {}
 
 const Header = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
   const [showDropdown, setShowDropdown] = useState(false);
   const [loading, setLoading] = useState(false);
   const dropdownRef = useRef<HTMLDivElement>(null);
+
+  const [user, setUser] = useState<any>(null);
+  const navigate = useNavigate();
 
   useEffect(() => {
     setLoading(true);
@@ -25,6 +26,27 @@ const Header = () => {
       });
   }, []);
 
+  useEffect(() => {
+    // Lấy user lần đầu
+    updateUserFromStorage();
+
+    // Lắng nghe sự kiện custom
+    window.addEventListener('storageChanged', updateUserFromStorage);
+
+    return () => {
+      window.removeEventListener('storageChanged', updateUserFromStorage);
+    };
+  }, []);
+
+  const updateUserFromStorage = () => {
+    const storedUser = localStorage.getItem('user');
+    if (storedUser) {
+      setUser(JSON.parse(storedUser));
+    } else {
+      setUser(null);
+    }
+  };
+
   const toggleDropdown = () => {
     setShowDropdown(!showDropdown);
   };
@@ -35,14 +57,21 @@ const Header = () => {
     }
   };
 
+  const handleCategoryClick = () => {
+    setShowDropdown(false);
+  };
+
+  const handleLogout = () => {
+    localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    setUser(null);
+    navigate('/login');
+  };
+
   useEffect(() => {
     document.addEventListener('mousedown', handleClickOutside);
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
-
-  const handleCategoryClick = () => {
-    setShowDropdown(false);
-  };
 
   return (
     <div className="bg-[#FFFFFF] font-sans text-gray-700 text-sm">
@@ -98,13 +127,36 @@ const Header = () => {
 
         {/* User Actions */}
         <div className="flex items-center gap-4 text-center flex-shrink-0">
+          {/* Login / Account */}
           <div className="flex items-center gap-2 hover:text-gray-900 cursor-pointer">
             <i className="far fa-user text-2xl"></i>
-            <div>
-              <div className="text-xs">LOGIN</div>
-              <div className="text-xs font-medium">Account</div>
+            <div className="text-left">
+              {!user ? (
+                <>
+                  <Link to="/login" className="text-xs block hover:underline">
+                    Đăng nhập
+                  </Link>
+                  <Link to="/register" className="text-xs font-medium block hover:underline">
+                    Đăng ký
+                  </Link>
+                </>
+              ) : (
+                <>
+                  <div className="text-xs font-medium">
+                    Xin chào, {user.username}
+                  </div>
+                  <button
+                    onClick={handleLogout}
+                    className="text-xs text-red-500 hover:underline block"
+                  >
+                    Đăng xuất
+                  </button>
+                </>
+              )}
             </div>
           </div>
+
+          {/* Wishlist */}
           <div className="flex items-center gap-2 hover:text-gray-900 cursor-pointer">
             <i className="far fa-heart text-2xl"></i>
             <div>
@@ -112,6 +164,8 @@ const Header = () => {
               <div className="text-xs font-medium">Wishlist</div>
             </div>
           </div>
+
+          {/* Cart */}
           <div className="flex items-center gap-2 hover:text-gray-900 cursor-pointer">
             <i className="fas fa-shopping-bag text-2xl text-gray-800"></i>
             <div>
@@ -165,24 +219,12 @@ const Header = () => {
 
           {/* Center - Navigation Links */}
           <nav className="flex gap-x-8 justify-between font-medium px-4">
-            <Link to="/" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
-              <span>Home</span>
-            </Link>
-            <Link to="/categories" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
-              <span>Categories</span>
-            </Link>
-            <Link to="/products" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
-              <span>Products</span>
-            </Link>
-            <Link to="/blog" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
-              <span>Blog</span>
-            </Link>
-            <Link to="/pages" className="flex items-center space-x-2 hover:text-green-600 focus:outline-none">
-              <span>Pages</span>
-            </Link>
-            <Link to="/offers" className="hover:text-green-600 font-medium focus:outline-none">
-              Offers
-            </Link>
+            <Link to="/" className="hover:text-green-600">Home</Link>
+            <Link to="/categories" className="hover:text-green-600">Categories</Link>
+            <Link to="/products" className="hover:text-green-600">Products</Link>
+            <Link to="/blog" className="hover:text-green-600">Blog</Link>
+            <Link to="/pages" className="hover:text-green-600">Pages</Link>
+            <Link to="/offers" className="hover:text-green-600">Offers</Link>
           </nav>
 
           {/* Right - Location */}
