@@ -30,6 +30,7 @@ const fetchDeletedCategories = async (pageNumber = page) => {
       await forceDeleteCategory(id);
       message.success("Xóa vĩnh viễn danh mục thành công");
       fetchDeletedCategories(page);
+      setCategories(prev => prev.filter(cat => cat._id !== id));
     } catch (error) {
       console.error("Lỗi khi xóa vĩnh viễn danh mục:", error);
       message.error("Lỗi khi xóa vĩnh viễn danh mục");
@@ -41,6 +42,8 @@ const fetchDeletedCategories = async (pageNumber = page) => {
       await restoreCategory(id);
       message.success("Khôi phục danh mục thành công");
       fetchDeletedCategories(page);
+      setCategories(prev => prev.filter(cat => cat._id !== id));
+
     } catch (error) {
       console.error("Lỗi khi khôi phục danh mục:", error);
       message.error("Lỗi khi khôi phục danh mục");
