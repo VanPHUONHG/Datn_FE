@@ -3,6 +3,7 @@ export interface Product {
   category_id: string; 
   name: string;
   description?: string;
+  brand:string;
   origin?: string;
   price: number;
   stock_quantity: number;
