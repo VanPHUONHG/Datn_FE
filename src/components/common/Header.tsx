@@ -1,5 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { FaExclamationCircle } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 import { getCategories } from 'services/category/category.service';
 import type { ICategory } from 'types/category';
 
@@ -11,6 +13,25 @@ const Header = () => {
 
   const [user, setUser] = useState<any>(null);
   const navigate = useNavigate();
+
+ const handleClickCart = () => {
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
+
+    if (!token || !user) {
+      toast.error("Vui lòng đăng nhập để xem sản phẩm giỏ hàng!", {
+        icon: <FaExclamationCircle color="white" />,
+      });
+     setTimeout(() => {
+      navigate("/login");
+    }, 0); 
+
+
+
+      return;
+    }
+    navigate("/cart");
+  };
 
   useEffect(() => {
     setLoading(true);
@@ -166,13 +187,19 @@ const Header = () => {
           </div>
 
           {/* Cart */}
-          <div className="flex items-center gap-2 hover:text-gray-900 cursor-pointer">
+                          <Link to="/cart" className="text-xs block hover:underline">
+
+          <div className="flex items-center gap-2 hover:text-gray-900 cursor-pointer" onClick={handleClickCart}>
             <i className="fas fa-shopping-bag text-2xl text-gray-800"></i>
-            <div>
+            
+                  <div>
               <div className="text-xs">3-ITEMS</div>
               <div className="text-xs font-medium">Cart</div>
             </div>
+          
           </div>
+                          </Link>
+
         </div>
       </div>
 
@@ -200,7 +227,9 @@ const Header = () => {
                     {categories.length === 0 ? (
                       <li className="p-2 text-gray-500">No categories found</li>
                     ) : (
-                      categories.map((cat) => (
+                      categories 
+                      .filter((cat) => cat.name !== 'Danh mục mặc định')
+                      .map((cat) => (
                         <Link
                           key={cat._id}
                           to={`/categories/${cat._id}`}
