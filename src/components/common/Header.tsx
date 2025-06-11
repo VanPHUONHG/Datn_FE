@@ -220,7 +220,6 @@ const Header = () => {
           {/* Center - Navigation Links */}
           <nav className="flex gap-x-8 justify-between font-medium px-4">
             <Link to="/" className="hover:text-green-600">Home</Link>
-            <Link to="/categories" className="hover:text-green-600">Categories</Link>
             <Link to="/products" className="hover:text-green-600">Products</Link>
             <Link to="/blog" className="hover:text-green-600">Blog</Link>
             <Link to="/pages" className="hover:text-green-600">Pages</Link>
