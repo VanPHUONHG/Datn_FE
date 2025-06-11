@@ -13,6 +13,7 @@ import ProductInCategory from "pages/ProductInCategory/ProductInCategory";
 import Blog from "pages/Blog/Blog";
 import BlogDetail from "pages/blogDetail/blogDetail";
 import Compare from "pages/Compare/Compare";
+import AllProducts from "pages/AllProduct/Product";
 
 export const router = createBrowserRouter([
   {
@@ -59,22 +60,27 @@ export const router = createBrowserRouter([
         path: "blog_detail",
         element: <BlogDetail />,
       },
-       {
+      {
         path: "compare",
         element: <Compare />,
       },
-       {
-        path: "categories/:categoryId", 
+      {
+        path: "categories/:categoryId",
         element: <ProductInCategory />,
       },
       {
         path: "register",
         element: <Register />,
       },
-         {
+      {
         path: "login",
         element: <Login />,
       },
+      {
+        path: "products",
+        element: <AllProducts />,
+      },
+
     ],
   },
 ]);
