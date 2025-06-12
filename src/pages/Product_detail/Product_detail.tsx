@@ -21,11 +21,19 @@ const ProductDetail = () => {
   const [quantity, setQuantity] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
 const [variantImages, setVariantImages] = useState<string[]>([]);
+const [previewVariant, setPreviewVariant] = useState<IProductVariant | null>(null);
+const displayedVariant = selectedVariant || previewVariant;
 
   useEffect(() => {
     const fetchProductDetail = async () => {
       try {
-        setVariantImages([]);
+        setLoading(true);
+        // ✅ Reset các state liên quan đến sản phẩm cũ
+      setSelectedVariant(null);
+      setSelectedColor("");
+      setVariantImages([]);
+      setQuantity(1);
+setPreviewVariant(null);
         const res = await axios.get(`http://localhost:8888/api/products/${id}`);
         setProduct(res.data);
         setCurrentImage(res.data.images?.[0] || "");
@@ -140,21 +148,21 @@ const [variantImages, setVariantImages] = useState<string[]>([]);
             <h1 className="text-2xl font-semibold text-gray-800 mb-2">{product.name}</h1>
 
            <div className="flex items-center gap-4 mb-4 flex-wrap">
-  <span className="text-3xl font-bold text-green-600">
-    {(selectedVariant?.discount_price ?? selectedVariant?.price ?? product.discount_price).toLocaleString()}₫
+ <span className="text-3xl font-bold text-green-600">
+  {(displayedVariant?.discount_price ?? displayedVariant?.price ?? product.discount_price).toLocaleString()}₫
+</span>
+
+{(displayedVariant?.discount_price || product.discount_price) && (
+  <span className="text-base text-gray-400 line-through">
+    {(displayedVariant?.price ?? product.price).toLocaleString()}₫
   </span>
+)}
 
-  {(selectedVariant?.discount_price || product.discount_price) && (
-    <span className="text-base text-gray-400 line-through">
-      {(selectedVariant?.price ?? product.price).toLocaleString()}₫
-    </span>
-  )}
-
-  {(selectedVariant?.discount_price || product.discount_price) && selectedVariant?.price && selectedVariant?.discount_price && (
-    <span className="text-sm text-red-600 font-medium">
-      -{Math.round(((selectedVariant.price - selectedVariant.discount_price) / selectedVariant.price) * 100)}%
-    </span>
-  )}
+{displayedVariant?.price && displayedVariant?.discount_price && (
+  <span className="text-sm text-red-600 font-medium">
+    -{Math.round(((displayedVariant.price - displayedVariant.discount_price) / displayedVariant.price) * 100)}%
+  </span>
+)}
 </div>
 
             <div className="text-sm text-gray-700 mb-2">
@@ -163,11 +171,11 @@ const [variantImages, setVariantImages] = useState<string[]>([]);
 
             <div className="text-sm text-gray-700 mb-2">Thương hiệu: {product.brand}</div>
 
-            {selectedVariant && (
+            {displayedVariant  && (
               <div className="mt-4 text-sm text-gray-700">
-                <p><strong>Số lượng còn:</strong> {selectedVariant.stock_quantity}</p>
-                <p><strong>Mã SKU:</strong> {selectedVariant.sku}</p>
-                   <p><strong>Màu sắc:</strong> {selectedVariant.color}</p>
+                <p><strong>Số lượng còn:</strong> {displayedVariant .stock_quantity}</p>
+                <p><strong>Mã SKU:</strong> {displayedVariant .sku}</p>
+                   <p><strong>Màu sắc:</strong> {displayedVariant .color}</p>
               </div>
             )}
 
@@ -182,13 +190,13 @@ const [variantImages, setVariantImages] = useState<string[]>([]);
         const allImages = sameColorVariants.flatMap(v => v.images?.length ? v.images : [v.image]);
         const uniqueImages = Array.from(new Set(allImages.filter(img => !!img)));
         setVariantImages(uniqueImages);
-        setSelectedVariant(null);
         setSelectedColor(variant.color);
         setCurrentImage(uniqueImages[0]);
 
-          if (sameColorVariants.length > 0) {
-    setSelectedVariant(sameColorVariants[0]);
-  }
+         setPreviewVariant(sameColorVariants[0]);
+
+    setSelectedVariant(null);
+
       }}
       className={`border rounded p-1 ${
         selectedVariant?.color === variant.color
