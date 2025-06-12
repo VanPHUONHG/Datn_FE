@@ -1,4 +1,4 @@
-import { Button, Popconfirm } from "antd";
+import { Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { deleteProductById, getAllProducts } from "services/product/product.service";

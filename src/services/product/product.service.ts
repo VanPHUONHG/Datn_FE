@@ -8,7 +8,6 @@ export const getAllProducts = async (search?: string) => {
     const params = search ? { search } : {};
 
     const response = await axios.get(url, { params });
-    console.log("👉 Response data:", response.data);
     return response.data.products;
   } catch (error) {
     console.error("Error fetching products:", error);

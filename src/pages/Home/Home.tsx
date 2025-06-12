@@ -18,7 +18,6 @@ function Home() {
       try {
         const result = await getAllProducts();
         setData(result);
-        console.log("Fetched result:", result);
       } catch (error) {
         console.error('Error fetching data:', error);
       } finally {
