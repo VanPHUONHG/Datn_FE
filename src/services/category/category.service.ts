@@ -9,7 +9,6 @@ export const getCategories = async (search?: string) => {
     const params = search ? { search } : {};
 
     const response = await axios.get(url, { params });
-    console.log("👉 Response data:", response.data);
     return response.data.data; // vì backend trả về { success, data, message }
   } catch (error) {
     console.error("Error fetching categories:", error);

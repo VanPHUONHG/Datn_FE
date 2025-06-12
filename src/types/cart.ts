@@ -9,7 +9,8 @@ export interface ICartItem {
 
 export interface ICart {
   _id?: string;
-  user: string;
+  user?: string;
   items: ICartItem[];
+  totalPrice?: number;
   updatedAt?: string;
 }

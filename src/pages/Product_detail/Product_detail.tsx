@@ -7,6 +7,7 @@ import type { IProductVariant } from "types/productVariant";
 import { getAllVariantsByProductId } from "services/productVariant/productVariant.service";
 import { toast } from "react-toastify";
 import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
+import { addToCart, type CartPayload } from "services/cart/cart.service";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -84,30 +85,44 @@ setPreviewVariant(null);
     }
   };
 
-  const handleAddToCart = () => {
-    if (!selectedVariant) {
-      toast.error("Vui lòng chọn size trước khi thêm vào giỏ hàng!", {
-        icon: <FaExclamationCircle color="white" />, 
-      });
-      return;
-    }
+const handleAddToCart = async () => {
+  if (!selectedVariant) {
+    toast.error("Vui lòng chọn size trước khi thêm vào giỏ hàng!", {
+      icon: <FaExclamationCircle color="white" />,
+    });
+    return;
+  }
 
-    const token = localStorage.getItem("token");
-    const user = localStorage.getItem("user");
+  const token = localStorage.getItem("token");
+  const user = localStorage.getItem("user");
 
-    if (!token || !user) {
-      toast.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!", {
-        icon: <FaExclamationCircle color="white" />,
-      });
-      setTimeout(() => navigate("/login"), 3000);
-      return;
-    }
+  if (!token || !user) {
+    toast.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!", {
+      icon: <FaExclamationCircle color="white" />,
+    });
+    setTimeout(() => navigate("/login"), 3000);
+    return;
+  }
 
-    // TODO: API thêm vào giỏ hàng
+  try {
+    const payload: CartPayload = {
+      product_id: product!._id,
+      variant_id: selectedVariant._id,
+      quantity,
+    };
+
+    await addToCart(payload); 
+
     toast.success("Sản phẩm đã được thêm vào giỏ hàng!", {
       icon: <FaCheckCircle color="green" />,
     });
-  };
+  } catch (error) {
+    console.error("Lỗi khi thêm vào giỏ hàng:", error);
+    toast.error("Có lỗi xảy ra khi thêm vào giỏ hàng!", {
+      icon: <FaExclamationCircle color="white" />,
+    });
+  }
+};
 
   if (loading) return <p className="text-center py-10">Đang tải dữ liệu...</p>;
   if (!product) return <p className="text-center py-10">Không tìm thấy sản phẩm</p>;
@@ -165,15 +180,15 @@ setPreviewVariant(null);
 )}
 </div>
 
-            <div className="text-sm text-gray-700 mb-2">
+            {/* <div className="text-sm text-gray-700 mb-2">
               Tình trạng: <span className={product.stock_quantity > 0 ? "text-green-600" : "text-red-600"}>{product.stock_quantity > 0 ? "Còn hàng" : "Hết hàng"}</span>
-            </div>
+            </div> */}
 
             <div className="text-sm text-gray-700 mb-2">Thương hiệu: {product.brand}</div>
 
             {displayedVariant  && (
               <div className="mt-4 text-sm text-gray-700">
-                <p><strong>Số lượng còn:</strong> {displayedVariant .stock_quantity}</p>
+                <p><strong>Số lượng:</strong> {displayedVariant .stock_quantity}</p>
                 <p><strong>Mã SKU:</strong> {displayedVariant .sku}</p>
                    <p><strong>Màu sắc:</strong> {displayedVariant .color}</p>
               </div>
