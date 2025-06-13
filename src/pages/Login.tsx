@@ -16,9 +16,8 @@ const Login: React.FC = () => {
     try {
       const res = await login(form);
       localStorage.setItem('token', res.data.token);
-      localStorage.setItem('user', JSON.stringify(res.data.user)); // lưu user
+      localStorage.setItem('user', JSON.stringify(res.data.user));
 
-      // Phát event custom 'storageChanged' để Header hoặc các component khác lắng nghe
       window.dispatchEvent(new Event('storageChanged'));
 
       message.success('Đăng nhập thành công!');

@@ -11,56 +11,61 @@ import CategoryEdit from "pages/Category/CategoryEdit";
 import CategoryDelete from "pages/Category/CategoryDelete";
 import CategoryInProduct from "pages/Category/CategoryInProduct";
 import CategoryAdd from "pages/Category/CategoryAdd";
+// import UserList from "pages/Users/listUsers";
 
 export const router = createBrowserRouter([
-    {
+  {
     path: "/",
-    element: <Navigate to="/admin" replace />, 
+    element: <Navigate to="/admin" replace />,
   },
-    {
-        path: "/admin",
-        element: <AdminLayout />,
-        children: [
-            {
-                index: true,
-                element: <Dasborad />,
-            },
-            {
-                path: "product-delete",
-                element: <ProductDelete />,
-            },
-              {
-                path: "product-list",
-                element: <ProductList />,
-            },
-            {
-                path: "product-edit/:id",
-                element: <ProductEdit />,
-            },
-               {
-                path: "product-add",
-                element: <ProductAdd />,
-            },
-            {
-                path: "category-list",
-                element: <CategoryList />,
-            },
-              {
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      {
+        index: true,
+        element: <Dasborad />,
+      },
+      {
+        path: "product-delete",
+        element: <ProductDelete />,
+      },
+      {
+        path: "product-list",
+        element: <ProductList />,
+      },
+      {
+        path: "product-edit/:id",
+        element: <ProductEdit />,
+      },
+      {
+        path: "product-add",
+        element: <ProductAdd />,
+      },
+      {
+        path: "category-list",
+        element: <CategoryList />,
+      },
+      {
         path: "category-add",
         element: <CategoryAdd />,
       },
-             {
-                path: "category-edit/:id",
-                element: <CategoryEdit />,
-            },
-              {
+      {
+        path: "category-edit/:id",
+        element: <CategoryEdit />,
+      },
+      {
         path: "category-in-product/:id",
         element: <CategoryInProduct />,
       },
-              {
-                path: "category-delete",
-                element: <CategoryDelete />,
-            },
-        ],
-    },
+      {
+        path: "category-delete",
+        element: <CategoryDelete />,
+      },
+      // {
+      //   path: "user-list",
+      //   element: <UserList />,
+      // }
+    ],
+  },
 ]);
