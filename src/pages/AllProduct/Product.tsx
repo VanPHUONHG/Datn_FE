@@ -1,8 +1,15 @@
-// src/pages/AllProducts.tsx
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import type { Product } from 'interface/product';
-import { getAll } from 'services/allProduct/allproduct.service';
+import { getAll } from 'services/allProduct/allProduct.service';
+
+const COLORS = [
+  { value: 'black', label: 'Đen' },
+  { value: 'white', label: 'Trắng' },
+  { value: 'blue', label: 'Xanh' },
+  { value: 'red', label: 'Đỏ' },
+  { value: 'brown', label: 'Nâu' },
+];
 
 function AllProducts() {
   const [data, setData] = useState<Product[] | null>(null);
@@ -10,13 +17,20 @@ function AllProducts() {
 
   const [selectedSize, setSelectedSize] = useState<string | null>(null);
   const [selectedPriceRange, setSelectedPriceRange] = useState<[number, number] | null>(null);
+  const [selectedColor, setSelectedColor] = useState<string | null>(null);
+  const [selectedBrand, setSelectedBrand] = useState<string | null>(null);
 
-  // ✅ State mở/đóng các section lọc
-  const [showPriceFilter, setShowPriceFilter] = useState<boolean>(false);
-  const [showSizeFilter, setShowSizeFilter] = useState<boolean>(false);
+  const [showPriceFilter, setShowPriceFilter] = useState(false);
+  const [showSizeFilter, setShowSizeFilter] = useState(false);
+  const [showColorFilter, setShowColorFilter] = useState(false);
+  const [showBrandFilter, setShowBrandFilter] = useState(false);
 
-  const handleSizeChange = (size: string) => {
-    setSelectedSize(size === selectedSize ? null : size);
+  const handleToggle = (
+    selected: string | null,
+    value: string,
+    setFn: React.Dispatch<React.SetStateAction<string | null>>
+  ) => {
+    setFn(selected === value ? null : value);
   };
 
   const handlePriceChange = (min: number, max: number) => {
@@ -30,6 +44,8 @@ function AllProducts() {
   const buildQueryString = () => {
     const params = new URLSearchParams();
     if (selectedSize) params.append('size', selectedSize);
+    if (selectedColor) params.append('color', selectedColor);
+    if (selectedBrand) params.append('brand', selectedBrand);
     if (selectedPriceRange) {
       params.append('minPrice', selectedPriceRange[0].toString());
       params.append('maxPrice', selectedPriceRange[1].toString());
@@ -51,74 +67,73 @@ function AllProducts() {
     };
 
     fetchData();
-  }, [selectedSize, selectedPriceRange]);
+  }, [selectedSize, selectedPriceRange, selectedColor, selectedBrand]);
 
   if (loading) return <div>Loading...</div>;
 
   return (
     <div className="flex gap-6">
-      {/* Sidebar bộ lọc */}
-      <div className="w-64 space-y-4">
-        {/* Lọc giá */}
-        <div>
-          <h3
-            className="font-semibold mb-2 cursor-pointer flex justify-between items-center"
-            onClick={() => setShowPriceFilter(!showPriceFilter)}
-          >
-            Lọc Giá
-            <span>{showPriceFilter ? '▲' : '▼'}</span>
-          </h3>
-          {showPriceFilter && (
-            <div className="space-y-1">
-              {[
-                { label: 'Dưới 500,000₫', min: 0, max: 500000 },
-                { label: '500,000₫ - 1,000,000₫', min: 500000, max: 1000000 },
-                { label: '1,000,000₫ - 3,000,000₫', min: 1000000, max: 3000000 },
-                { label: 'Trên 3,000,000₫', min: 3000000, max: 1000000000 },
-              ].map((range, index) => (
-                <label key={index} className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={
-                      selectedPriceRange?.[0] === range.min &&
-                      selectedPriceRange?.[1] === range.max
-                    }
-                    onChange={() => handlePriceChange(range.min, range.max)}
-                  />
-                  {range.label}
-                </label>
-              ))}
-            </div>
-          )}
-        </div>
+       <div className="w-64 p-4 bg-white rounded-lg shadow space-y-6 border border-gray-200">
 
-        {/* Kích thước */}
-        <div>
-          <h3
-            className="font-semibold mb-2 cursor-pointer flex justify-between items-center"
-            onClick={() => setShowSizeFilter(!showSizeFilter)}
-          >
-            Kích thước
-            <span>{showSizeFilter ? '▲' : '▼'}</span>
-          </h3>
-          {showSizeFilter && (
-            <div className="space-y-1">
-              {['37','38', '39', '40','41','42'].map((size) => (
-                <label key={size} className="flex items-center gap-2">
-                  <input
-                    type="checkbox"
-                    checked={selectedSize === size}
-                    onChange={() => handleSizeChange(size)}
-                  />
-                  {size}
-                </label>
-              ))}
-            </div>
-          )}
+    <div>
+      <h3
+        className="font-semibold mb-2 cursor-pointer flex justify-between items-center"
+        onClick={() => setShowPriceFilter(!showPriceFilter)}
+      >
+       Giá
+        <span>{showPriceFilter ? '▲' : '▼'}</span>
+      </h3>
+      {showPriceFilter && (
+        <div className="space-y-2 pl-1">
+          {[
+            { label: '100,000₫ - 1,000,000₫', min: 100000, max: 1000000 },
+            { label: '1,000,000₫ - 2,000,000₫', min: 1000000, max: 2000000 },
+            { label: '2,000,000₫ - 4,000,000₫', min: 2000000, max: 4000000 },
+            { label: 'Trên 4,000,000₫', min: 4000000, max: 1000000000 },
+          ].map((range, index) => (
+            <label key={index} className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={
+                  selectedPriceRange?.[0] === range.min &&
+                  selectedPriceRange?.[1] === range.max
+                }
+                onChange={() => handlePriceChange(range.min, range.max)}
+              />
+              {range.label}
+            </label>
+          ))}
         </div>
-      </div>
+      )}
+    </div>
 
-      {/* Danh sách sản phẩm */}
+    <div>
+      <h3
+        className="font-semibold mb-2 cursor-pointer flex justify-between items-center"
+        onClick={() => setShowSizeFilter(!showSizeFilter)}
+      >
+        Size
+        <span>{showSizeFilter ? '▲' : '▼'}</span>
+      </h3>
+      {showSizeFilter && (
+        <div className="space-y-2 pl-1">
+          {['38', '39', '40', '41', '42'].map((size) => (
+            <label key={size} className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={selectedSize === size}
+                onChange={() => handleToggle(selectedSize, size, setSelectedSize)}
+              />
+              {size}
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+
+  </div>
+
+    {/* list sản phẩm */}
       <div className="flex-1">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
           {data?.map((product) => (

@@ -1,4 +1,5 @@
 export interface Product {
+  matchedVariants: any;
   _id: string; 
   category_id: string; 
   name: string;

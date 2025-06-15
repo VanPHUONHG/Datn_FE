@@ -1,4 +1,5 @@
 interface Product {
+  matchedVariants: any;
   _id: string;
   name: string;
   origin?: string;
