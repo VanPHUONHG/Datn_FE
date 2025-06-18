@@ -73,11 +73,16 @@ setPreviewVariant(null);
     fetchRelatedProducts();
   }, []);
 
-  const handleIncrease = () => {
-    if (quantity < (selectedVariant?.stock_quantity || product?.stock_quantity || 1)) {
-      setQuantity((prev) => prev + 1);
-    }
-  };
+const handleIncrease = () => {
+  const maxStock = selectedVariant?.stock_quantity || product?.stock_quantity || 1;
+  if (quantity < maxStock) {
+    setQuantity((prev) => prev + 1);
+  } else {
+    toast.info(`Chỉ còn ${maxStock} sản phẩm trong kho`, {
+      icon: <FaExclamationCircle color="white" />,
+    });
+  }
+};
 
   const handleDecrease = () => {
     if (quantity > 1) {
@@ -116,12 +121,19 @@ const handleAddToCart = async () => {
     toast.success("Sản phẩm đã được thêm vào giỏ hàng!", {
       icon: <FaCheckCircle color="green" />,
     });
-  } catch (error) {
-    console.error("Lỗi khi thêm vào giỏ hàng:", error);
-    toast.error("Có lỗi xảy ra khi thêm vào giỏ hàng!", {
-      icon: <FaExclamationCircle color="white" />,
-    });
-  }
+  }catch (error: any) {
+  console.error("Lỗi khi thêm vào giỏ hàng:", error);
+
+  const message =
+    error?.response?.data?.code === "EXCEED_STOCK_LIMIT"
+      ? "Sản phẩm trong giỏ hàng đã đạt số lượng tồn kho tối đa."
+      : "Có lỗi xảy ra khi thêm vào giỏ hàng!";
+
+  toast.error(message, {
+    icon: <FaExclamationCircle color="white" />,
+  });
+}
+
 };
 
   if (loading) return <p className="text-center py-10">Đang tải dữ liệu...</p>;
@@ -186,13 +198,15 @@ const handleAddToCart = async () => {
 
             <div className="text-sm text-gray-700 mb-2">Thương hiệu: {product.brand}</div>
 
-            {displayedVariant  && (
-              <div className="mt-4 text-sm text-gray-700">
-                <p><strong>Số lượng:</strong> {displayedVariant .stock_quantity}</p>
-                <p><strong>Mã SKU:</strong> {displayedVariant .sku}</p>
-                   <p><strong>Màu sắc:</strong> {displayedVariant .color}</p>
-              </div>
-            )}
+         {displayedVariant && (
+  <div className="mt-4 text-sm text-gray-700">
+    {displayedVariant.stock_quantity > 0 && (
+      <p><strong>Số lượng:</strong> {displayedVariant.stock_quantity}</p>
+    )}
+    <p><strong>Mã SKU:</strong> {displayedVariant.sku}</p>
+    <p><strong>Màu sắc:</strong> {displayedVariant.color}</p>
+  </div>
+)}
 
     <div className="flex gap-2 flex-wrap mt-1">
 {[...new Map(variants.map(v => [v.color, v])).values()]
@@ -228,26 +242,45 @@ const handleAddToCart = async () => {
 
 
             {/* Chọn size */}
-            {selectedColor && (
-              <div className="mb-4">
-                <span className="text-sm text-gray-700">Kích cỡ:</span>
-                <div className="flex gap-2 flex-wrap mt-1">
-                  {variants.filter(v => v.color === selectedColor).sort((a, b) => Number(a.size) - Number(b.size)).map((variant) => (
-                    <button
-                      key={variant._id}
-                      onClick={() => setSelectedVariant(variant)}
-                      className={`px-3 py-1 text-sm border rounded ${
-                        selectedVariant?._id === variant._id
-                          ? "bg-green-600 text-white border-green-600"
-                          : "bg-white text-gray-700 border-gray-300 hover:border-green-500"
-                      }`}
-                    >
-                      {variant.size}
-                    </button>
-                  ))}
-                </div>
-              </div>
-            )}
+      {selectedColor && (
+  <div className="mb-4">
+    <span className="text-sm text-gray-700">Kích cỡ:</span>
+    <div className="flex gap-2 flex-wrap mt-1">
+      {variants
+        .filter(v => v.color === selectedColor)
+        .sort((a, b) => Number(a.size) - Number(b.size))
+        .map((variant) => {
+          const isOutOfStock = variant.stock_quantity === 0;
+          const isSelected = selectedVariant?._id === variant._id;
+
+          return (
+            <button
+              key={variant._id}
+              onClick={() => {
+                if (!isOutOfStock) {
+                  setSelectedVariant(variant);
+                }
+              }}
+              disabled={isOutOfStock}
+              className={`px-3 py-1 text-sm border rounded relative transition
+                ${isOutOfStock
+                  ? "bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed"
+                  : isSelected
+                  ? "bg-green-600 text-white border-green-600"
+                  : "bg-white text-gray-700 border-gray-300 hover:border-green-500"
+                }`}
+            >
+              {variant.size}
+              {isOutOfStock && (
+                <span className="absolute left-1/2 top-1/2 w-4/5 h-0.5 bg-red-500 transform -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full pointer-events-none"></span>
+              )}
+            </button>
+          );
+        })}
+    </div>
+  </div>
+)}
+
 
             <p className="text-sm text-gray-500 mb-4 leading-relaxed">{product.description}</p>
 

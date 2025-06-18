@@ -1,11 +1,9 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FaExclamationCircle } from "react-icons/fa";
+import { FaExclamationCircle, FaTrash } from "react-icons/fa";
 import type { ICart, ICartItem } from "types/cart";
-import { getCart, removeFromCart, updateCartItem } from "services/cart/cart.service";
-import type { Product } from "types/product";
-import type { IProductVariant } from "types/productVariant";
+import { getCart , removeFromCart, updateCartItem } from "services/cart/cart.service";
 
 const Cart = () => {
   const [cart, setCart] = useState<ICart | null>(null);
@@ -24,7 +22,6 @@ const Cart = () => {
       try {
         setLoading(true);
         const response = await getCart();
-        console.log("Cart data:", response);
 
         const cartData: ICart = {
           items: response.data.products,
@@ -45,38 +42,70 @@ const Cart = () => {
     fetchCart();
   }, []);
 
-  const handleUpdateQuantity = async (item: ICartItem, newQuantity: number) => {
-    if (newQuantity < 1) return;
-    try {
-      const payload = {
-        product_id: typeof item.product === "string" ? item.product : item.product._id,
-        variant_id: item.variant ? (typeof item.variant === "string" ? item.variant : item.variant._id) : undefined,
-        quantity: newQuantity,
-      };
-      const updatedCart = await updateCartItem(payload);
-      setCart(updatedCart);
-    } catch (err) {
-      toast.error("Lỗi khi cập nhật số lượng!", {
-        icon: <FaExclamationCircle color="white" />,
-      });
-    }
-  };
+const handleUpdateQuantity = async (item: ICartItem, newQuantity: number) => {
+  if (newQuantity < 1) return;
 
-  const handleRemoveItem = async (item: ICartItem) => {
-    try {
-      const payload = {
-        product_id: typeof item.product === "string" ? item.product : item.product._id,
-        variant_id: item.variant ? (typeof item.variant === "string" ? item.variant : item.variant._id) : undefined,
-      };
-      const updatedCart = await removeFromCart(payload);
-      setCart(updatedCart);
-      toast.success("Đã xóa sản phẩm khỏi giỏ hàng!");
-    } catch (err) {
-      toast.error("Lỗi khi xóa sản phẩm!", {
-        icon: <FaExclamationCircle color="white" />,
-      });
-    }
-  };
+  const variant = item.variant && typeof item.variant !== "string" ? item.variant : null;
+  const maxStock = variant?.stock_quantity ?? Infinity;
+
+  if (newQuantity > maxStock) {
+    toast.warning(`Chỉ còn ${maxStock} sản phẩm trong kho!`);
+    return;
+  }
+
+  const productId = typeof item.product === "string" ? item.product : item.product._id;
+  const variantId = typeof item.variant === "string" ? item.variant : item.variant?._id;
+
+  try {
+    // Gọi API cập nhật
+    await updateCartItem({
+      product_id: productId,
+      variant_id: variantId,
+      quantity: newQuantity,
+    });
+
+    // Gọi lại giỏ hàng sau khi cập nhật
+    const response = await getCart();
+    const cartData: ICart = {
+      items: response.data.products,
+      totalPrice: response.data.totalPrice,
+    };
+    setCart(cartData);
+  } catch (err: any) {
+  console.error("Lỗi updateCartItem:", err?.response?.data || err.message);
+  toast.error("Không thể cập nhật số lượng sản phẩm!", {
+    icon: <FaExclamationCircle color="white" />,
+  });
+}
+};
+
+const handleRemoveItem = async (item: ICartItem) => {
+  try {
+    const productId = typeof item.product === "string" ? item.product : item.product._id;
+const variantId = typeof item.variant === "string"
+  ? item.variant
+  : item.variant?._id?.toString();
+
+    await removeFromCart({
+      product_id: productId,
+      variant_id: variantId,
+    });
+
+    // Cập nhật lại giỏ hàng sau khi xoá
+    const response = await getCart();
+    const cartData: ICart = {
+      items: response.data.products,
+      totalPrice: response.data.totalPrice,
+    };
+    setCart(cartData);
+
+    toast.success("Đã xoá sản phẩm khỏi giỏ hàng!");
+  } catch (err) {
+    toast.error("Lỗi khi xoá sản phẩm!", {
+      icon: <FaExclamationCircle color="white" />,
+    });
+  }
+};
 
   const calculateSummary = () => {
     const items = cart?.items;
@@ -95,7 +124,7 @@ const Cart = () => {
     return { totalItems, totalAmount };
   };
 
-  const deliveryCharges = 32410; // giá trị 32.41 USD chuyển sang VND giả định
+  const deliveryCharges = 32410;
   const { totalItems, totalAmount } = calculateSummary();
   const totalWithDelivery = totalAmount + deliveryCharges;
 
@@ -120,7 +149,6 @@ const Cart = () => {
       <h1 className="text-xs text-gray-500 mb-6">Cart</h1>
 
       <div className="flex flex-col lg:flex-row gap-8">
-        {/* Summary */}
         <aside className="w-full lg:w-1/4 bg-white border border-gray-200 rounded-md p-5 shadow-sm text-sm text-gray-700">
           <h2 className="font-semibold text-lg text-gray-900 mb-4">Summary</h2>
           <div className="space-y-2 border-b pb-3">
@@ -137,9 +165,11 @@ const Cart = () => {
             <span>Total</span>
             <span>{formatVND(totalWithDelivery)}</span>
           </div>
+          <div className="text-red-500 mt-3">
+            Coupon áp dụng tại trang thanh toán!
+          </div>
         </aside>
 
-        {/* Cart Table */}
         <section className="flex-1">
           <div className="overflow-x-auto">
             <table className="w-full text-sm text-gray-700 border border-gray-200 shadow-sm rounded-md overflow-hidden">
@@ -194,10 +224,11 @@ const Cart = () => {
                       <td className="p-3">{formatVND(price * item.quantity)}</td>
                       <td className="p-3 text-center">
                         <button
-                          onClick={() => handleRemoveItem(item)}
-                          className="text-red-500 hover:text-red-700 text-sm font-medium"
+onClick={() => handleRemoveItem(item)}
+                          className="text-red-500 hover:text-red-700 text-lg"
+                          title="Xoá toàn bộ sản phẩm khỏi giỏ"
                         >
-                          Remove
+                          <FaTrash />
                         </button>
                       </td>
                     </tr>
@@ -213,11 +244,6 @@ const Cart = () => {
           </div>
         </section>
       </div>
-
-      {/* (Optional) Product Suggestion Section */}
-      <section aria-label="Product cards" className="mt-16 grid grid-cols-2 sm:grid-cols-3 md:grid-cols-5 gap-6">
-        {/* Gợi ý sản phẩm ở đây nếu cần */}
-      </section>
     </div>
   );
 };
