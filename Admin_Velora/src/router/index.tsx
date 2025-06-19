@@ -11,12 +11,17 @@ import CategoryEdit from "pages/Category/CategoryEdit";
 import CategoryDelete from "pages/Category/CategoryDelete";
 import CategoryInProduct from "pages/Category/CategoryInProduct";
 import CategoryAdd from "pages/Category/CategoryAdd";
+import AdminLogin from "pages/Login/Login";
 
 export const router = createBrowserRouter([
     {
     path: "/",
     element: <Navigate to="/admin" replace />, 
   },
+    {
+        path: "admin-login",
+        element: <AdminLogin />,
+      },
     {
         path: "/admin",
         element: <AdminLayout />,
