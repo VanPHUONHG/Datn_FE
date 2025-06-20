@@ -1,4 +1,4 @@
-import { Popconfirm } from "antd";
+import { message, Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import { deleteProductById, getAllProducts } from "services/product/product.service";
@@ -32,6 +32,8 @@ const ProductList = () => {
       await deleteProductById(id);
       const newProduct = products.filter((item) => item._id != id);
       setProduct(newProduct);
+       message.success("Xóa mềm sản phẩm thành công");
+
     } catch (error) {
       console.log(error);
     }
@@ -59,7 +61,6 @@ const ProductList = () => {
                 "Tên sản phẩm",
                 "Ảnh sản phẩm",
                 "Giá (VNĐ)",
-                "Số lượng",
                 "Danh mục",
                 "Ngày cập nhật",
                 "Thao tác",
@@ -109,11 +110,9 @@ const ProductList = () => {
                   <td className="border px-4 py-2 align-middle">
                     {item.price.toLocaleString()}
                   </td>
+      
                   <td className="border px-4 py-2 align-middle">
-                    {item.stock_quantity}
-                  </td>
-                  <td className="border px-4 py-2 align-middle">
-                    {(item.category_id as { name?: string })?.name || "Không có"}
+                    {item.category?.name || "Không có"}
                   </td>
                   <td className="border px-4 py-2 align-middle text-gray-600 text-sm">
                     {new Date(item.createdAt).toLocaleDateString()}
@@ -148,20 +147,79 @@ const ProductList = () => {
         </table>
       </div>
 
-      <div className="mt-4 flex justify-center gap-2">
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i}
-            className={`px-3 py-1 rounded border ${page === i + 1
-                ? "bg-blue-600 text-white border-blue-600"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-              }`}
-            onClick={() => setPage(i + 1)}
-          >
-            {i + 1}
-          </button>
-        ))}
-      </div>
+      <div className="mt-6 flex justify-center items-center gap-2 text-sm select-none">
+  {/* Nút về trang đầu tiên */}
+  <button
+    disabled={page === 1}
+    onClick={() => setPage(1)}
+    className={`px-3 py-1 rounded-lg border transition font-medium
+      ${page === 1
+        ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+      }`}
+    title="Trang đầu"
+  >
+    «
+  </button>
+
+  {/* Nút về trang trước */}
+  <button
+    disabled={page === 1}
+    onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+    className={`px-3 py-1 rounded-lg border transition font-medium
+      ${page === 1
+        ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+      }`}
+    title="Trang trước"
+  >
+    ‹
+  </button>
+
+  {/* Các số trang */}
+  {Array.from({ length: totalPages }, (_, i) => (
+    <button
+      key={i}
+      onClick={() => setPage(i + 1)}
+      className={`px-3 py-1 rounded-lg border transition font-semibold
+        ${page === i + 1
+          ? "bg-blue-600 text-white border-blue-600"
+          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+        }`}
+    >
+      {i + 1}
+    </button>
+  ))}
+
+  {/* Nút sang trang sau */}
+  <button
+    disabled={page === totalPages}
+    onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
+    className={`px-3 py-1 rounded-lg border transition font-medium
+      ${page === totalPages
+        ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+      }`}
+    title="Trang sau"
+  >
+    ›
+  </button>
+
+  {/* Nút về trang cuối */}
+  <button
+    disabled={page === totalPages}
+    onClick={() => setPage(totalPages)}
+    className={`px-3 py-1 rounded-lg border transition font-medium
+      ${page === totalPages
+        ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+      }`}
+    title="Trang cuối"
+  >
+    »
+  </button>
+</div>
+
     </div>
   );
 };

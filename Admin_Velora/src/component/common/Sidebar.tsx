@@ -1,4 +1,4 @@
-import { MailOutlined, AppstoreOutlined, SettingOutlined, UserOutlined, FolderOutlined } from '@ant-design/icons';
+import { MailOutlined, AppstoreOutlined, SettingOutlined, UserOutlined, FolderOutlined, AppstoreAddOutlined } from '@ant-design/icons';
 import { Menu } from 'antd';
 import type { MenuProps } from 'antd';
 
@@ -21,6 +21,15 @@ const AdminSidebar = () => {
       children: [
         { key: 'productlist', label: 'Danh sách sản phẩm' },
         { key: 'addproduct', label: 'Thêm mới sản phẩm' },
+      ],
+    },
+      {
+      key: 'sub6',
+      label: 'Quản lý biến thể',
+      icon: <AppstoreAddOutlined  />,
+      children: [
+        { key: 'variantlist', label: 'Danh sách biến thể' },
+        { key: 'addvariant', label: 'Thêm mới biến thể' },
       ],
     },
     {
@@ -60,7 +69,12 @@ const AdminSidebar = () => {
         case "productlist":
           navigate("/admin/product-list") 
           break;
-
+        case "variantlist":
+          navigate("/admin/variant-list")
+          break;
+          case "addvariant":
+          navigate("/admin/variant-add")
+          break;
         case "categorylist":
           navigate("/admin/category-list")
           break;

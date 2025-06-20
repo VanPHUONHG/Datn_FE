@@ -13,6 +13,10 @@ import CategoryInProduct from "pages/Category/CategoryInProduct";
 import CategoryAdd from "pages/Category/CategoryAdd";
 
 import AdminLogin from "pages/Login/Login";
+import VariantDelete from "pages/Variant/VariantDelete";
+import VariantList from "pages/Variant/VariantList";
+import VariantAdd from "pages/Variant/VariantAdd";
+import VariantEdit from "pages/Variant/VariantEdit";
 
 export const router = createBrowserRouter([
   {
@@ -66,6 +70,26 @@ export const router = createBrowserRouter([
       {
         path: "category-delete",
         element: <CategoryDelete />,
+      },
+
+       {
+        path: "variant-delete",
+        element: <VariantDelete />,
+      },
+
+       {
+        path: "variant-list",
+        element: <VariantList />,
+      },
+
+       {
+        path: "variant-add",
+        element: <VariantAdd />,
+      },
+
+       {
+        path: "variant-edit/:id",
+        element: <VariantEdit />,
       },
       // {
       //   path: "user-list",

@@ -128,20 +128,79 @@ const CategoryList = () => {
         </table>
       </div>
 
-      <div className="mt-4 flex justify-center gap-2">
-        {Array.from({ length: totalPages }, (_, i) => (
-          <button
-            key={i}
-            className={`px-3 py-1 rounded border ${page === i + 1
-                ? "bg-blue-600 text-white border-blue-600"
-                : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
-              }`}
-            onClick={() => setPage(i + 1)}
-          >
-            {i + 1}
-          </button>
-        ))}
-      </div>
+  <div className="mt-6 flex justify-center items-center gap-2 text-sm select-none">
+  {/* Nút về trang đầu tiên */}
+  <button
+    disabled={page === 1}
+    onClick={() => setPage(1)}
+    className={`px-3 py-1 rounded-lg border transition font-medium
+      ${page === 1
+        ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+      }`}
+    title="Trang đầu"
+  >
+    «
+  </button>
+
+  {/* Nút về trang trước */}
+  <button
+    disabled={page === 1}
+    onClick={() => setPage(prev => Math.max(prev - 1, 1))}
+    className={`px-3 py-1 rounded-lg border transition font-medium
+      ${page === 1
+        ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+      }`}
+    title="Trang trước"
+  >
+    ‹
+  </button>
+
+  {/* Các số trang */}
+  {Array.from({ length: totalPages }, (_, i) => (
+    <button
+      key={i}
+      onClick={() => setPage(i + 1)}
+      className={`px-3 py-1 rounded-lg border transition font-semibold
+        ${page === i + 1
+          ? "bg-blue-600 text-white border-blue-600"
+          : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+        }`}
+    >
+      {i + 1}
+    </button>
+  ))}
+
+  {/* Nút sang trang sau */}
+  <button
+    disabled={page === totalPages}
+    onClick={() => setPage(prev => Math.min(prev + 1, totalPages))}
+    className={`px-3 py-1 rounded-lg border transition font-medium
+      ${page === totalPages
+        ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+      }`}
+    title="Trang sau"
+  >
+    ›
+  </button>
+
+  {/* Nút về trang cuối */}
+  <button
+    disabled={page === totalPages}
+    onClick={() => setPage(totalPages)}
+    className={`px-3 py-1 rounded-lg border transition font-medium
+      ${page === totalPages
+        ? "bg-gray-100 text-gray-400 border-gray-200 cursor-not-allowed"
+        : "bg-white text-gray-700 border-gray-300 hover:bg-gray-100"
+      }`}
+    title="Trang cuối"
+  >
+    »
+  </button>
+</div>
+
     </div>
   );
 };

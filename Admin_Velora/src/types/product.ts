@@ -1,7 +1,10 @@
 export interface Product {
   _id: string;
-  category_id: string;           
-  name: string;
+  category?: {
+    _id: string;
+    name: string;
+  }; 
+ name: string;
   origin?: string;              
   description?: string;           
   images: string[];             
@@ -11,5 +14,6 @@ export interface Product {
   variation_status: boolean;
   isDeleted: boolean;
   createdAt: string;           
-  updatedAt: string;              
+  updatedAt: string;
+  deletedAt?: string;
 }

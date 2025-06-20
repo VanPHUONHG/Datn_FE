@@ -100,13 +100,7 @@ const productData: Partial<Product> = {
           {errors.discount_price && <p className="text-red-500 text-sm">Giá khuyến mãi phải nhỏ hơn giá gốc</p>}
         </div>
 
-        <div>
-          <label className="block font-semibold mb-1">Số lượng tồn kho</label>
-          <input {...register("stock_quantity", { required: true, valueAsNumber: true , min:0 })}type="number"className="w-full border rounded p-2 focus:outline-none focus:ring"placeholder="10"
-          />
-          {errors.stock_quantity && <p className="text-red-500 text-sm">Số lượng tồn kho ko âm</p>}
-        </div>
-
+      
       
         <div>
           <label className="block font-semibold mb-1">Xuất xứ</label>
