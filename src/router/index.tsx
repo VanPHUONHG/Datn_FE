@@ -1,7 +1,6 @@
 import { createBrowserRouter } from "react-router-dom";
 import MainLayout from "components/layout/MainLayout";
 import Home from "pages/Home";
-import About from "pages/About/About";
 import Cart from "pages/Cart/Cart";
 import Checkout from "pages/Checkout/Checkout";
 import Wishlist from "pages/Wishlist/Wishlist";
@@ -23,10 +22,6 @@ export const router = createBrowserRouter([
       {
         index: true,
         element: <Home />,
-      },
-      {
-        path: "about",
-        element: <About />,
       },
       {
         path: "/product/:id",

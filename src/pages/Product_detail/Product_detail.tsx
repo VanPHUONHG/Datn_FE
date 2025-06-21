@@ -8,6 +8,8 @@ import { getAllVariantsByProductId } from "services/productVariant/productVarian
 import { toast } from "react-toastify";
 import { FaCheckCircle, FaExclamationCircle } from "react-icons/fa";
 import { addToCart, type CartPayload } from "services/cart/cart.service";
+import type { IUser } from "types/user";
+import type { ICartItem } from "types/cart";
 
 const ProductDetail = () => {
   const { id } = useParams();
@@ -21,20 +23,20 @@ const ProductDetail = () => {
   const [currentImage, setCurrentImage] = useState<string>("");
   const [quantity, setQuantity] = useState<number>(1);
   const [loading, setLoading] = useState<boolean>(true);
-const [variantImages, setVariantImages] = useState<string[]>([]);
-const [previewVariant, setPreviewVariant] = useState<IProductVariant | null>(null);
-const displayedVariant = selectedVariant || previewVariant;
+  const [variantImages, setVariantImages] = useState<string[]>([]);
+  const [previewVariant, setPreviewVariant] = useState<IProductVariant | null>(null);
+  const displayedVariant = selectedVariant || previewVariant;
 
   useEffect(() => {
     const fetchProductDetail = async () => {
       try {
         setLoading(true);
         // ✅ Reset các state liên quan đến sản phẩm cũ
-      setSelectedVariant(null);
-      setSelectedColor("");
-      setVariantImages([]);
-      setQuantity(1);
-setPreviewVariant(null);
+        setSelectedVariant(null);
+        setSelectedColor("");
+        setVariantImages([]);
+        setQuantity(1);
+        setPreviewVariant(null);
         const res = await axios.get(`http://localhost:8888/api/products/${id}`);
         setProduct(res.data);
         setCurrentImage(res.data.images?.[0] || "");
@@ -73,16 +75,16 @@ setPreviewVariant(null);
     fetchRelatedProducts();
   }, []);
 
-const handleIncrease = () => {
-  const maxStock = selectedVariant?.stock_quantity || product?.stock_quantity || 1;
-  if (quantity < maxStock) {
-    setQuantity((prev) => prev + 1);
-  } else {
-    toast.info(`Chỉ còn ${maxStock} sản phẩm trong kho`, {
-      icon: <FaExclamationCircle color="white" />,
-    });
-  }
-};
+  const handleIncrease = () => {
+    const maxStock = selectedVariant?.stock_quantity || product?.stock_quantity || 1;
+    if (quantity < maxStock) {
+      setQuantity((prev) => prev + 1);
+    } else {
+      toast.info(`Chỉ còn ${maxStock} sản phẩm trong kho`, {
+        icon: <FaExclamationCircle color="white" />,
+      });
+    }
+  };
 
   const handleDecrease = () => {
     if (quantity > 1) {
@@ -90,51 +92,51 @@ const handleIncrease = () => {
     }
   };
 
-const handleAddToCart = async () => {
-  if (!selectedVariant) {
-    toast.error("Vui lòng chọn size trước khi thêm vào giỏ hàng!", {
-      icon: <FaExclamationCircle color="white" />,
-    });
-    return;
-  }
+  const handleAddToCart = async () => {
+    if (!selectedVariant) {
+      toast.error("Vui lòng chọn size trước khi thêm vào giỏ hàng!", {
+        icon: <FaExclamationCircle color="white" />,
+      });
+      return;
+    }
 
-  const token = localStorage.getItem("token");
-  const user = localStorage.getItem("user");
+    const token = localStorage.getItem("token");
+    const user = localStorage.getItem("user");
 
-  if (!token || !user) {
-    toast.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!", {
-      icon: <FaExclamationCircle color="white" />,
-    });
-    setTimeout(() => navigate("/login"), 3000);
-    return;
-  }
+    if (!token || !user) {
+      toast.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!", {
+        icon: <FaExclamationCircle color="white" />,
+      });
+      setTimeout(() => navigate("/login"), 3000);
+      return;
+    }
 
-  try {
-    const payload: CartPayload = {
-      product_id: product!._id,
-      variant_id: selectedVariant._id,
-      quantity,
-    };
+    try {
+      const payload: CartPayload = {
+        product_id: product!._id,
+        variant_id: selectedVariant._id,
+        quantity,
+      };
 
-    await addToCart(payload); 
+      await addToCart(payload);
 
-    toast.success("Sản phẩm đã được thêm vào giỏ hàng!", {
-      icon: <FaCheckCircle color="green" />,
-    });
-  }catch (error: any) {
-  console.error("Lỗi khi thêm vào giỏ hàng:", error);
+      toast.success("Sản phẩm đã được thêm vào giỏ hàng!", {
+        icon: <FaCheckCircle color="green" />,
+      });
+    } catch (error: any) {
+      console.error("Lỗi khi thêm vào giỏ hàng:", error);
 
-  const message =
-    error?.response?.data?.code === "EXCEED_STOCK_LIMIT"
-      ? "Sản phẩm trong giỏ hàng đã đạt số lượng tồn kho tối đa."
-      : "Có lỗi xảy ra khi thêm vào giỏ hàng!";
+      const message =
+        error?.response?.data?.code === "EXCEED_STOCK_LIMIT"
+          ? "Sản phẩm trong giỏ hàng đã đạt số lượng tồn kho tối đa."
+          : "Có lỗi xảy ra khi thêm vào giỏ hàng!";
 
-  toast.error(message, {
-    icon: <FaExclamationCircle color="white" />,
-  });
-}
+      toast.error(message, {
+        icon: <FaExclamationCircle color="white" />,
+      });
+    }
 
-};
+  };
 
   if (loading) return <p className="text-center py-10">Đang tải dữ liệu...</p>;
   if (!product) return <p className="text-center py-10">Không tìm thấy sản phẩm</p>;
@@ -149,22 +151,21 @@ const handleAddToCart = async () => {
             <div className="w-full h-[400px] flex items-center justify-center bg-white rounded-lg mb-4 shadow-inner">
               <img src={currentImage} alt={product.name} className="max-h-full object-contain" />
             </div>
-          {variantImages.length > 1 && (
-  <div className="flex gap-4 justify-center mt-4">
-    {variantImages.map((img, idx) => (
+            {variantImages.length > 1 && (
+              <div className="flex gap-4 justify-center mt-4">
+                {variantImages.map((img, idx) => (
 
-      <button
-        key={idx}
-        onClick={() => setCurrentImage(img)}
-        className={`w-20 h-20 p-1 rounded-md border flex items-center justify-center transition ${
-          currentImage === img ? "ring-2 ring-green-600" : "border-gray-300 hover:border-green-400"
-        }`}
-      >
-        <img src={img} alt={`Ảnh ${idx + 1}`} className="object-contain w-full h-full" />
-      </button>
-    ))}
-  </div>
-)}
+                  <button
+                    key={idx}
+                    onClick={() => setCurrentImage(img)}
+                    className={`w-20 h-20 p-1 rounded-md border flex items-center justify-center transition ${currentImage === img ? "ring-2 ring-green-600" : "border-gray-300 hover:border-green-400"
+                      }`}
+                  >
+                    <img src={img} alt={`Ảnh ${idx + 1}`} className="object-contain w-full h-full" />
+                  </button>
+                ))}
+              </div>
+            )}
 
           </div>
         </div>
@@ -174,23 +175,23 @@ const handleAddToCart = async () => {
           <div>
             <h1 className="text-2xl font-semibold text-gray-800 mb-2">{product.name}</h1>
 
-           <div className="flex items-center gap-4 mb-4 flex-wrap">
- <span className="text-3xl font-bold text-green-600">
-  {(displayedVariant?.discount_price ?? displayedVariant?.price ?? product.discount_price).toLocaleString()}₫
-</span>
+            <div className="flex items-center gap-4 mb-4 flex-wrap">
+              <span className="text-3xl font-bold text-green-600">
+                {(displayedVariant?.discount_price ?? displayedVariant?.price ?? product.discount_price).toLocaleString()}₫
+              </span>
 
-{(displayedVariant?.discount_price || product.discount_price) && (
-  <span className="text-base text-gray-400 line-through">
-    {(displayedVariant?.price ?? product.price).toLocaleString()}₫
-  </span>
-)}
+              {(displayedVariant?.discount_price || product.discount_price) && (
+                <span className="text-base text-gray-400 line-through">
+                  {(displayedVariant?.price ?? product.price).toLocaleString()}₫
+                </span>
+              )}
 
-{displayedVariant?.price && displayedVariant?.discount_price && (
-  <span className="text-sm text-red-600 font-medium">
-    -{Math.round(((displayedVariant.price - displayedVariant.discount_price) / displayedVariant.price) * 100)}%
-  </span>
-)}
-</div>
+              {displayedVariant?.price && displayedVariant?.discount_price && (
+                <span className="text-sm text-red-600 font-medium">
+                  -{Math.round(((displayedVariant.price - displayedVariant.discount_price) / displayedVariant.price) * 100)}%
+                </span>
+              )}
+            </div>
 
             {/* <div className="text-sm text-gray-700 mb-2">
               Tình trạng: <span className={product.stock_quantity > 0 ? "text-green-600" : "text-red-600"}>{product.stock_quantity > 0 ? "Còn hàng" : "Hết hàng"}</span>
@@ -198,88 +199,87 @@ const handleAddToCart = async () => {
 
             <div className="text-sm text-gray-700 mb-2">Thương hiệu: {product.brand}</div>
 
-         {displayedVariant && (
-  <div className="mt-4 text-sm text-gray-700">
-    {displayedVariant.stock_quantity > 0 && (
-      <p><strong>Số lượng:</strong> {displayedVariant.stock_quantity}</p>
-    )}
-    <p><strong>Mã SKU:</strong> {displayedVariant.sku}</p>
-    <p><strong>Màu sắc:</strong> {displayedVariant.color}</p>
-  </div>
-)}
+            {displayedVariant && (
+              <div className="mt-4 text-sm text-gray-700">
+                {displayedVariant.stock_quantity > 0 && (
+                  <p><strong>Số lượng:</strong> {displayedVariant.stock_quantity}</p>
+                )}
+                <p><strong>Mã SKU:</strong> {displayedVariant.sku}</p>
+                <p><strong>Màu sắc:</strong> {displayedVariant.color}</p>
+              </div>
+            )}
 
-    <div className="flex gap-2 flex-wrap mt-1">
-{[...new Map(variants.map(v => [v.color, v])).values()]
-  .filter(variant => !!variant.image) 
-  .map((variant) => (
-    <button
-      key={variant._id || `${variant.color}-${variant.image}`}
-      onClick={() => {
-        const sameColorVariants = variants.filter(v => v.color === variant.color);
-        const allImages = sameColorVariants.flatMap(v => v.images?.length ? v.images : [v.image]);
-        const uniqueImages = Array.from(new Set(allImages.filter(img => !!img)));
-        setVariantImages(uniqueImages);
-        setSelectedColor(variant.color);
-        setCurrentImage(uniqueImages[0]);
+            <div className="flex gap-2 flex-wrap mt-1">
+              {[...new Map(variants.map(v => [v.color, v])).values()]
+                .filter(variant => !!variant.image)
+                .map((variant) => (
+                  <button
+                    key={variant._id || `${variant.color}-${variant.image}`}
+                    onClick={() => {
+                      const sameColorVariants = variants.filter(v => v.color === variant.color);
+                      const allImages = sameColorVariants.flatMap(v => v.images?.length ? v.images : [v.image]);
+                      const uniqueImages = Array.from(new Set(allImages.filter(img => !!img)));
+                      setVariantImages(uniqueImages);
+                      setSelectedColor(variant.color);
+                      setCurrentImage(uniqueImages[0]);
 
-         setPreviewVariant(sameColorVariants[0]);
+                      setPreviewVariant(sameColorVariants[0]);
 
-    setSelectedVariant(null);
+                      setSelectedVariant(null);
 
-      }}
-      className={`border rounded p-1 ${
-        selectedVariant?.color === variant.color
-          ? "border-green-600"
-          : "border-gray-300 hover:border-green-400"
-      }`}
-    >
-      <img src={variant.image} alt={variant.color} className="w-10 h-10 object-cover rounded" />
-    </button>
-))}
+                    }}
+                    className={`border rounded p-1 ${selectedVariant?.color === variant.color
+                      ? "border-green-600"
+                      : "border-gray-300 hover:border-green-400"
+                      }`}
+                  >
+                    <img src={variant.image} alt={variant.color} className="w-10 h-10 object-cover rounded" />
+                  </button>
+                ))}
 
-</div>
+            </div>
 
 
 
             {/* Chọn size */}
-      {selectedColor && (
-  <div className="mb-4">
-    <span className="text-sm text-gray-700">Kích cỡ:</span>
-    <div className="flex gap-2 flex-wrap mt-1">
-      {variants
-        .filter(v => v.color === selectedColor)
-        .sort((a, b) => Number(a.size) - Number(b.size))
-        .map((variant) => {
-          const isOutOfStock = variant.stock_quantity === 0;
-          const isSelected = selectedVariant?._id === variant._id;
+            {selectedColor && (
+              <div className="mb-4">
+                <span className="text-sm text-gray-700">Kích cỡ:</span>
+                <div className="flex gap-2 flex-wrap mt-1">
+                  {variants
+                    .filter(v => v.color === selectedColor)
+                    .sort((a, b) => Number(a.size) - Number(b.size))
+                    .map((variant) => {
+                      const isOutOfStock = variant.stock_quantity === 0;
+                      const isSelected = selectedVariant?._id === variant._id;
 
-          return (
-            <button
-              key={variant._id}
-              onClick={() => {
-                if (!isOutOfStock) {
-                  setSelectedVariant(variant);
-                }
-              }}
-              disabled={isOutOfStock}
-              className={`px-3 py-1 text-sm border rounded relative transition
+                      return (
+                        <button
+                          key={variant._id}
+                          onClick={() => {
+                            if (!isOutOfStock) {
+                              setSelectedVariant(variant);
+                            }
+                          }}
+                          disabled={isOutOfStock}
+                          className={`px-3 py-1 text-sm border rounded relative transition
                 ${isOutOfStock
-                  ? "bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed"
-                  : isSelected
-                  ? "bg-green-600 text-white border-green-600"
-                  : "bg-white text-gray-700 border-gray-300 hover:border-green-500"
-                }`}
-            >
-              {variant.size}
-              {isOutOfStock && (
-                <span className="absolute left-1/2 top-1/2 w-4/5 h-0.5 bg-red-500 transform -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full pointer-events-none"></span>
-              )}
-            </button>
-          );
-        })}
-    </div>
-  </div>
-)}
+                              ? "bg-gray-200 text-gray-400 border-gray-300 cursor-not-allowed"
+                              : isSelected
+                                ? "bg-green-600 text-white border-green-600"
+                                : "bg-white text-gray-700 border-gray-300 hover:border-green-500"
+                            }`}
+                        >
+                          {variant.size}
+                          {isOutOfStock && (
+                            <span className="absolute left-1/2 top-1/2 w-4/5 h-0.5 bg-red-500 transform -translate-x-1/2 -translate-y-1/2 rotate-45 rounded-full pointer-events-none"></span>
+                          )}
+                        </button>
+                      );
+                    })}
+                </div>
+              </div>
+            )}
 
 
             <p className="text-sm text-gray-500 mb-4 leading-relaxed">{product.description}</p>
@@ -295,7 +295,44 @@ const handleAddToCart = async () => {
               <span className="px-4 py-1 border rounded text-sm">{quantity}</span>
               <button onClick={handleIncrease} className="bg-gray-300 text-black px-3 py-1 rounded hover:bg-gray-400">+</button>
               <button onClick={handleAddToCart} className="bg-green-500 text-white px-5 py-2 rounded hover:bg-green-700 text-sm">Thêm vào giỏ</button>
-              <button className="bg-green-500 text-white px-5 py-2 rounded hover:bg-green-700 text-sm">Mua ngay</button>
+              <button
+                onClick={() => {
+                  if (!selectedVariant) {
+                    toast.warning("Vui lòng chọn size trước khi mua!");
+                    return;
+                  }
+                  const token = localStorage.getItem("token");
+                  const user = localStorage.getItem("user");
+
+                  if (!token || !user) {
+                    toast.error("Vui lòng đăng nhập để mua sản phẩm!", {
+                      icon: <FaExclamationCircle color="white" />,
+                    });
+                    setTimeout(() => navigate("/login"), 3000);
+                    return;
+                  }
+
+
+                  const userString = localStorage.getItem("user");
+                  const userData: IUser | null = userString ? JSON.parse(userString) : null;
+
+                  const selectedItem: ICartItem = {
+                    product: product!,
+                    variant: selectedVariant,
+                    quantity,
+                  };
+
+                  navigate("/checkout", {
+                    state: {
+                      selectedItems: [selectedItem],
+                      user: userData,
+                    },
+                  });
+                }}
+                className="bg-green-500 text-white px-5 py-2 rounded hover:bg-green-700 text-sm"
+              >
+                Mua ngay
+              </button>
             </div>
           </div>
         </div>
