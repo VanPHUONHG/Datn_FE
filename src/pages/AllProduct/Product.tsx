@@ -131,6 +131,54 @@ function AllProducts() {
       )}
     </div>
 
+
+    <div>
+      <h3
+        className="font-semibold mb-2 cursor-pointer flex justify-between items-center"
+        onClick={() => setShowColorFilter(!showColorFilter)}
+      >
+        Màu sắc
+        <span>{showColorFilter ? '▲' : '▼'}</span>
+      </h3>
+      {showColorFilter && (
+        <div className="space-y-2 pl-1">
+          {COLORS.map((color) => (
+            <label key={color.value} className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={selectedColor === color.value}
+                onChange={() => handleToggle(selectedColor, color.value, setSelectedColor)}
+              />
+              {color.label}
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
+
+    <div>
+      <h3
+        className="font-semibold mb-2 cursor-pointer flex justify-between items-center"
+        onClick={() => setShowBrandFilter(!showBrandFilter)}
+      >
+        Thương hiệu
+        <span>{showBrandFilter ? '▲' : '▼'}</span>
+      </h3>
+      {showBrandFilter && (
+        <div className="space-y-2 pl-1">
+          {['Nike', 'Adidas', 'Puma', 'Converse'].map((brand) => (
+            <label key={brand} className="flex items-center gap-2 text-sm">
+              <input
+                type="checkbox"
+                checked={selectedBrand === brand}
+                onChange={() => handleToggle(selectedBrand, brand, setSelectedBrand)}
+              />
+              {brand}
+            </label>
+          ))}
+        </div>
+      )}
+    </div>
   </div>
 
     {/* list sản phẩm */}
