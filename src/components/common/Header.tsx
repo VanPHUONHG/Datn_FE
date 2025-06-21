@@ -14,7 +14,7 @@ const Header = () => {
   const [user, setUser] = useState<any>(null);
   const navigate = useNavigate();
 
- const handleClickCart = () => {
+  const handleClickCart = () => {
     const token = localStorage.getItem("token");
     const user = localStorage.getItem("user");
 
@@ -22,9 +22,9 @@ const Header = () => {
       toast.error("Vui lòng đăng nhập để xem sản phẩm giỏ hàng!", {
         icon: <FaExclamationCircle color="white" />,
       });
-     setTimeout(() => {
-      navigate("/login");
-    }, 0); 
+      setTimeout(() => {
+        navigate("/login");
+      }, 0);
 
 
 
@@ -95,7 +95,7 @@ const Header = () => {
   }, []);
 
   return (
-    <div className="bg-[#FFFFFF] font-sans text-gray-700 text-sm">
+    <div className="bg-gradient-to-r from-green-50 via-white to-green-50 border-b border-gray-100 text-xs text-gray-600">
       {/* Top Bar */}
       <div className="bg-[#f8f8fb] border-b border-gray-100 text-xs text-gray-500">
         <div className="max-w-7xl mx-auto flex justify-between items-center h-8 px-4">
@@ -133,7 +133,7 @@ const Header = () => {
         </div>
 
         {/* Search Bar */}
-        <div className="flex-1 flex justify-center">
+        <div className="flex-1 flex justify-center ml-30">
           <div className="relative w-[500px]">
             <input
               type="text"
@@ -187,18 +187,18 @@ const Header = () => {
           </div>
 
           {/* Cart */}
-                          <Link to="/cart" className="text-xs block hover:underline">
+          <Link to="/cart" className="text-xs block hover:underline">
 
-          <div className="flex items-center gap-2 hover:text-gray-900 cursor-pointer" onClick={handleClickCart}>
-            <i className="fas fa-shopping-bag text-2xl text-gray-800"></i>
-            
-                  <div>
-              <div className="text-xs">3-ITEMS</div>
-              <div className="text-xs font-medium">Cart</div>
+            <div className="flex items-center gap-2 hover:text-gray-900 cursor-pointer" onClick={handleClickCart}>
+              <i className="fas fa-shopping-bag text-2xl text-gray-800"></i>
+
+              <div>
+                <div className="text-xs">3-ITEMS</div>
+                <div className="text-xs font-medium">Cart</div>
+              </div>
+
             </div>
-          
-          </div>
-                          </Link>
+          </Link>
 
         </div>
       </div>
@@ -227,18 +227,18 @@ const Header = () => {
                     {categories.length === 0 ? (
                       <li className="p-2 text-gray-500">No categories found</li>
                     ) : (
-                      categories 
-                      .filter((cat) => cat.name !== 'Danh mục mặc định')
-                      .map((cat) => (
-                        <Link
-                          key={cat._id}
-                          to={`/categories/${cat._id}`}
-                          className="block px-4 py-2 hover:bg-green-100 text-gray-700"
-                          onClick={handleCategoryClick}
-                        >
-                          {cat.name}
-                        </Link>
-                      ))
+                      categories
+                        .filter((cat) => cat.name !== 'Danh mục mặc định')
+                        .map((cat) => (
+                          <Link
+                            key={cat._id}
+                            to={`/categories/${cat._id}`}
+                            className="block px-4 py-2 hover:bg-green-100 text-gray-700"
+                            onClick={handleCategoryClick}
+                          >
+                            {cat.name}
+                          </Link>
+                        ))
                     )}
                   </ul>
                 )}

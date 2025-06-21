@@ -2,7 +2,7 @@
 
 const Footer = () => {
   return (
-    <footer className="w-full bg-white text-gray-600">
+    <footer className="w-full bg-gradient-to-r from-green-100 via-white to-green-100 text-gray-700 border-t border-gray-200 mt-10 py-6">
       <div className="max-w-7xl mx-auto px-6 py-12 flex flex-col md:flex-row md:justify-between md:items-start gap-10 md:gap-0">
         {/* Logo & Description */}
         <div className="flex flex-col items-center md:items-start md:w-1/4 space-y-4">

@@ -6,13 +6,13 @@ import { Outlet } from 'react-router-dom';
 const MainLayout = () => {
   return (
     <div>
-     <Header />
-      <main>
+      <Header />
+      <main className='mt-10'>
         <Outlet />
       </main>
 
-    <Footer />
-    
+      <Footer />
+
     </div>
   );
 };

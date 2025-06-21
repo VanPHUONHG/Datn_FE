@@ -1,110 +1,175 @@
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import type { ICartItem } from "types/cart";
+import type { IUser } from "types/user";
+
 function Checkout() {
+    const location = useLocation();
+
+    const selectedItems: ICartItem[] = location.state?.selectedItems || [];
+    const passedUser: IUser | null = location.state?.user || null;
+
+    const [userForm, setUserForm] = useState<IUser | null>(null);
+    const [loading, setLoading] = useState(true);
+
+    const deliveryCharges = 32400;
+
+    // ✅ Lấy user từ location.state thay vì gọi lại API
+    useEffect(() => {
+        if (passedUser) {
+            setUserForm(passedUser);
+        }
+        setLoading(false);
+    }, [passedUser]);
+
+    const formatVND = (value: number) =>
+        new Intl.NumberFormat("vi-VN", {
+            style: "currency",
+            currency: "VND",
+        }).format(value);
+
+    const calculatePrice = (item: ICartItem) => {
+        const variant = item.variant && typeof item.variant !== "string" ? item.variant : null;
+        const discountPrice = variant?.discount_price;
+        const originalPrice = variant?.price || 0;
+        const price = discountPrice && discountPrice < originalPrice ? discountPrice : originalPrice;
+        return { price, originalPrice };
+    };
+
+    const totalAmount = selectedItems.reduce((sum, item) => {
+        const { price } = calculatePrice(item);
+        return sum + price * item.quantity;
+    }, 0);
+
+    if (loading) return <p>Đang tải...</p>;
+    if (selectedItems.length === 0) return <p>Không có sản phẩm nào được chọn.</p>;
     return (
         <div>
             <div className="max-w-6xl mx-auto space-y-6">
                 <div className="flex flex-col lg:flex-row bg-[#f8f9ff] rounded-md p-6">
-                    {/* Left side: Payment summary */}
-                    <div className="lg:w-1/2 space-y-4">
-                        <div>
-                            <h2 className="text-sm font-normal text-gray-700 mb-3">
-                                Phiếu thanh toán
-                            </h2>
-                            <div className="text-xs text-gray-600 space-y-1">
-                                <div className="flex justify-between">
-                                    <span>
-                                        Tổng phụ
-                                    </span>
-                                    <span>
-                                        $182.00
-                                    </span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span>
-                                        Phí giao hàng
-                                    </span>
-                                    <span>
-                                        $32.40
-                                    </span>
-                                </div>
-                                <div className="flex justify-between">
-                                    <span>
-                                        Phiếu giảm giá
-                                    </span>
-                                    <span className="text-[#3cb371] italic cursor-pointer">
-                                        Apply Discount
-                                    </span>
-                                </div>
+                    <div className="max-w-7xl mx-auto px-4 py-8">
+                        <div className="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                            {/* Danh sách sản phẩm */}
+                            <div className="space-y-6">
+                                <h2 className="text-lg font-semibold text-gray-800">Đơn hàng của bạn</h2>
+                                {selectedItems.map((item, index) => {
+                                    const product = typeof item.product === "string" ? null : item.product;
+                                    const variant = typeof item.variant === "string" ? null : item.variant;
+                                    const { price, originalPrice } = calculatePrice(item);
+                                    const image = variant?.image || product?.images?.[0] || "/no-image.png";
+                                    const name = product?.name || "Sản phẩm";
+                                    const color = variant?.color || "Không rõ";
+                                    const size = variant?.size || "Không rõ";
+
+                                    return (
+                                        <div key={index} className="flex gap-4 bg-white p-4 rounded-xl border shadow-sm hover:shadow-md">
+                                            <img src={image} alt={name} className="w-20 h-20 object-cover rounded-lg border" />
+                                            <div className="flex-1 text-sm">
+                                                <h3 className="font-medium text-gray-900">{name}</h3>
+                                                <p className="text-xs text-gray-500">Màu: {color} | Size: {size}</p>
+                                                <p className="text-xs text-gray-500">Số lượng: {item.quantity}</p>
+                                                <div className="flex gap-2 pt-1">
+                                                    {price < originalPrice && (
+                                                        <span className="line-through text-xs text-gray-400">{formatVND(originalPrice)}</span>
+                                                    )}
+                                                    <span className="text-sm font-semibold text-gray-900">{formatVND(price)}</span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    );
+                                })}
                             </div>
-                            <div className="mt-4 flex justify-between font-semibold text-gray-900 text-sm">
-                                <span>
-                                    Tổng số tiền
-                                </span>
-                                <span>
-                                    $194.40
-                                </span>
-                            </div>
-                        </div>
-                        {/* Products list */}
-                        <div className="space-y-4 mt-4">
-                            {/* Product 1 */}
-                            <div className="flex items-center space-x-3">
-                                <img alt="Black and white women's wallet hand purse shoes side view" className="w-12 h-12 object-contain" height={48} src="https://storage.googleapis.com/a1aa/image/e320ab34-cd94-4b7d-c3bd-fefefe9ba3c2.jpg" width={48} />
-                                <div className="text-xs text-gray-700">
-                                    <div>
-                                        Women's Wallet hand Purse
+
+                            {/* Phiếu thanh toán */}
+                            <div className="bg-white p-4 rounded-xl border border-gray-200 shadow-md space-y-6">
+                                <h2 className="text-lg font-semibold text-gray-800">Tóm tắt đơn hàng</h2>
+
+                                <div className="space-y-3 text-sm text-gray-700">
+                                    <div className="flex justify-between">
+                                        <span>Tạm tính</span>
+                                        <span>{formatVND(totalAmount)}</span>
                                     </div>
-                                    <div>
-                                        <span className="line-through text-gray-400">
-                                            $50.00
-                                        </span>
-                                        <span className="ml-1 font-semibold text-gray-900">
-                                            $70.00
-                                        </span>
+                                    <div className="flex justify-between">
+                                        <span>Phí vận chuyển</span>
+                                        <span>{formatVND(deliveryCharges)}</span>
+                                    </div>
+
+                                </div>
+
+                                <div className="border-t pt-4 flex justify-between font-bold text-gray-900 text-base">
+                                    <span>Tổng thanh toán</span>
+                                    <span>{formatVND(totalAmount + deliveryCharges)}</span>
+                                </div>
+
+                                <button className="w-full mt-2 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition text-sm font-semibold">
+                                    Thanh toán
+                                </button>-
+
+                                <div className="mt-6 space-y-2"> <span className="text-gray-500 text-sm">Thêm mã khuyến mãi:</span>
+                                    <div className="flex items-center gap-2 mt-2">
+                                        <input type="text" placeholder="Nhập mã" className="border rounded px-3 py-1 w-44 focus:outline-none focus:ring-2 focus:ring-green-500" />
+                                        <button className="bg-green-600 text-white text-[11px] px-2 py-1 rounded-sm hover:bg-green-700 transition">
+                                            Áp dụng
+                                        </button>
                                     </div>
                                 </div>
-                            </div>
-                            {/* Product 2 */}
-                            <div className="flex items-center space-x-3">
-                                <img alt="Blue rose gold earring jewelry side view" className="w-12 h-12 object-contain" height={48} src="https://storage.googleapis.com/a1aa/image/884c1ae5-7481-42dd-b08b-4642a084911b.jpg" width={48} />
-                                <div className="text-xs text-gray-700">
-                                    <div>
-                                        Rose Gold Earring
-                                    </div>
-                                    <div>
-                                        <span className="line-through text-gray-400">
-                                            $90.00
-                                        </span>
-                                        <span className="ml-1 font-semibold text-gray-900">
-                                            $80.00
-                                        </span>
-                                    </div>
-                                </div>
-                            </div>
-                            {/* Product 3 */}
-                            <div className="flex items-center space-x-3">
-                                <img alt="Blue sneakers shoes side view" className="w-12 h-12 object-contain" height={48} src="https://storage.googleapis.com/a1aa/image/fd1dd58c-14db-4dfb-f8ba-9d5f1509b92b.jpg" width={48} />
-                                <div className="text-xs text-gray-700">
-                                    <div>
-                                        <span className="text-yellow-500">
-                                            ★★★★★
-                                        </span>
-                                    </div>
-                                    <div>
-                                        <span className="line-through text-gray-400">
-                                            $10.00
-                                        </span>
-                                        <span className="ml-1 font-semibold text-gray-900">
-                                            $12.00
-                                        </span>
-                                    </div>
-                                </div>
+
+
                             </div>
                         </div>
                     </div>
-                    {/* Right side: Personal info placeholder */}
+
                     <div className="lg:w-1/2 flex justify-center items-center mt-6 lg:mt-0">
-                        <img alt="Placeholder block representing personal information form with lines and a box" className="rounded-lg" height={160} src="https://storage.googleapis.com/a1aa/image/ff53359c-bb89-41f9-deef-b4e06310bc02.jpg" width={320} />
+                        <div className="bg-white p-6 rounded-xl shadow-md w-full max-w-sm space-y-3 text-sm text-gray-700">
+                            <h2 className="text-lg font-semibold text-gray-800 mb-3">Thông tin người nhận</h2>
+
+                            {userForm ? (
+                                <>
+                                    <div>
+                                        <label className="font-medium block mb-1">Họ tên:</label>
+                                        <input
+                                            type="text"
+                                            value={userForm.full_name}
+                                            onChange={(e) =>
+                                                setUserForm({ ...userForm, full_name: e.target.value })
+                                            }
+                                            className="w-full border border-gray-300 rounded-md px-3 py-2"
+                                        />
+                                    </div>
+
+
+
+                                    <div>
+                                        <label className="font-medium block mb-1">SĐT:</label>
+                                        <input
+                                            type="tel"
+                                            value={userForm.phone}
+                                            onChange={(e) =>
+                                                setUserForm({ ...userForm, phone: e.target.value })
+                                            }
+                                            className="w-full border border-gray-300 rounded-md px-3 py-2"
+                                        />
+                                    </div>
+
+                                    <div>
+                                        <label className="font-medium block mb-1">Địa chỉ:</label>
+                                        <input
+                                            type="text"
+                                            value={userForm.address}
+                                            onChange={(e) =>
+                                                setUserForm({ ...userForm, address: e.target.value })
+                                            }
+                                            className="w-full border border-gray-300 rounded-md px-3 py-2"
+                                        />
+                                    </div>
+                                </>
+                            ) : (
+                                <p className="italic text-gray-400">Đang tải thông tin người dùng...</p>
+                            )}
+                        </div>
                     </div>
+
+
                 </div>
                 {/* Bottom left section */}
                 <div className="max-w-md space-y-4">
@@ -143,7 +208,7 @@ function Checkout() {
                     </div>
                 </div>
             </div>
-            
+
             <div className="max-w-7xl mx-auto px-4 py-10">
                 <div className="text-center mb-6">
                     <h2 className="text-gray-700 font-semibold text-lg">
