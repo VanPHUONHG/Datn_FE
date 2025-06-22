@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
+import { validateCouponForUser } from "services/coupon/coupon.service";
 import type { ICartItem } from "types/cart";
 import type { IUser } from "types/user";
 
@@ -12,7 +13,29 @@ function Checkout() {
     const [userForm, setUserForm] = useState<IUser | null>(null);
     const [loading, setLoading] = useState(true);
 
-    const deliveryCharges = 32400;
+    const [couponCode, setCouponCode] = useState("");
+    const [coupon, setCoupon] = useState<any>(null);
+    const [couponError, setCouponError] = useState<string | null>(null);
+
+    const deliveryCharges = 32000;
+
+    const handleApplyCoupon = async () => {
+        try {
+            setCouponError(null);
+            const result = await validateCouponForUser(couponCode.trim());
+            if (result.valid) {
+                setCoupon(result.data);
+            } else {
+                setCoupon(null);
+                setCouponError(result.message || "Mã không hợp lệ.");
+            }
+        } catch (error: any) {
+            const errMessage = error?.message || "Không thể áp dụng mã giảm giá.";
+            setCoupon(null);
+            setCouponError(errMessage);
+        }
+    };
+
 
     // ✅ Lấy user từ location.state thay vì gọi lại API
     useEffect(() => {
@@ -28,7 +51,7 @@ function Checkout() {
             currency: "VND",
         }).format(value);
 
-    const calculatePrice = (item: ICartItem) => {
+    const calculatePrice = (item: ICartItem) => {    //  Tính giá sản phẩm 
         const variant = item.variant && typeof item.variant !== "string" ? item.variant : null;
         const discountPrice = variant?.discount_price;
         const originalPrice = variant?.price || 0;
@@ -40,6 +63,17 @@ function Checkout() {
         const { price } = calculatePrice(item);
         return sum + price * item.quantity;
     }, 0);
+
+    const calculateDiscount = () => {
+        if (!coupon) return 0;
+        if (coupon.discount_type === "percent") {
+            return Math.floor((totalAmount * coupon.discount_value) / 100);
+        }
+        return coupon.discount_value;
+    };
+
+    const discountAmount = calculateDiscount();
+    const finalTotal = totalAmount + deliveryCharges - discountAmount;
 
     if (loading) return <p>Đang tải...</p>;
     if (selectedItems.length === 0) return <p>Không có sản phẩm nào được chọn.</p>;
@@ -93,26 +127,48 @@ function Checkout() {
                                         <span>Phí vận chuyển</span>
                                         <span>{formatVND(deliveryCharges)}</span>
                                     </div>
-
+                                    {coupon && (
+                                        <div className="flex justify-between text-green-600 font-medium">
+                                            <span>Giảm giá ({coupon.code})</span>
+                                            <span>-{formatVND(discountAmount)}</span>
+                                        </div>
+                                    )}
                                 </div>
 
                                 <div className="border-t pt-4 flex justify-between font-bold text-gray-900 text-base">
                                     <span>Tổng thanh toán</span>
-                                    <span>{formatVND(totalAmount + deliveryCharges)}</span>
+                                    <span>{formatVND(finalTotal)}</span>
                                 </div>
 
                                 <button className="w-full mt-2 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition text-sm font-semibold">
                                     Thanh toán
                                 </button>-
 
-                                <div className="mt-6 space-y-2"> <span className="text-gray-500 text-sm">Thêm mã khuyến mãi:</span>
+                                <div className="mt-6 space-y-2">
+                                    <span className="text-gray-500 text-sm">Thêm mã khuyến mãi:</span>
                                     <div className="flex items-center gap-2 mt-2">
-                                        <input type="text" placeholder="Nhập mã" className="border rounded px-3 py-1 w-44 focus:outline-none focus:ring-2 focus:ring-green-500" />
-                                        <button className="bg-green-600 text-white text-[11px] px-2 py-1 rounded-sm hover:bg-green-700 transition">
+                                        <input
+                                            type="text"
+                                            placeholder="Nhập mã"
+                                            value={couponCode}
+                                            onChange={(e) => setCouponCode(e.target.value)}
+                                            className="border rounded px-3 py-1 w-44 focus:outline-none focus:ring-2 focus:ring-green-500"
+                                        />
+                                        <button
+                                            onClick={handleApplyCoupon}
+                                            className="bg-green-600 text-white text-[11px] px-2 py-1 rounded-sm hover:bg-green-700 transition"
+                                        >
                                             Áp dụng
                                         </button>
                                     </div>
+                                    {coupon && (
+                                        <p className="text-green-600 text-sm">
+                                            Đã áp dụng mã <strong>{coupon.code}</strong>: Giảm {coupon.discount_type === "percent" ? `${coupon.discount_value}%` : `${formatVND(coupon.discount_value)}`}
+                                        </p>
+                                    )}
+                                    {couponError && <p className="text-red-500 text-sm">{couponError}</p>}
                                 </div>
+
 
 
                             </div>

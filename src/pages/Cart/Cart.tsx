@@ -136,7 +136,7 @@ const Cart = () => {
   };
 
   const { totalItems, totalAmount } = calculateSummary();
-  const deliveryCharges = 32400;
+  const deliveryCharges = 32000;
   const totalWithDelivery = totalAmount + deliveryCharges;
 
   if (loading) return <p className="text-center py-10">Đang tải giỏ hàng...</p>;
