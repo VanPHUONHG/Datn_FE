@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { validateCouponForUser } from "services/coupon/coupon.service";
+import { createOrder } from "services/order/order.service";
 import type { ICartItem } from "types/cart";
 import type { IUser } from "types/user";
 
@@ -12,10 +13,47 @@ function Checkout() {
 
     const [userForm, setUserForm] = useState<IUser | null>(null);
     const [loading, setLoading] = useState(true);
+    const navigate = useNavigate();
 
     const [couponCode, setCouponCode] = useState("");
     const [coupon, setCoupon] = useState<any>(null);
     const [couponError, setCouponError] = useState<string | null>(null);
+
+    const [paymentMethod, setPaymentMethod] = useState("cod");
+
+    const [note, setNote] = useState("");
+
+    const [formErrors, setFormErrors] = useState({
+        full_name: "",
+        phone: "",
+        address: "",
+    });
+
+
+    const validateForm = () => {
+        const errors = { full_name: "", phone: "", address: "" };
+        let isValid = true;
+
+        if (!userForm?.full_name.trim()) {
+            errors.full_name = "Vui lòng nhập họ tên.";
+            isValid = false;
+        }
+
+        const phoneRegex = /^(0|\+84)(3[2-9]|5[6|8|9]|7[06-9]|8[1-9]|9[0-9])[0-9]{7}$/;
+        if (!userForm?.phone.trim() || !phoneRegex.test(userForm.phone)) {
+            errors.phone = "Số điện thoại không hợp lệ.";
+            isValid = false;
+        }
+
+        if (!userForm?.address.trim()) {
+            errors.address = "Vui lòng nhập địa chỉ.";
+            isValid = false;
+        }
+
+        setFormErrors(errors);
+        return isValid;
+    };
+
 
     const deliveryCharges = 32000;
 
@@ -75,6 +113,72 @@ function Checkout() {
     const discountAmount = calculateDiscount();
     const finalTotal = totalAmount + deliveryCharges - discountAmount;
 
+    const handleCheckout = async () => {
+        if (!validateForm()) return;
+
+        const token = localStorage.getItem("token");
+        if (!token || !userForm) return;
+
+        try {
+
+            const orderData = {
+                user: passedUser?._id,
+
+                items: selectedItems.map((item) => {
+                    const product = typeof item.product === "string" ? null : item.product;
+                    const variant = typeof item.variant === "string" ? null : item.variant;
+                    const { price } = calculatePrice(item);
+
+                    return {
+                        productId: product?._id,
+                        variantId: variant?._id,
+                        productImage: variant?.image || product?.images?.[0] || "",
+                        productName: product?.name || "Sản phẩm",
+                        variant: {
+                            size: variant?.size || "",
+                            color: variant?.color || "",
+                        },
+                        quantity: item.quantity,
+                        price: price,
+                    };
+                }),
+
+                totalAmount: totalAmount,
+                discountAmount: discountAmount,
+                finalAmount: finalTotal,
+                shippingFee: deliveryCharges,
+                coupon: coupon
+                    ? {
+                        couponId: coupon._id,
+                        code: coupon.code,
+                        discountAmount: discountAmount,
+                    }
+                    : null,
+
+                shippingAddress: {
+                    name: userForm.full_name,
+                    phone: userForm.phone,
+                    addressLine: userForm.address,
+                },
+
+                note: note,
+
+                paymentMethod: paymentMethod,
+
+                status: "pending",
+            };
+            console.log("🟢 orderData gửi lên:", orderData);
+
+            const res = await createOrder(orderData);
+            console.log("Đơn hàng tạo thành công:", res);
+
+            // ✅ Điều hướng tới trang cảm ơn hoặc chi tiết đơn hàng
+            navigate("/order-success", { state: { order: res } });
+        } catch (error: any) {
+            console.error("Lỗi khi tạo đơn hàng:", error);
+            // Có thể thêm toast báo lỗi
+        }
+    };
     if (loading) return <p>Đang tải...</p>;
     if (selectedItems.length === 0) return <p>Không có sản phẩm nào được chọn.</p>;
     return (
@@ -140,7 +244,7 @@ function Checkout() {
                                     <span>{formatVND(finalTotal)}</span>
                                 </div>
 
-                                <button className="w-full mt-2 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition text-sm font-semibold">
+                                <button onClick={handleCheckout} className="w-full mt-2 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition text-sm font-semibold">
                                     Thanh toán
                                 </button>-
 
@@ -191,6 +295,7 @@ function Checkout() {
                                             }
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
                                         />
+                                        {formErrors.full_name && <p className="text-red-500 text-xs mt-1">{formErrors.full_name}</p>}
                                     </div>
 
 
@@ -205,6 +310,8 @@ function Checkout() {
                                             }
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
                                         />
+                                        {formErrors.phone && <p className="text-red-500 text-xs mt-1">{formErrors.phone}</p>}
+
                                     </div>
 
                                     <div>
@@ -217,6 +324,8 @@ function Checkout() {
                                             }
                                             className="w-full border border-gray-300 rounded-md px-3 py-2"
                                         />
+                                        {formErrors.address && <p className="text-red-500 text-xs mt-1">{formErrors.address}</p>}
+
                                     </div>
                                 </>
                             ) : (
@@ -237,15 +346,27 @@ function Checkout() {
                             Vui lòng chọn phương thức thanh toán ưa thích để sử dụng với đơn hàng này.
                         </p>
                         <label className="flex items-center space-x-2 mb-2 cursor-pointer">
-                            <input defaultChecked className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500" name="payment" type="radio" />
-                            <span className="text-xs">
-                                Tiền mặt khi giao hàng
-                            </span>
+                            <input
+                                type="radio"
+                                name="payment"
+                                value="cod"
+                                checked={paymentMethod === "cod"}
+                                onChange={(e) => setPaymentMethod(e.target.value)}
+                                className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
+                            />
+                            <span className="text-xs">Tiền mặt khi giao hàng</span>
                         </label>
+
                         <p className="mb-2">
                             Thêm bình luận về đơn hàng của bạn
                         </p>
-                        <textarea className="w-full rounded border border-gray-300 p-2 text-xs resize-none focus:outline-none focus:ring-1 focus:ring-blue-500" placeholder="Comments" rows={3} defaultValue={""} />
+                        <textarea
+                            className="w-full rounded border border-gray-300 p-2 text-xs resize-none focus:outline-none focus:ring-1 focus:ring-blue-500"
+                            placeholder="Comments"
+                            rows={3}
+                            value={note}
+                            onChange={(e) => setNote(e.target.value)}
+                        />
                         <p className="mt-2 text-[10px] text-gray-400">
                             Tôi đã đọc và đồng ý với Điều khoản &amp; Điều kiện.
                         </p>
