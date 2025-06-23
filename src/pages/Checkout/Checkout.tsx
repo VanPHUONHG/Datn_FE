@@ -23,6 +23,7 @@ function Checkout() {
 
     const [note, setNote] = useState("");
 
+
     const [formErrors, setFormErrors] = useState({
         full_name: "",
         phone: "",

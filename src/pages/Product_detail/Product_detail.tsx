@@ -76,15 +76,38 @@ const ProductDetail = () => {
   }, []);
 
   const handleIncrease = () => {
+    if (!selectedVariant) {
+      const toastId = "must-select-size";
+      if (!toast.isActive(toastId)) {
+        toast.error(
+          selectedColor
+            ? "Vui lòng chọn kích cỡ trước khi tắng số lượng!"
+            : "Vui lòng chọn màu sắc và kích cỡ trước khi tăng số lượng!",
+          {
+            toastId,
+            icon: <FaExclamationCircle color="white" />,
+            autoClose: 3000,
+          }
+        );
+      }
+      return;
+    }
+
     const maxStock = selectedVariant?.stock_quantity || product?.stock_quantity || 1;
     if (quantity < maxStock) {
       setQuantity((prev) => prev + 1);
     } else {
-      toast.info(`Chỉ còn ${maxStock} sản phẩm trong kho`, {
-        icon: <FaExclamationCircle color="white" />,
-      });
+      const toastId = "stock-limit";
+      if (!toast.isActive(toastId)) {
+        toast.warning(`Chỉ còn ${maxStock} sản phẩm trong kho`, {
+          toastId,
+          icon: <FaExclamationCircle color="white" />,
+          autoClose: 3000,
+        });
+      }
     }
   };
+
 
   const handleDecrease = () => {
     if (quantity > 1) {
@@ -94,19 +117,37 @@ const ProductDetail = () => {
 
   const handleAddToCart = async () => {
     if (!selectedVariant) {
-      toast.error("Vui lòng chọn size trước khi thêm vào giỏ hàng!", {
-        icon: <FaExclamationCircle color="white" />,
-      });
+      const toastId = "no-size-selected";
+      if (!toast.isActive(toastId)) {
+        toast.error("Vui lòng chọn size trước khi thêm vào giỏ hàng!", {
+          toastId,
+          icon: <FaExclamationCircle color="white" />,
+          autoClose: 3000,
+        });
+      }
       return;
     }
 
+
+    if (quantity > selectedVariant.stock_quantity) {
+      toast.error(`Chỉ còn ${selectedVariant.stock_quantity} sản phẩm trong kho!`, {
+        icon: <FaExclamationCircle color="white" />,
+      });
+      setQuantity(selectedVariant.stock_quantity);
+      return;
+    }
     const token = localStorage.getItem("token");
     const user = localStorage.getItem("user");
 
     if (!token || !user) {
-      toast.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!", {
-        icon: <FaExclamationCircle color="white" />,
-      });
+      const toastId = "not-logged-in-cart";
+      if (!toast.isActive(toastId)) {
+        toast.error("Vui lòng đăng nhập để thêm sản phẩm vào giỏ hàng!", {
+          toastId,
+          icon: <FaExclamationCircle color="white" />,
+          autoClose: 3000,
+        });
+      }
       setTimeout(() => navigate("/login"), 3000);
       return;
     }
@@ -198,17 +239,17 @@ const ProductDetail = () => {
             </div> */}
 
             <div className="text-sm text-gray-700 mb-2">Thương hiệu: {product.brand}</div>
-
-            {displayedVariant && (
+            {previewVariant && (
               <div className="mt-4 text-sm text-gray-700">
-                {displayedVariant.stock_quantity > 0 && (
-                  <p><strong>Số lượng:</strong> {displayedVariant.stock_quantity}</p>
-                )}
-                <p><strong>Mã SKU:</strong> {displayedVariant.sku}</p>
-                <p><strong>Màu sắc:</strong> {displayedVariant.color}</p>
+                <p><strong>Màu sắc:</strong> {previewVariant.color}</p>
               </div>
             )}
-
+            {selectedVariant && (
+              <div className="mt-2 text-sm text-gray-700">
+                <p><strong>Mã SKU:</strong> {selectedVariant.sku}</p>
+                <p><strong>Số lượng:</strong> {selectedVariant.stock_quantity}</p>
+              </div>
+            )}
             <div className="flex gap-2 flex-wrap mt-1">
               {[...new Map(variants.map(v => [v.color, v])).values()]
                 .filter(variant => !!variant.image)
@@ -292,7 +333,23 @@ const ProductDetail = () => {
             {/* Số lượng + Thêm giỏ */}
             <div className="flex items-center gap-3">
               <button onClick={handleDecrease} className="bg-gray-300 text-black px-3 py-1 rounded hover:bg-gray-400">-</button>
-              <span className="px-4 py-1 border rounded text-sm">{quantity}</span>
+              <input
+                type="number"
+                min={1}
+                max={selectedVariant?.stock_quantity || 1}
+                value={quantity}
+                onChange={(e) => {
+                  const val = parseInt(e.target.value, 10);
+                  if (!isNaN(val)) {
+                    const stock = selectedVariant?.stock_quantity || 1;
+                    setQuantity(val > stock ? stock : val < 1 ? 1 : val);
+                  }
+                }}
+                className="w-16 px-2 py-1 border rounded text-sm text-center
+    [appearance:textfield] 
+    [&::-webkit-outer-spin-button]:appearance-none 
+    [&::-webkit-inner-spin-button]:appearance-none"
+              />
               <button onClick={handleIncrease} className="bg-gray-300 text-black px-3 py-1 rounded hover:bg-gray-400">+</button>
               <button onClick={handleAddToCart} className="bg-green-500 text-white px-5 py-2 rounded hover:bg-green-700 text-sm">Thêm vào giỏ</button>
               <button

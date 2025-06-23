@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
-import { FaTrash } from "react-icons/fa";
+import { FaExclamationCircle, FaTrash } from "react-icons/fa";
 import type { ICart, ICartItem } from "types/cart";
 import { getCart, removeFromCart, updateCartItem } from "services/cart/cart.service";
 import { getUserById } from "services/user/user.service";
@@ -29,8 +29,42 @@ const Cart = () => {
   const fetchCart = async () => {
     try {
       const res = await getCart();
+      const updatedItems = await Promise.all(
+        res.data.products.map(async (item: ICartItem) => {
+          const variant = typeof item.variant !== "string" ? item.variant : null;
+          const product = typeof item.product !== "string" ? item.product : null;
+          const productName = product?.name || "Không rõ";
+
+          if (!variant) return item;
+
+          if (item.quantity > variant.stock_quantity) {
+            toast.warning(
+              `Sản phẩm ${productName} chỉ còn ${variant.stock_quantity} sản phẩm. Đã cập nhật lại số lượng.`
+            );
+
+            // Cập nhật số lượng trong giỏ hàng
+            const productId = typeof item.product === "string" ? item.product : item.product._id;
+            const variantId = variant._id;
+
+            await updateCartItem({
+              product_id: productId,
+              variant_id: variantId,
+              quantity: variant.stock_quantity,
+            });
+
+            // Trả về phiên bản mới đã cập nhật số lượng
+            return {
+              ...item,
+              quantity: variant.stock_quantity,
+            };
+          }
+
+          return item;
+        })
+      );
+
       setCart({
-        items: res.data.products,
+        items: updatedItems,
         totalPrice: res.data.totalPrice,
       });
     } catch (error) {
@@ -39,6 +73,7 @@ const Cart = () => {
       setLoading(false);
     }
   };
+
 
   useEffect(() => {
     fetchCart();
@@ -78,6 +113,17 @@ const Cart = () => {
     const variant = typeof item.variant !== "string" ? item.variant : null;
 
     if (variant?.stock_quantity && newQuantity > variant.stock_quantity) {
+      const toastId = "exceed-stock-limit";
+      if (!toast.isActive(toastId)) {
+        toast.warning(`Chỉ còn ${variant.stock_quantity} sản phẩm trong kho!`, {
+          toastId,
+          icon: <FaExclamationCircle color="white" />,
+          autoClose: 3000,
+        });
+      }
+      return;
+    }
+    if (variant?.stock_quantity && newQuantity > variant.stock_quantity) {
       toast.warning(`Chỉ còn ${variant.stock_quantity} sản phẩm trong kho!`);
       return;
     }
@@ -113,7 +159,14 @@ const Cart = () => {
       selectedItemKeys.includes(getItemKey(item))
     );
     if (selectedItems.length === 0) {
-      toast.warning("Vui lòng chọn ít nhất một sản phẩm để thanh toán.");
+      const toastId = "no-selected-items";
+      if (!toast.isActive(toastId)) {
+        toast.warning("Vui lòng chọn ít nhất một sản phẩm để thanh toán.", {
+          toastId,
+          icon: <FaExclamationCircle color="white" />,
+          autoClose: 3000,
+        });
+      }
       return;
     }
     navigate("/checkout", { state: { selectedItems, user: userData, } });
