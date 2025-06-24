@@ -1,28 +1,31 @@
 import { message, Popconfirm } from "antd";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { deleteVariant, getAllVariants } from "services/variant/variant.service";
+import { deleteVariant, getAllVariants  } from "services/variant/variant.service";
 import type { IProductVariant } from "types/variant";
 
 const VariantList = () => {
-  const [variants, setVariants] = useState<IProductVariant[]>([]);
-  const [page, setPage] = useState(1);
-  const perPage = 5;
+ const [variants, setVariants] = useState<IProductVariant[]>([]);
+const [page, setPage] = useState(1);
+const [total, setTotal] = useState(0); // tổng biến thể
+const perPage = 5;
+const currentVariants = variants;
 
-  useEffect(() => {
-    const fetchVariants = async () => {
-      try {
-        const data = await getAllVariants();
-        setVariants(data.variants || []);
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetchVariants();
-  }, []);
+useEffect(() => {
+  const fetchVariants = async () => {
+    try {
+      const data = await getAllVariants({ page, limit: perPage });
+      setVariants(data.variants || []);
+      setTotal(data.pagination?.totalItem || 0); 
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  fetchVariants();
+}, [page]);
 
-  const currentVariants = variants.slice((page - 1) * perPage, page * perPage);
-  const totalPages = Math.ceil(variants.length / perPage);
+const totalPages = Math.ceil(total / perPage); 
+
 
   const handleDelete = async (id: string) => {
     try {

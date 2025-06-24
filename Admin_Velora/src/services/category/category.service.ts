@@ -8,9 +8,9 @@ export const getAllCategories = async (): Promise<Category[]> => {
   try {
     const res = await axios.get(`${API_URL}/categories`);
     return res.data.data;
-  } catch (error: any) {
-    console.error("Lỗi khi lấy danh mục:", error);
-    throw new Error("Không thể lấy danh mục");
+  } catch (error) {
+   console.log(error);
+     return [];
   }
 };
 
@@ -33,6 +33,7 @@ export const getProductsByCategory = async (categoryId: string): Promise<Product
       return [];
     }
   } catch (error) {
+    console.log(error);
     return []; 
   }
 };

@@ -3,16 +3,8 @@ import type { IProductVariant } from "types/variant";
 
 const API_URL = import.meta.env.VITE_API_URL;
 
-interface GetAllVariantsParams {
-  product_id?: string;
-  color?: string;
-  page?: number;
-  limit?: number;
-  isDeleted?: "true" | "false";
-}
-
 // Lấy danh sách biến thể
-export const getAllVariants = async (params?: GetAllVariantsParams) => {
+export const getAllVariants = async (params: { page: number; limit: number }) => {
   try {
     const res = await axios.get(`${API_URL}/productvariants`, { params });
     return res.data; 
@@ -50,7 +42,7 @@ export const getVariantById = async (id: string) => {
 export const createVariant = async (variantData: Partial<IProductVariant>) => {
   try {
     const res = await axios.post(`${API_URL}/productvariants`, variantData);
-    return res.data; // { variant }
+    return res.data; 
   } catch (error) {
     console.error("Lỗi khi tạo biến thể:", error);
     throw error;

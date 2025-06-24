@@ -15,20 +15,16 @@ export const getAllProducts = async (params?: GetAllProductsParams) => {
     const res = await axios.get(`${API_URL}/products`, { params });
     return res.data;
   } catch (error) {
-    throw error;
+    console.log(error);
   }
 };
 
-export const createProduct = async (productData: any) => {
+export const createProduct = async (productData: unknown) => {
   try {
     const res = await axios.post(`${API_URL}/products`, productData);
     return res.data; 
-  } catch (error: any) {
-
-    if (error.response && error.response.data) {
-      throw new Error(error.response.data.message || 'Lỗi khi tạo sản phẩm');
-    }
-    throw error;
+  } catch (error) {
+    console.log(error);
   }
 };
 

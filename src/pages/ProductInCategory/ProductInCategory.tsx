@@ -7,62 +7,68 @@ import type { ICategory } from 'types/category';
 const ProductInCategory = () => {
   const { categoryId } = useParams();
   const [products, setProducts] = useState<Product[]>([]);
+  const [tempProducts, setTempProducts] = useState<Product[] | null>(null);
   const [loading, setLoading] = useState(true);
-  const [showAnimation, setShowAnimation] = useState(false);
   const [categoryName, setCategoryName] = useState("");
+  const [showAnimation, setShowAnimation] = useState(false);
 
   useEffect(() => {
     if (!categoryId) return;
 
     setLoading(true);
-    setProducts([]);
     setShowAnimation(false);
 
     getProductsByCategory(categoryId)
       .then((data) => {
-        setProducts(data);
-        if (data.length > 0) {
-          setTimeout(() => setShowAnimation(true), 100);
-        }
+        setTimeout(() => {
+          setTempProducts(data);
+        }, 100);
       })
       .catch((error) => {
         console.error('Lỗi tải sản phẩm:', error);
-      })
-      .finally(() => {
         setLoading(false);
       });
   }, [categoryId]);
 
-
-
-useEffect(() => {
-  const fetchCategoryName = async () => {
-    try {
-      const categories = await getCategories();
-      const matchedCategory = categories.find(
-        (cat: ICategory) => cat._id === categoryId
-      );
-      if (matchedCategory) {
-        setCategoryName(matchedCategory.name);
-      }
-    } catch (error) {
-      console.error("Lỗi lấy danh mục:", error);
-    } finally {
+  useEffect(() => {
+    if (tempProducts !== null) {
+      setProducts(tempProducts);
       setLoading(false);
+      setShowAnimation(true);
+      setTempProducts(null);
     }
-  };
+  }, [tempProducts]);
 
-  if (categoryId) {
-    fetchCategoryName();
-  }
-}, [categoryId]);
+  useEffect(() => {
+    const fetchCategoryName = async () => {
+      try {
+        const categories = await getCategories();
+        const matchedCategory = categories.find(
+          (cat: ICategory) => cat._id === categoryId
+        );
+        if (matchedCategory) {
+          setCategoryName(matchedCategory.name);
+        }
+      } catch (error) {
+        console.error("Lỗi lấy danh mục:", error);
+      }
+    };
+
+    if (categoryId) {
+      fetchCategoryName();
+    }
+  }, [categoryId]);
+
+  const isLoading = loading && products.length === 0;
 
   return (
     <div className="max-w-7xl mx-auto px-4 py-10">
-  <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
-        Sản phẩm theo danh mục {categoryName && <span className="text-blue-600">"{categoryName}"</span>}
+      <h2 className="text-3xl font-bold text-center mb-8 text-gray-800">
+        Sản phẩm theo danh mục{" "}
+        {categoryName && <span className="text-blue-600">"{categoryName}"</span>}
       </h2>
-      {loading ? (
+
+      {isLoading ? (
         <div className="grid gap-8 grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4">
           {[...Array(8)].map((_, i) => (
             <div
@@ -82,10 +88,10 @@ useEffect(() => {
           {products.map((product, index) => (
             <div
               key={product._id}
-              className={`transition-all duration-700 transform ${
+              className={`transition-all duration-500 transform ${
                 showAnimation ? 'opacity-100 translate-y-0' : 'opacity-0 translate-y-4'
               }`}
-              style={{ transitionDelay: `${index * 100}ms` }}
+              style={{ transitionDelay: `${index * 50}ms` }}
             >
               <Link
                 to={`/product/${product._id}`}

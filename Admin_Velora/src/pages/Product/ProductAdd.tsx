@@ -42,9 +42,9 @@ const ProductAdd = () => {
       await createProduct(productData);
       message.success("Thêm mới thành công");
       nav("/admin/product-list");
-    } catch (error: any) {
-      message.error("Lỗi khi thêm sản phẩm: " + (error.message || error));
-      console.error(error);
+    } catch (error) {
+     console.log(error);
+     
     }
   };
 
