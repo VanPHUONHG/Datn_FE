@@ -19,6 +19,8 @@ const Order = () => {
             .finally(() => setLoading(false));
     }, []);
 
+    const toastId = "cancel-order-error";
+
     const formatOrderCode = (id: string) => `ORDER-${id.slice(-6).toUpperCase()}`;
 
     const getPaymentMethod = (method: string) => {
@@ -34,16 +36,25 @@ const Order = () => {
     const handleCancelOrder = async (orderId: string) => {
         try {
             const res = await cancelOrderService(orderId);
+
+            if (!res.success) {
+                throw new Error(res.message || "Hủy đơn hàng thất bại");
+            }
+
             toast.success(res.message || "Đã hủy đơn hàng thành công");
 
-            // Cập nhật lại order trong danh sách
+            // ✅ Nếu thành công, mới cập nhật lại status
             setOrders((prevOrders) =>
                 prevOrders.map((order) =>
                     order._id === orderId ? { ...order, status: "cancelled" } : order
                 )
             );
         } catch (err: any) {
-            toast.error(err.message || "Không thể hủy đơn hàng");
+            if (!toast.isActive(toastId)) {
+                toast.error(err.message || "Không thể hủy đơn hàng", {
+                    toastId,
+                });
+            }
         }
     };
 
