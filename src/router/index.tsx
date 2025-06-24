@@ -15,7 +15,7 @@ import AllProducts from "pages/AllProduct/Product";
 import User from "pages/User/User";
 import OrderDetail from "pages/User/OrderDetail";
 import Profile from "pages/User/Profile";
-import Order from "pages/User/Order";
+import Order from "pages/User/order";
 
 export const router = createBrowserRouter([
   {

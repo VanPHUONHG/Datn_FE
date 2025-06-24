@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
-import { getOrdersByUserService } from 'services/order/order.service';
+import { cancelOrderService, getOrdersByUserService } from 'services/order/order.service';
 import type { IOrder } from 'types/order';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 const PAGE_SIZE = 5;
 
@@ -30,9 +31,22 @@ const Order = () => {
         navigate(`/user/order/${orderId}`);
     };
 
-    const handleCancelOrder = (orderId: string) => {
-        console.log('Hủy đơn hàng:', orderId);
+    const handleCancelOrder = async (orderId: string) => {
+        try {
+            const res = await cancelOrderService(orderId);
+            toast.success(res.message || "Đã hủy đơn hàng thành công");
+
+            // Cập nhật lại order trong danh sách
+            setOrders((prevOrders) =>
+                prevOrders.map((order) =>
+                    order._id === orderId ? { ...order, status: "cancelled" } : order
+                )
+            );
+        } catch (err: any) {
+            toast.error(err.message || "Không thể hủy đơn hàng");
+        }
     };
+
 
     // Pagination logic
     const totalPages = Math.ceil(orders.length / PAGE_SIZE);
@@ -103,12 +117,14 @@ const Order = () => {
                                             >
                                                 Chi tiết
                                             </button>
-                                            <button
-                                                onClick={() => handleCancelOrder(order._id)}
-                                                className="text-sm px-3 py-1 border border-red-400 text-white bg-red-400 rounded hover:bg-red-600 transition"
-                                            >
-                                                Hủy
-                                            </button>
+                                            {order.status === "pending" && (
+                                                <button
+                                                    onClick={() => handleCancelOrder(order._id)}
+                                                    className="text-sm px-3 py-1 border border-red-400 text-white bg-red-400 rounded hover:bg-red-600 transition"
+                                                >
+                                                    Hủy
+                                                </button>
+                                            )}
                                         </td>
                                     </tr>
                                 ))}
