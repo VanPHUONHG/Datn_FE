@@ -49,3 +49,27 @@ export const getOrderById = async (orderId: string) => {
         throw error.response?.data || { message: "Không thể lấy đơn hàng theo ID" };
     }
 };
+
+
+export const updateOrderInfoService = async (orderId: string, updatedData: any) => {
+    try {
+        const token = localStorage.getItem("token");
+
+        const res = await axios.put(
+            `${API_URL}/orders/${orderId}/update-info`,
+            updatedData,
+            {
+                headers: { Authorization: `Bearer ${token}` },
+            }
+        );
+
+        return res.data;
+    } catch (error: any) {
+        throw error.response?.data || { message: "Không thể cập nhật thông tin đơn hàng" };
+    }
+};
+
+
+
+
+

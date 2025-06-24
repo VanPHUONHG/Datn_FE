@@ -76,6 +76,7 @@ const Order = () => {
                                     <th className="border px-4 py-2">Ngày đặt</th>
                                     <th className="border px-4 py-2">Tổng tiền</th>
                                     <th className="border px-4 py-2">Thanh toán</th>
+                                    <th className="border px-4 py-2">Trạng thái</th>
                                     <th className="border px-4 py-2">Thao tác</th>
                                 </tr>
                             </thead>
@@ -94,6 +95,7 @@ const Order = () => {
                                         <td className="border px-4 py-2">
                                             {getPaymentMethod(order.paymentMethod)}
                                         </td>
+                                        <td className="border px-4 py-2 capitalize">{order.status}</td>
                                         <td className="border px-4 py-2 flex justify-center gap-2">
                                             <button
                                                 onClick={() => handleViewDetail(order._id)}
