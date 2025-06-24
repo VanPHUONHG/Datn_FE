@@ -4,7 +4,6 @@ import Home from "pages/Home";
 import Cart from "pages/Cart/Cart";
 import Checkout from "pages/Checkout/Checkout";
 import Wishlist from "pages/Wishlist/Wishlist";
-import Order_History from "pages/Order_History/Order_History";
 import ProductDetail from "pages/Product_detail/Product_detail";
 import Register from "pages/Register";
 import Login from "pages/Login";
@@ -13,6 +12,10 @@ import Blog from "pages/Blog/Blog";
 import BlogDetail from "pages/blogDetail/blogDetail";
 import Compare from "pages/Compare/Compare";
 import AllProducts from "pages/AllProduct/Product";
+import User from "pages/User/User";
+import OrderDetail from "pages/User/OrderDetail";
+import Profile from "pages/User/Profile";
+import Order from "pages/User/Order";
 
 export const router = createBrowserRouter([
   {
@@ -43,10 +46,7 @@ export const router = createBrowserRouter([
         path: "cart",
         element: <Cart />,
       },
-      {
-        path: "order_history",
-        element: <Order_History />,
-      },
+
       {
         path: "blog",
         element: <Blog />,
@@ -70,6 +70,24 @@ export const router = createBrowserRouter([
       {
         path: "login",
         element: <Login />,
+      },
+      {
+        path: "user",
+        element: <User />,
+        children: [
+          {
+            path: "profile",
+            element: <Profile />,
+          },
+          {
+            path: "order",
+            element: <Order />,
+          },
+          {
+            path: "order/:id",
+            element: <OrderDetail />,
+          },
+        ],
       },
       {
         path: "products",

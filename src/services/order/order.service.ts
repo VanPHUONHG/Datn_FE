@@ -17,3 +17,35 @@ export const createOrder = async (orderData: any) => {
         throw error.response?.data || { message: "Không thể tạo đơn hàng" };
     }
 };
+
+export const getOrdersByUserService = async () => {
+    try {
+        const token = localStorage.getItem("token");
+
+        const response = await axios.get(`${API_URL}/orders`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        return response.data; // { message, status, data: [orders] }
+    } catch (error: any) {
+        throw error.response?.data || { message: "Không thể lấy đơn hàng" };
+    }
+};
+
+export const getOrderById = async (orderId: string) => {
+    try {
+        const token = localStorage.getItem("token");
+
+        const response = await axios.get(`${API_URL}/orders/${orderId}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+
+        return response.data; // { message, statusCode, data: order }
+    } catch (error: any) {
+        throw error.response?.data || { message: "Không thể lấy đơn hàng theo ID" };
+    }
+};

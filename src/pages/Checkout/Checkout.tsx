@@ -8,12 +8,13 @@ import type { IUser } from "types/user";
 function Checkout() {
     const location = useLocation();
 
+    const navigate = useNavigate();
+
     const selectedItems: ICartItem[] = location.state?.selectedItems || [];
     const passedUser: IUser | null = location.state?.user || null;
 
     const [userForm, setUserForm] = useState<IUser | null>(null);
     const [loading, setLoading] = useState(true);
-    const navigate = useNavigate();
 
     const [couponCode, setCouponCode] = useState("");
     const [coupon, setCoupon] = useState<any>(null);
@@ -23,6 +24,10 @@ function Checkout() {
 
     const [note, setNote] = useState("");
 
+    const [createdOrder, setCreatedOrder] = useState<any>(null);   //Ko cần xóa createadOrder vì nó chỉ dùng để tạo dữ liệu id đơn hàng (Mã đơn hàng)
+
+
+    const isFromCart: boolean = location.state?.isFromCart || false;
 
     const [formErrors, setFormErrors] = useState({
         full_name: "",
@@ -103,13 +108,20 @@ function Checkout() {
         return sum + price * item.quantity;
     }, 0);
 
+    //Tính giá mã có type percent là giảm giá % lấy theo maxDiscount
     const calculateDiscount = () => {
         if (!coupon) return 0;
+
         if (coupon.discount_type === "percent") {
-            return Math.floor((totalAmount * coupon.discount_value) / 100);
+            const percentDiscount = Math.floor((totalAmount * coupon.discount_value) / 100);
+            return coupon.max_discount ? Math.min(percentDiscount, coupon.max_discount) : percentDiscount;
         }
-        return coupon.discount_value;
+
+        return coupon.max_discount
+            ? Math.min(coupon.discount_value, coupon.max_discount)
+            : coupon.discount_value;
     };
+
 
     const discountAmount = calculateDiscount();
     const finalTotal = totalAmount + deliveryCharges - discountAmount;
@@ -167,14 +179,16 @@ function Checkout() {
                 paymentMethod: paymentMethod,
 
                 status: "pending",
+
+                isFromCart: isFromCart,
             };
             console.log("🟢 orderData gửi lên:", orderData);
 
             const res = await createOrder(orderData);
-            console.log("Đơn hàng tạo thành công:", res);
 
-            // ✅ Điều hướng tới trang cảm ơn hoặc chi tiết đơn hàng
-            navigate("/order-success", { state: { order: res } });
+            setCreatedOrder(res.data);
+            navigate("/user/order", { replace: true });
+
         } catch (error: any) {
             console.error("Lỗi khi tạo đơn hàng:", error);
             // Có thể thêm toast báo lỗi
@@ -268,8 +282,12 @@ function Checkout() {
                                     </div>
                                     {coupon && (
                                         <p className="text-green-600 text-sm">
-                                            Đã áp dụng mã <strong>{coupon.code}</strong>: Giảm {coupon.discount_type === "percent" ? `${coupon.discount_value}%` : `${formatVND(coupon.discount_value)}`}
+                                            Đã áp dụng mã <strong>{coupon.code}</strong>: Giảm {formatVND(calculateDiscount())}
+                                            {coupon.discount_type === "percent" && (
+                                                <span className="text-gray-500"> ({coupon.discount_value}% tối đa {formatVND(coupon.max_discount)})</span>
+                                            )}
                                         </p>
+
                                     )}
                                     {couponError && <p className="text-red-500 text-sm">{couponError}</p>}
                                 </div>
@@ -571,8 +589,12 @@ function Checkout() {
                 </div>
             </div>
 
+
         </div>
+
     )
+
 }
 
 export default Checkout;
+
