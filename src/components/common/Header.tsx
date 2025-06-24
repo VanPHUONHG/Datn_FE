@@ -13,6 +13,43 @@ const Header = () => {
 
   const [user, setUser] = useState<any>(null);
   const navigate = useNavigate();
+  const [open, setOpen] = useState(false);
+  const accountRef = useRef<HTMLDivElement>(null);
+
+  //Xử lý click để nhấn ở icon user 
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      const target = event.target as Node;
+
+      if (
+        dropdownRef.current &&
+        !dropdownRef.current.contains(target)
+      ) {
+        setShowDropdown(false);
+      }
+
+      if (
+        accountRef.current &&
+        !accountRef.current.contains(target)
+      ) {
+        setOpen(false);
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (accountRef.current && !accountRef.current.contains(event.target as Node)) {
+        setOpen(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
+
 
   const handleClickCart = () => {
     const token = localStorage.getItem("token");
@@ -150,7 +187,48 @@ const Header = () => {
         <div className="flex items-center gap-4 text-center flex-shrink-0">
           {/* Login / Account */}
           <div className="flex items-center gap-2 hover:text-gray-900 cursor-pointer">
-            <i className="far fa-user text-2xl"></i>
+            <div
+              className="relative"
+              ref={accountRef}
+              onMouseEnter={() => setOpen(true)}
+              onMouseLeave={() => setOpen(false)}
+            >
+              <div className="text-2xl text-gray-700 cursor-pointer">
+                <i className="far fa-user text-2xl"></i>
+              </div>
+
+              <div
+                className={`absolute top-full right-0 mt-2 w-48 bg-white border rounded shadow-lg z-50 text-sm translate-x-[170px] transition-opacity duration-200 ${open ? "opacity-100 visible" : "opacity-0 invisible"
+                  }`}
+              >
+                <button
+                  onClick={() => {
+                    navigate("/user/profile");
+                    setOpen(false);
+                  }}
+                  className="w-full text-left px-4 py-2 hover:bg-green-100 transition duration-200"
+                >
+                  Tài khoản của tôi
+                </button>
+                <button
+                  onClick={() => {
+                    navigate("/user/order");
+                    setOpen(false);
+                  }}
+                  className="w-full text-left px-4 py-2 hover:bg-green-100 transition duration-200"
+                >
+                  Đơn mua
+                </button>
+                <button
+                  onClick={handleLogout}
+                  className="w-full text-left px-4 py-2 hover:bg-red-100 transition duration-200"
+                >
+                  Đăng xuất
+                </button>
+              </div>
+            </div>
+
+
             <div className="text-left">
               {!user ? (
                 <>
@@ -163,15 +241,13 @@ const Header = () => {
                 </>
               ) : (
                 <>
-                  <div className="text-xs font-medium">
+                  <div
+                    className="text-xs font-medium cursor-pointer hover:underline"
+                    onClick={() => navigate("/user/profile")}
+                  >
                     Xin chào, {user.username}
                   </div>
-                  <button
-                    onClick={handleLogout}
-                    className="text-xs text-red-500 hover:underline block"
-                  >
-                    Đăng xuất
-                  </button>
+
                 </>
               )}
             </div>
@@ -264,7 +340,9 @@ const Header = () => {
         </div>
       </div>
     </div>
+
   );
+
 };
 
 export default Header;

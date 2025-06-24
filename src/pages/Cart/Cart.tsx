@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FaExclamationCircle, FaTrash } from "react-icons/fa";
 import type { ICart, ICartItem } from "types/cart";
@@ -169,7 +169,7 @@ const Cart = () => {
       }
       return;
     }
-    navigate("/checkout", { state: { selectedItems, user: userData, } });
+    navigate("/checkout", { state: { selectedItems, user: userData, isFromCart: true } });
   };
 
   const calculateSummary = () => {
@@ -234,13 +234,19 @@ const Cart = () => {
                         onChange={(e) => handleToggleSelect(item, e.target.checked)}
                       />
                     </td>
-                    <td className="p-2 flex gap-3 items-center">
-                      <img src={image} alt={name} className="w-14 h-14 object-cover border rounded" />
-                      <div>
-                        <p className="font-medium">{name}</p>
-                        <p className="text-xs text-gray-500">Màu: {color} | Size: {size}</p>
-                      </div>
+                    <td className="p-2">
+                      <Link
+                        to={`/product/${product?._id}`}
+                        className="flex gap-3 items-center hover:bg-gray-50 p-2 rounded transition"
+                      >
+                        <img src={image} alt={name} className="w-14 h-14 object-cover border rounded" />
+                        <div>
+                          <p className="font-medium text-blue-600 hover:underline">{name}</p>
+                          <p className="text-xs text-gray-500">Màu: {color} | Size: {size}</p>
+                        </div>
+                      </Link>
                     </td>
+
                     <td className="text-center">{formatVND(price)}</td>
                     <td className="text-center">
                       <div className="flex justify-center items-center gap-2">

@@ -26,6 +26,7 @@ const ProductDetail = () => {
   const [variantImages, setVariantImages] = useState<string[]>([]);
   const [previewVariant, setPreviewVariant] = useState<IProductVariant | null>(null);
   const displayedVariant = selectedVariant || previewVariant;
+  const errorToastId = "add-to-cart-error";  //Báo lỗi toast khi giỏ hàng đã vượt quá giới hạn tồn kho
 
   useEffect(() => {
     const fetchProductDetail = async () => {
@@ -161,20 +162,28 @@ const ProductDetail = () => {
 
       await addToCart(payload);
 
-      toast.success("Sản phẩm đã được thêm vào giỏ hàng!", {
-        icon: <FaCheckCircle color="green" />,
-      });
+      if (!toast.isActive("added-to-cart")) {
+        toast.success("Sản phẩm đã được thêm vào giỏ hàng!", {
+          toastId: "added-to-cart",
+          icon: <FaCheckCircle color="green" />,
+          autoClose: 3000,
+        });
+      }
     } catch (error: any) {
       console.error("Lỗi khi thêm vào giỏ hàng:", error);
 
-      const message =
-        error?.response?.data?.code === "EXCEED_STOCK_LIMIT"
-          ? "Sản phẩm trong giỏ hàng đã đạt số lượng tồn kho tối đa."
-          : "Có lỗi xảy ra khi thêm vào giỏ hàng!";
+      if (!toast.isActive(errorToastId)) {
+        const message =
+          error?.response?.data?.code === "EXCEED_STOCK_LIMIT"
+            ? "Sản phẩm trong giỏ hàng đã đạt số lượng tồn kho tối đa."
+            : "Có lỗi xảy ra khi thêm vào giỏ hàng!";
 
-      toast.error(message, {
-        icon: <FaExclamationCircle color="white" />,
-      });
+        toast.error(message, {
+          toastId: errorToastId,
+          icon: <FaExclamationCircle color="white" />,
+          autoClose: 3000, // tự đóng sau 3 giây
+        });
+      }
     }
 
   };
@@ -383,6 +392,7 @@ const ProductDetail = () => {
                     state: {
                       selectedItems: [selectedItem],
                       user: userData,
+                      isFromCart: false,
                     },
                   });
                 }}
