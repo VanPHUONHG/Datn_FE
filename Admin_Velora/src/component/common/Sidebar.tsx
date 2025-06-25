@@ -23,13 +23,22 @@ const AdminSidebar = () => {
         { key: 'addproduct', label: 'Thêm mới sản phẩm' },
       ],
     },
-      {
+    {
       key: 'sub6',
       label: 'Quản lý biến thể',
-      icon: <AppstoreAddOutlined  />,
+      icon: <AppstoreAddOutlined />,
       children: [
         { key: 'variantlist', label: 'Danh sách biến thể' },
         { key: 'addvariant', label: 'Thêm mới biến thể' },
+      ],
+    },
+    {
+      key: "sub7",
+      label: "Quản lý blog",
+      icon: <FolderOutlined />,
+      children: [
+        { key: "blog-list", label: "Danh sách blog" },
+        { key: "blog-add", label: "Thêm blog" },
       ],
     },
     {
@@ -54,48 +63,54 @@ const AdminSidebar = () => {
       type: 'divider',
     },
     {
-  key: 'sub4',
-  label: 'Quản lý đơn hàng',
-  icon: <SettingOutlined />,
-}
+      key: 'sub4',
+      label: 'Quản lý đơn hàng',
+      icon: <SettingOutlined />,
+    }
   ];
 
-  const onClick: MenuProps['onClick'] = ({key}) => {
-      switch(key)
-      {
-        case "addproduct":
-          navigate("/admin/product-add")
-          break;
-        case "productlist":
-          navigate("/admin/product-list") 
-          break;
-        case "variantlist":
-          navigate("/admin/variant-list")
-          break;
-          case "addvariant":
-          navigate("/admin/variant-add")
-          break;
-        case "categorylist":
-          navigate("/admin/category-list")
-          break;
-        case "addcategory":
-          navigate("/admin/category-add")
-          break;
+  const onClick: MenuProps['onClick'] = ({ key }) => {
+    switch (key) {
+      case "addproduct":
+        navigate("/admin/product-add");
+        break;
+      case "productlist":
+        navigate("/admin/product-list");
+        break;
+      case "variantlist":
+        navigate("/admin/variant-list");
+        break;
+      case "addvariant":
+        navigate("/admin/variant-add");
+        break;
+      case "categorylist":
+        navigate("/admin/category-list");
+        break;
+      case "addcategory":
+        navigate("/admin/category-add");
+        break;
+      case "userlist":
+        navigate("/admin/user-list");
+        break;
+      case "adminList":
+        navigate("/admin/admin-list");
+        break;
+      case "sub4":
+        navigate("/admin/order-manage");
+        break;
+      case "blog-list":
+        navigate("/admin/blog-list");
+        break;
 
-        case "userlist":
-          navigate("/admin/user-list")
-          break;
-        case "adminList":
-          navigate("/admin/admin-list")
-          break;
-        case "sub4": 
-          navigate("/admin/order-manage")
-          break;
-        default:
-          navigate("") 
-          break;
-      }
+      case "blog-add":
+        navigate("/admin/blog-add");
+        break;
+      default:
+        navigate("");
+        break;
+    }
   };
+
 
   return (
     <div className='w-1/5 h-screen bg-white'>

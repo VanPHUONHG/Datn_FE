@@ -17,45 +17,51 @@ import VariantDelete from "pages/Variant/VariantDelete";
 import VariantList from "pages/Variant/VariantList";
 import VariantAdd from "pages/Variant/VariantAdd";
 import VariantEdit from "pages/Variant/VariantEdit";
+import BlogList from "pages/Blog/BlogList";
+import BlogAdd from "pages/Blog/BlogAdd";
+import BlogEdit from "pages/Blog/BlogEdit";
+import BlogDeleted from "pages/Blog/BlogDeleted";
+
+
 
 export const router = createBrowserRouter([
   {
     path: "/",
     element: <Navigate to="/admin" replace />,
   },
-    {
-        path: "admin-login",
-        element: <AdminLogin />,
+  {
+    path: "admin-login",
+    element: <AdminLogin />,
+  },
+  {
+    path: "/admin",
+    element: <AdminLayout />,
+    children: [
+      {
+        index: true,
+        element: <Dasborad />,
       },
-    {
-        path: "/admin",
-        element: <AdminLayout />,
-        children: [
-            {
-                index: true,
-                element: <Dasborad />,
-            },
-            {
-                path: "product-delete",
-                element: <ProductDelete />,
-            },
-              {
-                path: "product-list",
-                element: <ProductList />,
-            },
-            {
-                path: "product-edit/:id",
-                element: <ProductEdit />,
-            },
-               {
-                path: "product-add",
-                element: <ProductAdd />,
-            },
-            {
-                path: "category-list",
-                element: <CategoryList />,
-            },
-              {
+      {
+        path: "product-delete",
+        element: <ProductDelete />,
+      },
+      {
+        path: "product-list",
+        element: <ProductList />,
+      },
+      {
+        path: "product-edit/:id",
+        element: <ProductEdit />,
+      },
+      {
+        path: "product-add",
+        element: <ProductAdd />,
+      },
+      {
+        path: "category-list",
+        element: <CategoryList />,
+      },
+      {
         path: "category-add",
         element: <CategoryAdd />,
       },
@@ -72,22 +78,22 @@ export const router = createBrowserRouter([
         element: <CategoryDelete />,
       },
 
-       {
+      {
         path: "variant-delete",
         element: <VariantDelete />,
       },
 
-       {
+      {
         path: "variant-list",
         element: <VariantList />,
       },
 
-       {
+      {
         path: "variant-add",
         element: <VariantAdd />,
       },
 
-       {
+      {
         path: "variant-edit/:id",
         element: <VariantEdit />,
       },
@@ -95,6 +101,23 @@ export const router = createBrowserRouter([
       //   path: "user-list",
       //   element: <UserList />,
       // }
+      {
+        path: "blog-list",
+        element: <BlogList />
+      },
+      {
+        path: "blog-add",
+        element: <BlogAdd />
+      },
+      {
+        path: "blog-edit/:slug",
+        element: <BlogEdit />
+      },
+      { path: "blog-deleted",
+         element: <BlogDeleted /> }
+
+
+
     ],
   },
 ]);
