@@ -166,9 +166,23 @@ const OrderDetail = () => {
                             <div><span className="font-semibold">Ghi chú:</span> {order.note || 'Không có'}</div>
                         )}
                         <div><span className="font-semibold">Trạng thái:</span> {translateStatus(order.status)}</div>
-                        <div className="text-lg font-bold text-green-600">
-                            Tổng tiền: {order.finalAmount.toLocaleString()} đ <span className="text-sm font-normal text-gray-600">(đã bao gồm 32.000đ phí ship)</span>
-                        </div>
+                     <div className="text-lg font-bold text-green-600">
+  Tổng tiền: {order.finalAmount.toLocaleString()} đ
+  <span className="text-sm font-normal text-gray-600 block">
+    (đã bao gồm 32.000đ phí ship)
+  </span>
+
+  {order.discountAmount > 0 ? (
+    <div className="text-sm text-red-500 mt-1">
+      Đã áp mã giảm giá <strong>{order.coupon?.code || "chưa rõ"}</strong>, được giảm <strong>{order.discountAmount.toLocaleString()}đ</strong>
+    </div>
+  ) : (
+    <div className="text-sm text-gray-500 mt-1 italic">
+      Không áp mã giảm giá
+    </div>
+  )}
+</div>
+
 
                     </div>
                 </div>

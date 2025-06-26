@@ -75,7 +75,7 @@ const OrderDetail = () => {
                                     Mã đơn hàng: {order._id?.slice(-6)}
                                 </span>
                             </div>
-                            <div>Tổng tiền: {order.totalAmount.toLocaleString()} VND</div>
+                            <div>Tổng tiền: {order.finalAmount.toLocaleString()} VND</div>
                             <div>Ghi chú: {order.note || "Không có"}</div>
                             <div>Thanh toán: {order.paymentMethod}</div>
                         </div>
@@ -127,15 +127,22 @@ const OrderDetail = () => {
                         </div>
                     </div>
 
-                    <div className="flex justify-between py-1 border-b border-gray-200">
-                        <div className="font-semibold">Vận chuyển</div>
-                        <div className="text-right">{(order.finalAmount - order.totalAmount).toLocaleString()} VND</div>
-                    </div>
+                  <div className="flex justify-between py-1 border-b border-gray-200">
+  <div className="font-semibold">Vận chuyển</div>
+  <div className="text-right">32,000 VND</div>
+</div>
+
 
                     <div className="flex justify-between py-1 border-b border-gray-200 font-semibold">
                         <div>Total:</div>
                         <div className="text-right">{order.finalAmount.toLocaleString()} VND</div>
                     </div>
+{(order?.discountAmount ?? 0) > 0 && order?.coupon?.code && (
+  <div className="text-sm text-red-500 italic mt-1 text-right">
+    Đã áp mã giảm giá <strong>{order.coupon.code}</strong>, được giảm <strong>{order.discountAmount?.toLocaleString()}đ</strong>
+  </div>
+)}
+
 
                 </section>
             </main>

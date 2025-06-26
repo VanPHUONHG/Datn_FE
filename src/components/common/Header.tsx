@@ -211,7 +211,7 @@ const Header = () => {
   <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md max-h-[300px] overflow-y-auto z-50">
     {products.map((product: any) => (
       <Link
-        to={`/products/${product._id}`}
+        to={`/product/${product._id}`}
         key={product._id}
         className="flex items-center gap-3 px-4 py-2 hover:bg-green-100 text-sm text-gray-800"
         onClick={() => setSearchTerm("")}

@@ -1,26 +1,30 @@
 import axios from "axios";
+import type { User } from "types/user";
+
 const API_URL = import.meta.env.VITE_API_URL;
+const USER_ENDPOINT = `${API_URL}/users`;
 
-export const getAllUsers = async () => {
-    try {
-        const res = await axios.get(`${API_URL}/users`);
-        return res.data;
-    } catch (error) {
-        console.log(error);
+// Lấy danh sách tất cả người dùng (chỉ admin mới gọi được)
+export const getAllUsers = async (): Promise<User[]> => {
+  const token = localStorage.getItem("token_admin");
 
-    }
+  const res = await axios.get(`${USER_ENDPOINT}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+   return res.data.users as User[];
 };
 
-export const getUserById = async (id: string, token: string) => {
-    try {
-        const res = await axios.get(`${API_URL}/users/${id}`, {
-            headers: {
-                Authorization: `Bearer ${token}`,
-            },
-        });
-        return res.data.user; // vì BE trả về { message, user }
-    } catch (error) {
-        console.log(error);
+// Lấy thông tin chi tiết 1 user theo ID
+export const getUserById = async (id: string): Promise<User> => {
+  const token = localStorage.getItem("token_admin");
 
-    }
+  const res = await axios.get(`${USER_ENDPOINT}/${id}`, {
+    headers: {
+      Authorization: `Bearer ${token}`,
+    },
+  });
+
+  return res.data.user as User; // giả định BE trả về { user }
 };

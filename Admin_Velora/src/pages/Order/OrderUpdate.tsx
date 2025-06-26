@@ -28,14 +28,14 @@ const OrderUpdate = () => {
 
         const validNext = getValidNextStatuses(order?.status || "pending");
         if (!validNext.includes(status)) {
-            return message.warning("⚠️ Trạng thái này không hợp lệ!");
+            return message.warning("Không thể cập nhật đơn hàng đã hoàn thành hoặc đã bị hủy!");
         }
 
         try {
             await updateOrderStatus(orderId as string, status);
             const refreshedOrder = await getOrderById(orderId as string);
             setOrder(refreshedOrder);
-            message.success("✅ Cập nhật trạng thái thành công!");
+            message.success(" Cập nhật trạng thái thành công!");
         } catch (error: any) {
             console.error("Lỗi cập nhật trạng thái:", error.response?.data || error.message);
             message.error("❌ Cập nhật trạng thái thất bại!");
@@ -157,7 +157,11 @@ const OrderUpdate = () => {
                     </div>
                 </div>
             </section>
+              <footer className="bg-gray-100 text-gray-600 text-sm py-4 px-6 flex justify-between mt-45">
+                <div><strong>Website bán giày (Velora)</strong></div>
+            </footer>
         </div>
+        
     );
 };
 
