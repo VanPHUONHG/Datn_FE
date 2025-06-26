@@ -18,6 +18,8 @@ import VariantList from "pages/Variant/VariantList";
 import VariantAdd from "pages/Variant/VariantAdd";
 import VariantEdit from "pages/Variant/VariantEdit";
 import OrderList from "pages/Order/OrderList";
+import OrderDetail from "pages/Order/OrderDetail";
+import RequireAdmin from "pages/Login/RequireAdmin";
 
 export const router = createBrowserRouter([
   {
@@ -25,12 +27,16 @@ export const router = createBrowserRouter([
     element: <Navigate to="/admin" replace />,
   },
   {
-    path: "admin-login",
+    path: "admin/login",
     element: <AdminLogin />,
   },
   {
     path: "/admin",
-    element: <AdminLayout />,
+    element: (
+      <RequireAdmin>
+        <AdminLayout />
+      </RequireAdmin>
+    ),
     children: [
       {
         index: true,
@@ -99,6 +105,10 @@ export const router = createBrowserRouter([
       {
         path: "order-list",
         element: <OrderList />,
+      },
+      {
+        path: "order-detail/:id",
+        element: <OrderDetail />,
       },
     ],
   },
