@@ -17,7 +17,15 @@ import VariantDelete from "pages/Variant/VariantDelete";
 import VariantList from "pages/Variant/VariantList";
 import VariantAdd from "pages/Variant/VariantAdd";
 import VariantEdit from "pages/Variant/VariantEdit";
+
 import OrderList from "pages/Order/OrderList";
+
+import BlogList from "pages/Blog/BlogList";
+import BlogAdd from "pages/Blog/BlogAdd";
+import BlogEdit from "pages/Blog/BlogEdit";
+import BlogDeleted from "pages/Blog/BlogDeleted";
+
+
 
 export const router = createBrowserRouter([
   {
@@ -100,6 +108,24 @@ export const router = createBrowserRouter([
         path: "order-list",
         element: <OrderList />,
       },
+      {
+        path: "blog-list",
+        element: <BlogList />
+      },
+      {
+        path: "blog-add",
+        element: <BlogAdd />
+      },
+      {
+        path: "blog-edit/:slug",
+        element: <BlogEdit />
+      },
+      {
+        path: "blog-deleted",
+        element: <BlogDeleted />
+      }
+
+
     ],
   },
 ]);

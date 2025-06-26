@@ -52,9 +52,10 @@ export const router = createBrowserRouter([
         element: <Blog />,
       },
       {
-        path: "blog_detail",
+        path: "blog/:slug",
         element: <BlogDetail />,
-      },
+      }
+      ,
       {
         path: "compare",
         element: <Compare />,

@@ -33,6 +33,15 @@ const AdminSidebar = () => {
       ],
     },
     {
+      key: "sub7",
+      label: "Quản lý blog",
+      icon: <FolderOutlined />,
+      children: [
+        { key: "blog-list", label: "Danh sách blog" },
+        { key: "blog-add", label: "Thêm blog" },
+      ],
+    },
+    {
       key: 'sub3',
       label: 'Quản lý danh mục',
       icon: <FolderOutlined />,
@@ -61,6 +70,7 @@ const AdminSidebar = () => {
     {
       type: 'divider',
     },
+
 
   ];
 
@@ -94,11 +104,18 @@ const AdminSidebar = () => {
       case "orderlist":
         navigate("/admin/order-list")
         break;
+      case "blog-list":
+        navigate("/admin/blog-list");
+        break;
+      case "blog-add":
+        navigate("/admin/blog-add");
+        break;
       default:
         navigate("")
         break;
     }
   };
+
 
   return (
     <div className='w-1/5 h-screen bg-white'>
