@@ -2,8 +2,8 @@ import React from "react";
 import { Navigate } from "react-router-dom";
 
 const RequireAdmin = ({ children }: { children: React.ReactNode }) => {
-    const userString = localStorage.getItem("user");
-    const token = localStorage.getItem("token");
+    const userString = localStorage.getItem("user_admin");
+    const token = localStorage.getItem("token_admin");
 
     if (!userString || !token) {
         return <Navigate to="/admin/login" replace />;

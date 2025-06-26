@@ -5,7 +5,7 @@ const API_URL = import.meta.env.VITE_API_URL;
 const ORDER_ENDPOINT = `${API_URL}/orders`;
 
 export const getAllOrdersAdmin = async (): Promise<IOrder[]> => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token_admin");
 
     const res = await axios.get(`${ORDER_ENDPOINT}/all`, {
         headers: {
@@ -18,7 +18,7 @@ export const getAllOrdersAdmin = async (): Promise<IOrder[]> => {
 };
 
 export const getOrderById = async (orderId: string): Promise<IOrder> => {
-    const token = localStorage.getItem("token");
+    const token = localStorage.getItem("token_admin");
 
     const res = await axios.get(`${ORDER_ENDPOINT}/${orderId}`, {
         headers: {
