@@ -27,6 +27,10 @@ import BlogAdd from "pages/Blog/BlogAdd";
 import BlogEdit from "pages/Blog/BlogEdit";
 import BlogDeleted from "pages/Blog/BlogDeleted";
 import OrderUpdate from "pages/Order/OrderUpdate";
+import BlogCategoryList from "pages/blogcategory/BlogCategoryList";
+import BlogCategoryAdd from "pages/blogcategory/BlogCategoryAdd";
+import BlogCategoryEdit from "pages/blogcategory/BlogCategoryEdit";
+import BlogCategoryDeleted from "pages/blogcategory/BlogCategoryDeleted";
 
 
 
@@ -141,6 +145,24 @@ export const router = createBrowserRouter([
         path: "order-update/:id",
         element: <OrderUpdate />,
       },
+      {
+        path: "blog-category-list",
+        element: <BlogCategoryList />,
+      },
+      {
+        path: "blog-category-add",
+        element: <BlogCategoryAdd />,
+      },
+      {
+        path: "blog-category-edit/:slug",
+        element: <BlogCategoryEdit />,
+      },
+      {
+        path: "blog-category-deleted",
+        element: <BlogCategoryDeleted />
+      },
+
+
     ],
   },
 ]);

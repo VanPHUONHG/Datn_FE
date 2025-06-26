@@ -42,6 +42,16 @@ const AdminSidebar = () => {
       ],
     },
     {
+      key: "sub8",
+      label: "Quản lý danh mục blog",
+      icon: <FolderOutlined />,
+      children: [
+        { key: "blog-category-list", label: "Danh sách danh mục blog" },
+        { key: "blog-category-add", label: "Thêm danh mục blog" },
+      ],
+    },
+
+    {
       key: 'sub3',
       label: 'Quản lý danh mục',
       icon: <FolderOutlined />,
@@ -110,6 +120,17 @@ const AdminSidebar = () => {
       case "blog-add":
         navigate("/admin/blog-add");
         break;
+      case "blog-category-list":
+        navigate("/admin/blog-category-list");
+        break;
+      case "blog-category-add":
+        navigate("/admin/blog-category-add");
+        break;
+      case "blog-category-deleted":
+        navigate("/admin/blog-category-deleted");
+        break;
+
+
       default:
         navigate("")
         break;
