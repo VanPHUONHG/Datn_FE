@@ -1,18 +1,26 @@
-import { MailOutlined, AppstoreOutlined, SettingOutlined, UserOutlined, FolderOutlined, AppstoreAddOutlined } from '@ant-design/icons';
+import {
+  MailOutlined,
+  AppstoreOutlined,
+  SettingOutlined,
+  UserOutlined,
+  FolderOutlined,
+  AppstoreAddOutlined,
+  GiftOutlined,
+} from '@ant-design/icons';
 import { Menu } from 'antd';
 import type { MenuProps } from 'antd';
-
-import React from 'react'
+import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
 const AdminSidebar = () => {
   type MenuItem = Required<MenuProps>['items'][number];
-  const navigate = useNavigate()
+  const navigate = useNavigate();
+
   const items: MenuItem[] = [
     {
       key: 'sub1',
       label: 'Dashboard',
-      icon: <MailOutlined />
+      icon: <MailOutlined />,
     },
     {
       key: 'sub2',
@@ -33,12 +41,12 @@ const AdminSidebar = () => {
       ],
     },
     {
-      key: "sub7",
-      label: "Quản lý blog",
+      key: 'sub7',
+      label: 'Quản lý blog',
       icon: <FolderOutlined />,
       children: [
-        { key: "blog-list", label: "Danh sách blog" },
-        { key: "blog-add", label: "Thêm blog" },
+        { key: 'blog-list', label: 'Danh sách blog' },
+        { key: 'blog-add', label: 'Thêm blog' },
       ],
     },
     {
@@ -60,60 +68,73 @@ const AdminSidebar = () => {
       ],
     },
     {
+      key: 'sub8',
+      label: 'Quản lý khuyến mãi',
+      icon: <GiftOutlined />,
+      children: [
+        { key: 'couponlist', label: 'Danh sách mã giảm giá' },
+        { key: 'addcoupon', label: 'Thêm mã giảm giá' },
+      ],
+    },
+    {
       type: 'divider',
     },
     {
       key: 'sub4',
       label: 'Quản lý đơn hàng',
       icon: <SettingOutlined />,
-    }
+    },
   ];
 
   const onClick: MenuProps['onClick'] = ({ key }) => {
     switch (key) {
-      case "addproduct":
-        navigate("/admin/product-add");
+      case 'addproduct':
+        navigate('/admin/product-add');
         break;
-      case "productlist":
-        navigate("/admin/product-list");
+      case 'productlist':
+        navigate('/admin/product-list');
         break;
-      case "variantlist":
-        navigate("/admin/variant-list");
+      case 'variantlist':
+        navigate('/admin/variant-list');
         break;
-      case "addvariant":
-        navigate("/admin/variant-add");
+      case 'addvariant':
+        navigate('/admin/variant-add');
         break;
-      case "categorylist":
-        navigate("/admin/category-list");
+      case 'categorylist':
+        navigate('/admin/category-list');
         break;
-      case "addcategory":
-        navigate("/admin/category-add");
+      case 'addcategory':
+        navigate('/admin/category-add');
         break;
-      case "userlist":
-        navigate("/admin/user-list");
+      case 'userlist':
+        navigate('/admin/user-list');
         break;
-      case "adminList":
-        navigate("/admin/admin-list");
+      case 'adminList':
+        navigate('/admin/admin-list');
         break;
-      case "sub4":
-        navigate("/admin/order-manage");
+      case 'sub4':
+        navigate('/admin/order-manage');
         break;
-      case "blog-list":
-        navigate("/admin/blog-list");
+      case 'blog-list':
+        navigate('/admin/blog-list');
         break;
-
-      case "blog-add":
-        navigate("/admin/blog-add");
+      case 'blog-add':
+        navigate('/admin/blog-add');
+        break;
+      case 'couponlist':
+        navigate('/admin/coupon-list');
+        break;
+      case 'addcoupon':
+        navigate('/admin/coupon-add');
         break;
       default:
-        navigate("");
+        navigate('');
         break;
     }
   };
 
-
   return (
-    <div className='w-1/5 h-screen bg-white'>
+    <div className="w-1/5 h-screen bg-white">
       <Menu
         onClick={onClick}
         style={{ width: '100%' }}
@@ -123,7 +144,7 @@ const AdminSidebar = () => {
         items={items}
       />
     </div>
-  )
-}
+  );
+};
 
-export default AdminSidebar
+export default AdminSidebar;
