@@ -32,6 +32,7 @@ import BlogCategoryAdd from "pages/blogcategory/BlogCategoryAdd";
 import BlogCategoryEdit from "pages/blogcategory/BlogCategoryEdit";
 import BlogCategoryDeleted from "pages/blogcategory/BlogCategoryDeleted";
 import UserList from "pages/Account/UserList";
+import UserDetail from "pages/Account/UserDetail";
 
 
 
@@ -115,6 +116,10 @@ export const router = createBrowserRouter([
       {
         path: "user-list",
         element: <UserList />,
+      },
+       {
+        path: "user-detail/:id",
+        element: <UserDetail />,
       },
       {
         path: "order-list",

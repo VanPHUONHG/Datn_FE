@@ -49,3 +49,18 @@ export const updateOrderStatus = async (
 };
 
 
+export const getOrdersByUserService = async (userId: string): Promise<IOrder[]> => {
+  try {
+    const token = localStorage.getItem("token_admin");
+
+    const res = await axios.get(`${ORDER_ENDPOINT}/user/${userId}`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    return res.data.orders as IOrder[]; // giả định BE trả về { orders: [...] }
+  } catch (error: any) {
+    throw error.response?.data || { message: "Không thể lấy đơn hàng theo người dùng" };
+  }
+};
