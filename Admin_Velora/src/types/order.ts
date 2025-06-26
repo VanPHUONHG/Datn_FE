@@ -28,7 +28,7 @@ export type OrderStatus = 'pending' | 'confirmed' | 'shipped' | 'completed' | 'c
 
 export interface IOrder {
     _id?: string;
-    user: string; // ObjectId dạng string
+    user: { _id: string; full_name: string } | string;
 
     items: IOrderItem[];
 

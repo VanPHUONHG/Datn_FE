@@ -6,6 +6,21 @@ export const getAllUsers = async () => {
         const res = await axios.get(`${API_URL}/users`);
         return res.data;
     } catch (error) {
-        throw error;
+        console.log(error);
+
+    }
+};
+
+export const getUserById = async (id: string, token: string) => {
+    try {
+        const res = await axios.get(`${API_URL}/users/${id}`, {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        });
+        return res.data.user; // vì BE trả về { message, user }
+    } catch (error) {
+        console.log(error);
+
     }
 };

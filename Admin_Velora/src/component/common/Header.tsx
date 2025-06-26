@@ -5,7 +5,7 @@ const AdminHeader = () => {
   const [adminUser, setAdminUser] = useState<{ full_name: string } | null>(null);
 
   useEffect(() => {
-    const adminUserStr = localStorage.getItem("adminUser");
+    const adminUserStr = localStorage.getItem("user_admin");
     if (adminUserStr) {
       const user = JSON.parse(adminUserStr);
       setAdminUser(user);
@@ -14,15 +14,16 @@ const AdminHeader = () => {
     }
   }, []);
 
-const logout = () => {
-  localStorage.removeItem("token");
-  localStorage.removeItem("adminUser");
-  window.location.href = "/admin-login";
-};
-  
-const handleLogout = () => {
-  logout();
-};
+  const logout = () => {
+    localStorage.removeItem("token");
+    localStorage.removeItem("token_admin");
+    localStorage.removeItem("user_admin");
+    window.location.href = "/admin/login";
+  };
+
+  const handleLogout = () => {
+    logout();
+  };
 
 
   return (
@@ -65,20 +66,7 @@ const handleLogout = () => {
               </div>
             </>
           ) : (
-            <Link to="/admin-login" className="hover:text-gray-900">
-              <div className="flex items-center space-x-2 cursor-pointer">
-                <i className="fas fa-sign-in-alt text-[20px]"></i>
-                <div className="leading-none">
-                  <div>Account</div>
-                  <div
-                    className="font-semibold text-[13px]"
-                    style={{ fontFamily: "'Poppins', sans-serif" }}
-                  >
-                    LOGIN
-                  </div>
-                </div>
-              </div>
-            </Link>
+            <Link to="/admin/login">LOGIN</Link>
           )}
         </div>
       </div>
