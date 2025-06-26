@@ -115,7 +115,7 @@ const OrderDetail = () => {
                         </tbody>
                     </table>
 
-                    <time>
+                    <time className="block my-3 text-right text-sm text-gray-600">
                         Ngày đặt: {order.createdAt ? new Date(order.createdAt).toLocaleString() : "Không rõ"}
                     </time>
 
@@ -141,8 +141,7 @@ const OrderDetail = () => {
             </main>
 
             <footer className="bg-gray-100 text-gray-600 text-sm py-4 px-6 flex justify-between">
-                <div><strong>Website bán gấu bông (Fbear) .</strong></div>
-                <div>Nhóm 11</div>
+                <div><strong>Website bán giày (Velora)</strong></div>
             </footer>
         </div>
     );

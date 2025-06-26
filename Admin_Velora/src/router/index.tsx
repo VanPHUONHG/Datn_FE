@@ -26,6 +26,7 @@ import BlogList from "pages/Blog/BlogList";
 import BlogAdd from "pages/Blog/BlogAdd";
 import BlogEdit from "pages/Blog/BlogEdit";
 import BlogDeleted from "pages/Blog/BlogDeleted";
+import OrderUpdate from "pages/Order/OrderUpdate";
 
 
 
@@ -135,6 +136,10 @@ export const router = createBrowserRouter([
       {
         path: "order-detail/:id",
         element: <OrderDetail />,
+      },
+      {
+        path: "order-update/:id",
+        element: <OrderUpdate />,
       },
     ],
   },

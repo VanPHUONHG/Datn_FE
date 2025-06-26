@@ -28,3 +28,24 @@ export const getOrderById = async (orderId: string): Promise<IOrder> => {
 
     return res.data.data as IOrder;
 };
+
+export const updateOrderStatus = async (
+    orderId: string,
+    newStatus: string
+): Promise<IOrder> => {
+    const token = localStorage.getItem("token_admin");
+
+    const res = await axios.put(
+        `${ORDER_ENDPOINT}/${orderId}/status`,
+        { status: newStatus },
+        {
+            headers: {
+                Authorization: `Bearer ${token}`,
+            },
+        }
+    );
+
+    return res.data.data as IOrder;
+};
+
+
