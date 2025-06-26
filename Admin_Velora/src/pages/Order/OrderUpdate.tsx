@@ -4,30 +4,43 @@ import { useParams } from "react-router-dom";
 import { getOrderById, updateOrderStatus } from "services/order/order.service";
 import type { IOrder } from "types/order";
 
+const STATUS_ORDER = ["pending", "confirmed", "shipped", "completed", "cancelled"];
+
+const getValidNextStatuses = (current: string) => {
+    if (current === "pending") return ["confirmed", "cancelled"];
+    if (current === "confirmed") return ["shipped"];
+    if (current === "shipped") return ["completed"];
+    return []; // completed or cancelled can't change
+};
+
+const formatOrderCode = (id: string) => {
+    const last6 = id.slice(-6).toUpperCase();
+    return `ORDER-${last6}`;
+};
+
 const OrderUpdate = () => {
     const { id: orderId } = useParams();
     const [order, setOrder] = useState<IOrder | null>(null);
     const [status, setStatus] = useState("");
-    const formatOrderCode = (id: string) => {
-        // Lấy 6 ký tự cuối của _id (hoặc bao nhiêu bạn muốn)
-        const last6 = id.slice(-6).toUpperCase();
-        return `ORDER-${last6}`;
-    };
+
     const handleUpdateStatus = async () => {
+        if (!order) return;
+
+        const validNext = getValidNextStatuses(order?.status || "pending");
+        if (!validNext.includes(status)) {
+            return message.warning("⚠️ Trạng thái này không hợp lệ!");
+        }
+
         try {
             await updateOrderStatus(orderId as string, status);
-
-            // Gọi lại API để lấy đầy đủ order mới
             const refreshedOrder = await getOrderById(orderId as string);
             setOrder(refreshedOrder);
-
-            message.success("Cập nhật trạng thái thành công!");
+            message.success("✅ Cập nhật trạng thái thành công!");
         } catch (error: any) {
             console.error("Lỗi cập nhật trạng thái:", error.response?.data || error.message);
             message.error("❌ Cập nhật trạng thái thất bại!");
         }
     };
-
 
     useEffect(() => {
         const fetchData = async () => {
@@ -44,16 +57,15 @@ const OrderUpdate = () => {
 
     if (!order) return <div className="p-6">Đang tải đơn hàng...</div>;
 
+    const validOptions = getValidNextStatuses(order?.status || "pending");
+
     return (
         <div className="bg-gray-50 min-h-screen py-10 px-6 font-sans">
             <section className="max-w-5xl mx-auto bg-white rounded-lg shadow-md overflow-hidden">
                 <header className="p-6 bg-blue-600">
                     <h2 className="text-white text-xl font-bold">
-                        Chi tiết đơn hàng:{" "}
-                        <span className="underline">{formatOrderCode(order._id || "")}</span>
+                        Chi tiết đơn hàng: <span className="underline">{formatOrderCode(order._id || "")}</span>
                     </h2>
-
-
                 </header>
 
                 <div className="p-6 grid grid-cols-2 gap-6">
@@ -91,32 +103,40 @@ const OrderUpdate = () => {
                         </div>
                     </div>
 
-                    {/* Cập nhật trạng thái */}
+                    {/* Trạng thái đơn hàng */}
                     <div className="col-span-2">
-                        <div>
+                        <div className="mb-3">
                             <label className="block text-sm font-medium text-gray-600 mb-1">Trạng thái đơn hàng</label>
                             <select
                                 className="w-full border border-gray-300 rounded-md px-4 py-2"
                                 value={status}
                                 onChange={(e) => setStatus(e.target.value)}
                             >
-                                <option value="pending">🕓 Chờ xác nhận</option>
-                                <option value="confirmed">✅ Đã xác nhận</option>
-                                <option value="shipped">🚚 Đang giao</option>
-                                <option value="completed">🎉 Hoàn thành</option>
-                                <option value="cancelled">❌ Đã huỷ</option>
+                                {STATUS_ORDER.map((stt) => (
+                                    <option
+                                        key={stt}
+                                        value={stt}
+                                        disabled={!validOptions.includes(stt)}
+                                    >
+                                        {stt === "pending" && "🕓 Chờ xác nhận"}
+                                        {stt === "confirmed" && "✅ Đã xác nhận"}
+                                        {stt === "shipped" && "🚚 Đang giao"}
+                                        {stt === "completed" && "🎉 Hoàn thành"}
+                                        {stt === "cancelled" && "❌ Đã huỷ"}
+                                    </option>
+                                ))}
                             </select>
                         </div>
-                        <button
-                            type="button"
-                            onClick={handleUpdateStatus}
-                            className="w-full bg-green-600 text-white px-5 py-2 rounded-md font-semibold hover:bg-green-700"
-                        >
-                            Cập nhật trạng thái
-                        </button>
-
+                        <div className="flex justify-end">
+                            <button
+                                type="button"
+                                onClick={handleUpdateStatus}
+                                className="bg-green-600 text-white px-6 py-2 rounded-md font-semibold hover:bg-green-700"
+                            >
+                                Cập nhật trạng thái
+                            </button>
+                        </div>
                     </div>
-
 
                     {/* Danh sách sản phẩm */}
                     <div className="col-span-2 mt-6">
