@@ -40,12 +40,9 @@ const OrderList = () => {
                     <tr>
                         {[
                             "STT",
-                            "ID khách hàng",
                             "Tên người nhận",
                             "SĐT",
-                            "Địa chỉ",
                             "Tổng tiền",
-                            "Thanh toán",
                             "Trạng thái",
                             "Thao tác",
                         ].map((header) => (
@@ -74,22 +71,17 @@ const OrderList = () => {
                                 <td className="border px-4 py-2">
                                     {(page - 1) * perPage + index + 1}
                                 </td>
-                                <td className="border px-4 py-2">{order.user}</td>
                                 <td className="border px-4 py-2">
                                     {order.shippingAddress?.name || "N/A"}
                                 </td>
                                 <td className="border px-4 py-2">
                                     {order.shippingAddress?.phone || "N/A"}
                                 </td>
-                                <td className="border px-4 py-2">
-                                    {order.shippingAddress?.addressLine || "N/A"}
-                                </td>
+
                                 <td className="border px-4 py-2">
                                     {order.finalAmount.toLocaleString()} ₫
                                 </td>
-                                <td className="border px-4 py-2">
-                                    {order.paymentMethod === "cod" ? "COD" : "VNPay"}
-                                </td>
+
                                 <td className="border px-4 py-2 capitalize">
                                     {order.status}
                                 </td>
@@ -140,8 +132,8 @@ const OrderList = () => {
                         key={i}
                         onClick={() => setPage(i + 1)}
                         className={`px-3 py-1 rounded border font-medium ${page === i + 1
-                                ? "bg-blue-600 text-white"
-                                : "bg-white hover:bg-gray-100"
+                            ? "bg-blue-600 text-white"
+                            : "bg-white hover:bg-gray-100"
                             }`}
                     >
                         {i + 1}

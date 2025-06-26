@@ -16,3 +16,15 @@ export const getAllOrdersAdmin = async (): Promise<IOrder[]> => {
     // Trả về danh sách đơn hàng (mảng)
     return res.data.data as IOrder[];
 };
+
+export const getOrderById = async (orderId: string): Promise<IOrder> => {
+    const token = localStorage.getItem("token");
+
+    const res = await axios.get(`${ORDER_ENDPOINT}/${orderId}`, {
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+
+    return res.data.data as IOrder;
+};
