@@ -33,7 +33,7 @@ const CouponDelete = () => {
     try {
       await updateCoupon(id, { is_active: true });
       message.success("Khôi phục mã khuyến mãi thành công");
-      fetchDeletedCoupons();
+      setDeletedCoupons((prev) => prev.filter((coupon) => coupon._id !== id));
     } catch (error) {
       console.error("Lỗi khi khôi phục mã:", error);
       message.error("Khôi phục thất bại");
@@ -44,7 +44,8 @@ const CouponDelete = () => {
     try {
       await updateCoupon(id, { is_active: false });
       message.success("Xoá lại mã khuyến mãi thành công");
-      fetchDeletedCoupons();
+      // Vẫn xoá khỏi danh sách vì đã đang ở trang "đã xoá"
+      setDeletedCoupons((prev) => prev.filter((coupon) => coupon._id !== id));
     } catch (error) {
       console.error("Lỗi khi xoá lại mã:", error);
       message.error("Xoá thất bại");
@@ -54,7 +55,9 @@ const CouponDelete = () => {
   return (
     <div className="p-6 bg-white rounded-lg shadow-md">
       <div className="flex justify-between items-center mb-6">
-        <h2 className="text-2xl font-semibold text-gray-800">Danh sách mã khuyến mãi đã xoá</h2>
+        <h2 className="text-2xl font-semibold text-gray-800">
+          Danh sách mã khuyến mãi đã xoá
+        </h2>
         <Link
           to="/admin/coupon-list"
           className="px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 border border-red-300 shadow transition"
@@ -103,43 +106,46 @@ const CouponDelete = () => {
               </tr>
             ) : (
               deletedCoupons.map((coupon, index) => (
-                <tr key={coupon._id} className="even:bg-gray-50 hover:bg-gray-100 transition-colors">
+                <tr
+                  key={coupon._id}
+                  className="even:bg-gray-50 hover:bg-gray-100 transition-colors"
+                >
                   <td className="border px-4 py-2">{index + 1}</td>
                   <td className="border px-4 py-2">{coupon.code}</td>
                   <td className="border px-4 py-2">{coupon.discount_type}</td>
                   <td className="border px-4 py-2">{coupon.discount_value}</td>
                   <td className="border px-4 py-2">{coupon.max_discount}</td>
                   <td className="border px-4 py-2">{coupon.min_purchase}</td>
-                  <td className="border px-4 py-2">{new Date(coupon.start_date).toLocaleDateString()}</td>
-                  <td className="border px-4 py-2">{new Date(coupon.end_date).toLocaleDateString()}</td>
                   <td className="border px-4 py-2">
-                    {coupon.is_active ? (
-                      <span className="text-green-600 font-medium">✔</span>
-                    ) : (
-                      <span className="text-red-600 font-medium">✘</span>
-                    )}
+                    {new Date(coupon.start_date).toLocaleDateString()}
+                  </td>
+                  <td className="border px-4 py-2">
+                    {new Date(coupon.end_date).toLocaleDateString()}
+                  </td>
+                  <td className="border px-4 py-2">
+                    <span className="text-red-600 font-medium">✘</span>
                   </td>
                   <td className="border px-4 py-2">
                     <div className="flex gap-2 justify-center">
                       <Popconfirm
-                        title="Bạn có chắc muốn xoá không?"
+                        title="Bạn có chắc muốn xoá lại mã này?"
                         onConfirm={() => handleSoftDelete(coupon._id)}
-                        okText="có"
-                        cancelText="không"
+                        okText="Có"
+                        cancelText="Không"
                       >
                         <Button
                           danger
                           size="small"
                           icon={<DeleteOutlined />}
                         >
-                          Xoá
+                          Xoá lại
                         </Button>
                       </Popconfirm>
                       <Popconfirm
-                        title="Bạn có muốn khôi phục?"
+                        title="Bạn có muốn khôi phục mã này không?"
                         onConfirm={() => handleRestore(coupon._id)}
                         okText="Khôi phục"
-                        cancelText="Hủy"
+                        cancelText="Huỷ"
                       >
                         <Button
                           type="primary"

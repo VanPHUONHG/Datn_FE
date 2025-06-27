@@ -77,12 +77,15 @@ const AdminSidebar = () => {
       ],
     },
     {
-      type: 'divider',
-    },
-    {
       key: 'sub4',
       label: 'Quản lý đơn hàng',
       icon: <SettingOutlined />,
+      children: [
+        { key: 'orderlist', label: 'Danh sách đơn hàng' },
+      ],
+    },
+    {
+      type: 'divider',
     },
   ];
 
@@ -112,20 +115,20 @@ const AdminSidebar = () => {
       case 'adminList':
         navigate('/admin/admin-list');
         break;
-      case 'sub4':
-        navigate('/admin/order-manage');
+      case 'couponlist':
+        navigate('/admin/coupon-list');
+        break;
+      case 'addcoupon':
+        navigate('/admin/coupon-add');
+        break;
+      case 'orderlist':
+        navigate('/admin/order-list');
         break;
       case 'blog-list':
         navigate('/admin/blog-list');
         break;
       case 'blog-add':
         navigate('/admin/blog-add');
-        break;
-      case 'couponlist':
-        navigate('/admin/coupon-list');
-        break;
-      case 'addcoupon':
-        navigate('/admin/coupon-add');
         break;
       default:
         navigate('');

@@ -41,8 +41,8 @@ const AdminLogin = () => {
         return;
       }
 
-      localStorage.setItem("token", token);
-      localStorage.setItem("user", JSON.stringify(user));
+      localStorage.setItem("token_admin", token);
+      localStorage.setItem("user_admin", JSON.stringify(user));
 
       // Phát custom event giống Login.tsx
       window.dispatchEvent(new Event("storageChanged"));
