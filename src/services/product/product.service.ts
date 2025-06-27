@@ -14,3 +14,13 @@ export const getAllProducts = async (search?: string) => {
     throw error;
   }
 };
+
+export const getProductDetail = async (id: string) => {
+  try {
+    const response = await axios.get(`${API_URL}/products/${id}`);
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching product detail:", error);
+    throw error;
+  }
+};

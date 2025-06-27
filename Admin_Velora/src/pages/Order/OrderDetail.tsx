@@ -75,7 +75,7 @@ const OrderDetail = () => {
                                     Mã đơn hàng: {order._id?.slice(-6)}
                                 </span>
                             </div>
-                            <div>Tổng tiền: {order.totalAmount.toLocaleString()} VND</div>
+                            <div>Tổng tiền: {order.finalAmount.toLocaleString()} VND</div>
                             <div>Ghi chú: {order.note || "Không có"}</div>
                             <div>Thanh toán: {order.paymentMethod}</div>
                         </div>
@@ -115,7 +115,7 @@ const OrderDetail = () => {
                         </tbody>
                     </table>
 
-                    <time>
+                    <time className="block my-3 text-right text-sm text-gray-600">
                         Ngày đặt: {order.createdAt ? new Date(order.createdAt).toLocaleString() : "Không rõ"}
                     </time>
 
@@ -127,22 +127,28 @@ const OrderDetail = () => {
                         </div>
                     </div>
 
-                    <div className="flex justify-between py-1 border-b border-gray-200">
-                        <div className="font-semibold">Vận chuyển</div>
-                        <div className="text-right">{(order.finalAmount - order.totalAmount).toLocaleString()} VND</div>
-                    </div>
+                  <div className="flex justify-between py-1 border-b border-gray-200">
+  <div className="font-semibold">Vận chuyển</div>
+  <div className="text-right">32,000 VND</div>
+</div>
+
 
                     <div className="flex justify-between py-1 border-b border-gray-200 font-semibold">
                         <div>Total:</div>
                         <div className="text-right">{order.finalAmount.toLocaleString()} VND</div>
                     </div>
+{(order?.discountAmount ?? 0) > 0 && order?.coupon?.code && (
+  <div className="text-sm text-red-500 italic mt-1 text-right">
+    Đã áp mã giảm giá <strong>{order.coupon.code}</strong>, được giảm <strong>{order.discountAmount?.toLocaleString()}đ</strong>
+  </div>
+)}
+
 
                 </section>
             </main>
 
             <footer className="bg-gray-100 text-gray-600 text-sm py-4 px-6 flex justify-between">
-                <div><strong>Website bán gấu bông (Fbear) .</strong></div>
-                <div>Nhóm 11</div>
+                <div><strong>Website bán giày (Velora)</strong></div>
             </footer>
         </div>
     );

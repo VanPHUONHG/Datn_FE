@@ -3,6 +3,7 @@ import { FaExclamationCircle } from 'react-icons/fa';
 import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { getCategories } from 'services/category/category.service';
+import { getAllProducts } from 'services/product/product.service';
 import type { ICategory } from 'types/category';
 
 const Header = () => {
@@ -15,6 +16,9 @@ const Header = () => {
   const navigate = useNavigate();
   const [open, setOpen] = useState(false);
   const accountRef = useRef<HTMLDivElement>(null);
+
+   const [searchTerm, setSearchTerm] = useState("");
+  const [products, setProducts] = useState([]);
 
   //Xử lý click để nhấn ở icon user 
   useEffect(() => {
@@ -131,6 +135,25 @@ const Header = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+
+  // Gọi API mỗi khi searchTerm thay đổi (debounce nhẹ nếu muốn)
+  useEffect(() => {
+    const delayDebounce = setTimeout(() => {
+      const fetchProducts = async () => {
+        try {
+          const data = await getAllProducts(searchTerm);
+          setProducts(data);
+        } catch (error) {
+          console.error("Error fetching products:", error);
+        }
+      };
+
+      fetchProducts();
+    }, 300); // debounce 300ms
+
+    return () => clearTimeout(delayDebounce);
+  }, [searchTerm]);
+
   return (
     <div className="bg-gradient-to-r from-green-50 via-white to-green-50 border-b border-gray-100 text-xs text-gray-600">
       {/* Top Bar */}
@@ -171,16 +194,50 @@ const Header = () => {
 
         {/* Search Bar */}
         <div className="flex-1 flex justify-center ml-30">
-          <div className="relative w-[500px]">
-            <input
-              type="text"
-              placeholder="Search Products..."
-              className="w-full border border-gray-200 rounded-md py-2 pl-4 pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400"
-            />
-            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-[#212529]">
-              <i className="fas fa-search text-sm"></i>
-            </div>
-          </div>
+        <div className="relative w-[500px] z-50">
+  <input
+    type="text"
+    placeholder="Search Products..."
+    className="w-full border border-gray-200 rounded-md py-2 pl-4 pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+  />
+  <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-[#212529]">
+    <i className="fas fa-search text-sm"></i>
+  </div>
+
+  {/* Dropdown sản phẩm gợi ý */}
+ {searchTerm && products.length > 0 && (
+  <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md max-h-[300px] overflow-y-auto z-50">
+    {products.map((product: any) => (
+      <Link
+        to={`/product/${product._id}`}
+        key={product._id}
+        className="flex items-center gap-3 px-4 py-2 hover:bg-green-100 text-sm text-gray-800"
+        onClick={() => setSearchTerm("")}
+      >
+        <img
+          src={product.images?.[0] || "/default-product.jpg"}
+          alt={product.name}
+          className="w-12 h-12 object-cover rounded border"
+        />
+        <div>
+          <div className="font-medium">{product.name}</div>
+        </div>
+      </Link>
+    ))}
+  </div>
+)}
+
+
+  {/* Không tìm thấy */}
+  {searchTerm && products.length === 0 && (
+    <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md text-sm text-gray-500 px-4 py-2">
+      Không tìm thấy sản phẩm.
+    </div>
+  )}
+</div>
+
         </div>
 
         {/* User Actions */}

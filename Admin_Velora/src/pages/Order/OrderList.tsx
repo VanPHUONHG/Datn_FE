@@ -24,10 +24,7 @@ const OrderList = () => {
     const currentOrders = orders.slice((page - 1) * perPage, page * perPage);
     const totalPages = Math.ceil(orders.length / perPage);
 
-    const handleUpdate = async (id: string) => {
-        // Thêm logic cập nhật trạng thái nếu cần
-        message.info("Tính năng cập nhật đang phát triển.");
-    };
+
 
     return (
         <div className="p-6 bg-white rounded-lg shadow-md">
@@ -93,12 +90,12 @@ const OrderList = () => {
                                         >
                                             Chi tiết
                                         </Link>
-                                        <button
-                                            onClick={() => handleUpdate(order._id!)}
-                                            className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600"
+                                        <Link
+                                            to={`/admin/order-update/${order._id}`} // hoặc `/orders/${order._id}/edit` tuỳ theo route của bạn
+                                            className="px-3 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 inline-block"
                                         >
                                             Cập nhật
-                                        </button>
+                                        </Link>
                                     </div>
                                 </td>
                             </tr>
