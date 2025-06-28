@@ -16,6 +16,7 @@ import User from "pages/User/User";
 import OrderDetail from "pages/User/OrderDetail";
 import Profile from "pages/User/Profile";
 import Order from "pages/User/order";
+import CheckPaymentVNPay from "pages/Checkout/CheckPaymentVNPay";
 
 export const router = createBrowserRouter([
   {
@@ -37,6 +38,10 @@ export const router = createBrowserRouter([
       {
         path: "checkout",
         element: <Checkout />,
+      },
+         {
+        path: "payment-result",
+        element: <CheckPaymentVNPay />,
       },
       {
         path: "wishlist",

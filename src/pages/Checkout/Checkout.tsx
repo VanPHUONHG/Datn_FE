@@ -1,3 +1,4 @@
+import axios from "axios";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { validateCouponForUser } from "services/coupon/coupon.service";
@@ -127,6 +128,8 @@ function Checkout() {
     const finalTotal = totalAmount + deliveryCharges - discountAmount;
 
     const handleCheckout = async () => {
+console.log("✅ paymentMethod trước khi gửi đơn:", paymentMethod);
+
         if (!validateForm()) return;
 
         const token = localStorage.getItem("token");
@@ -184,15 +187,38 @@ function Checkout() {
             };
             console.log("🟢 orderData gửi lên:", orderData);
 
-            const res = await createOrder(orderData);
+           if (paymentMethod === "vnpay") {
+    try {
+        // 🟢 Ghi đè phương thức thanh toán là vnpay
+        const pendingOrderData = {
+            ...orderData,
+            paymentMethod: "vnpay",
+        };
 
-            setCreatedOrder(res.data);
-            navigate("/user/order", { replace: true });
+        localStorage.setItem("pendingOrder", JSON.stringify(pendingOrderData));
+
+        const { data } = await axios.get(
+            `http://localhost:8888/api/orders/create_payment?amount=${finalTotal}`
+        );
+        window.location.href = data.paymentUrl;
+        return;
+    } catch (error) {
+        console.error("Lỗi tạo link thanh toán:", error);
+    }
+} else {
+    // Với COD thì tạo luôn đơn hàng
+    const res = await createOrder(orderData);
+    setCreatedOrder(res.data);
+    navigate("/user/order", { replace: true });
+}
+
 
         } catch (error: any) {
             console.error("Lỗi khi tạo đơn hàng:", error);
             // Có thể thêm toast báo lỗi
         }
+
+      
     };
     if (loading) return <p>Đang tải...</p>;
     if (selectedItems.length === 0) return <p>Không có sản phẩm nào được chọn.</p>;
@@ -259,9 +285,7 @@ function Checkout() {
                                     <span>{formatVND(finalTotal)}</span>
                                 </div>
 
-                                <button onClick={handleCheckout} className="w-full mt-2 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition text-sm font-semibold">
-                                    Thanh toán
-                                </button>-
+ 
 
                                 <div className="mt-6 space-y-2">
                                     <span className="text-gray-500 text-sm">Thêm mã khuyến mãi:</span>
@@ -376,6 +400,22 @@ function Checkout() {
                             <span className="text-xs">Tiền mặt khi giao hàng</span>
                         </label>
 
+                          <label className="flex items-center space-x-2 mb-2 cursor-pointer">
+                            <input
+                                type="radio"
+                                name="payment"
+                                value="vnpay"
+                                checked={paymentMethod === "vnpay"}
+                                onChange={(e) => setPaymentMethod(e.target.value)}
+                                className="w-3 h-3 text-blue-600 border-gray-300 focus:ring-blue-500"
+                            />
+<img
+  src="/image/vnpay-logo.jpg"
+  alt="VNPay"
+  className="h-8 w-auto object-contain mt-2"
+/>                            <span className="text-xs">Thanh toán VNPay</span>
+                        </label>
+
                         <p className="mb-2">
                             Thêm bình luận về đơn hàng của bạn
                         </p>
@@ -389,19 +429,11 @@ function Checkout() {
                         <p className="mt-2 text-[10px] text-gray-400">
                             Tôi đã đọc và đồng ý với Điều khoản &amp; Điều kiện.
                         </p>
+                              <button onClick={handleCheckout} className="w-full mt-2 bg-green-600 text-white py-3 rounded-lg hover:bg-green-700 transition text-sm font-semibold">
+                Thanh toán
+      </button>
                     </div>
-                    <div className="bg-[#f8f9ff] rounded-md p-4 text-xs text-gray-700">
-                        <h3 className="font-semibold mb-2">
-                            Payment Method
-                        </h3>
-                        <div className="flex items-center space-x-3">
-                            <img alt="Visa credit card logo" className="h-6 object-contain" height={24} src="https://storage.googleapis.com/a1aa/image/63719734-9fd4-4a47-b853-7f60ecc22e59.jpg" width={40} />
-                            <img alt="Mastercard credit card logo" className="h-6 object-contain" height={24} src="https://storage.googleapis.com/a1aa/image/aa799d13-9fec-4cfd-e671-11f16f87cd15.jpg" width={40} />
-                            <img alt="Paypal payment logo" className="h-6 object-contain" height={24} src="https://storage.googleapis.com/a1aa/image/d8d82665-6995-4961-fc8e-d118ea9a632e.jpg" width={40} />
-                            <img alt="Skil payment logo" className="h-6 object-contain" height={24} src="https://storage.googleapis.com/a1aa/image/a9ebe714-6bc9-467f-d668-7a7aee61d3e7.jpg" width={40} />
-                            <img alt="Visa credit card logo" className="h-6 object-contain" height={24} src="https://storage.googleapis.com/a1aa/image/63719734-9fd4-4a47-b853-7f60ecc22e59.jpg" width={40} />
-                        </div>
-                    </div>
+                
                 </div>
             </div>
 
