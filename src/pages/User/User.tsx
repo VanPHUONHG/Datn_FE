@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Link, Outlet, useNavigate } from 'react-router-dom';
 
 const User = () => {
     const navigate = useNavigate();
@@ -34,7 +34,9 @@ const User = () => {
                         <button className="flex items-center gap-3 text-orange-500 font-semibold hover:underline">...</button>
                         <button className="flex items-center gap-3 text-blue-600 hover:underline">...</button>
                         <button onClick={() => navigate('/user/order')} className="flex items-center gap-3 text-blue-600 hover:underline">Đơn Mua</button>
+                        <Link to={'/user/coupon'}>
                         <button className="flex items-center gap-3 text-gray-700 hover:underline">Kho Voucher</button>
+                        </Link>
                         <button className="flex items-center gap-3 text-yellow-500 hover:underline">Shopee Xu</button>
                         <button className="flex items-center gap-2 text-gray-800 hover:underline">
                             <img src="https://cf.shopee.vn/file/10a1587f6b2853231a9278db30f08c83" alt="promo" className="w-6 h-6 rounded-full" />

@@ -7,7 +7,7 @@ export interface ICoupon {
   max_discount?: number;
   start_date?: string; // ISO string nếu từ API
   end_date?: string;
-  is_active?: boolean;
+  is_active: boolean;
   isDeleted?: boolean;
   createdAt?: string;
   updatedAt?: string;

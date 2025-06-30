@@ -17,6 +17,7 @@ import OrderDetail from "pages/User/OrderDetail";
 import Profile from "pages/User/Profile";
 import Order from "pages/User/order";
 import CheckPaymentVNPay from "pages/Checkout/CheckPaymentVNPay";
+import UserCoupon from "pages/User/UserCoupon";
 
 export const router = createBrowserRouter([
   {
@@ -92,6 +93,10 @@ export const router = createBrowserRouter([
           {
             path: "order/:id",
             element: <OrderDetail />,
+          },
+          {
+            path: "coupon",
+            element: <UserCoupon />,
           },
         ],
       },
