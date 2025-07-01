@@ -3,6 +3,8 @@ import { Link, Outlet, useNavigate } from 'react-router-dom';
 import { getUserById } from 'services/user/user.service';
 import type { IUser } from 'types/user';
 import { Spin, message } from 'antd';
+import { EditOutlined } from "@ant-design/icons";
+
 
 const User = () => {
   const navigate = useNavigate();
@@ -49,12 +51,13 @@ const User = () => {
                 <Link to='/user/profile'>
                   <span className="font-semibold truncate max-w-[130px]">{user.full_name}</span>
                 </Link>
-              <button className="mt-0.5 text-xs text-gray-500 hover:text-gray-900 flex items-center gap-1">
-                <svg xmlns="http://www.w3.org/2000/svg" className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth="2">
-                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.232 5.232l3.536 3.536M16.768 4.768a2 2 0 112.828 2.828L7.5 19.5H4v-3.5L16.768 4.768z" />
-                </svg>
-                Sửa Hồ Sơ
-              </button>
+                <Link to='/user/profile/edit'>
+                  <button className="pt-0.5 text-xs text-gray-500 hover:text-gray-900 flex items-center gap-1">
+                    <EditOutlined className="text-[14px]" />
+                    Sửa Hồ Sơ
+                  </button>
+                </Link>
+
             </div>
           </div>
 
@@ -70,7 +73,7 @@ const User = () => {
             </Link>
             <button className="flex items-center gap-3 text-yellow-500 hover:underline">Shopee Xu</button>
             <button className="flex items-center gap-2 text-gray-800 hover:underline">
-              <img src="https://cf.shopee.vn/file/10a1587f6b2853231a9278db30f08c83" alt="promo" className="w-6 h-6 rounded-full" />
+              <img src="https://www.bigc.vn/files/banners/2022/july-nh/payday-go-cover-blog.jpg" alt="promo" className="w-6 h-6 rounded-full" />
               25.6 Lương Về Sale To
               <span className="ml-1 bg-red-600 text-white text-xs font-semibold px-1 rounded-sm">New</span>
             </button>

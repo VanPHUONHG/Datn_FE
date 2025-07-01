@@ -18,6 +18,7 @@ import Profile from "pages/User/Profile";
 import Order from "pages/User/order";
 import CheckPaymentVNPay from "pages/Checkout/CheckPaymentVNPay";
 import UserCoupon from "pages/User/UserCoupon";
+import ProfileEdit from "pages/User/ProfileEdit";
 
 export const router = createBrowserRouter([
   {
@@ -85,6 +86,10 @@ export const router = createBrowserRouter([
           {
             path: "profile",
             element: <Profile />,
+          },
+          {
+            path: "profile/edit",
+            element: <ProfileEdit />,
           },
           {
             path: "order",
