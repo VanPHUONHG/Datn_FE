@@ -1,10 +1,10 @@
-import React, { useEffect, useRef, useState } from 'react';
-import { FaExclamationCircle } from 'react-icons/fa';
-import { Link, useNavigate } from 'react-router-dom';
-import { toast } from 'react-toastify';
-import { getCategories } from 'services/category/category.service';
-import { getAllProducts } from 'services/product/product.service';
-import type { ICategory } from 'types/category';
+import React, { useEffect, useRef, useState } from "react";
+import { FaExclamationCircle } from "react-icons/fa";
+import { Link, useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import { getCategories } from "services/category/category.service";
+import { getAllProducts } from "services/product/product.service";
+import type { ICategory } from "types/category";
 
 const Header = () => {
   const [categories, setCategories] = useState<ICategory[]>([]);
@@ -17,25 +17,19 @@ const Header = () => {
   const [open, setOpen] = useState(false);
   const accountRef = useRef<HTMLDivElement>(null);
 
-   const [searchTerm, setSearchTerm] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
   const [products, setProducts] = useState([]);
 
-  //Xử lý click để nhấn ở icon user 
+  //Xử lý click để nhấn ở icon user
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       const target = event.target as Node;
 
-      if (
-        dropdownRef.current &&
-        !dropdownRef.current.contains(target)
-      ) {
+      if (dropdownRef.current && !dropdownRef.current.contains(target)) {
         setShowDropdown(false);
       }
 
-      if (
-        accountRef.current &&
-        !accountRef.current.contains(target)
-      ) {
+      if (accountRef.current && !accountRef.current.contains(target)) {
         setOpen(false);
       }
     };
@@ -46,14 +40,16 @@ const Header = () => {
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
-      if (accountRef.current && !accountRef.current.contains(event.target as Node)) {
+      if (
+        accountRef.current &&
+        !accountRef.current.contains(event.target as Node)
+      ) {
         setOpen(false);
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
 
   const handleClickCart = () => {
     const token = localStorage.getItem("token");
@@ -66,8 +62,6 @@ const Header = () => {
       setTimeout(() => {
         navigate("/login");
       }, 0);
-
-
 
       return;
     }
@@ -93,15 +87,15 @@ const Header = () => {
     updateUserFromStorage();
 
     // Lắng nghe sự kiện custom
-    window.addEventListener('storageChanged', updateUserFromStorage);
+    window.addEventListener("storageChanged", updateUserFromStorage);
 
     return () => {
-      window.removeEventListener('storageChanged', updateUserFromStorage);
+      window.removeEventListener("storageChanged", updateUserFromStorage);
     };
   }, []);
 
   const updateUserFromStorage = () => {
-    const storedUser = localStorage.getItem('user');
+    const storedUser = localStorage.getItem("user");
     if (storedUser) {
       setUser(JSON.parse(storedUser));
     } else {
@@ -114,7 +108,10 @@ const Header = () => {
   };
 
   const handleClickOutside = (event: MouseEvent) => {
-    if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
+    if (
+      dropdownRef.current &&
+      !dropdownRef.current.contains(event.target as Node)
+    ) {
       setShowDropdown(false);
     }
   };
@@ -124,17 +121,16 @@ const Header = () => {
   };
 
   const handleLogout = () => {
-    localStorage.removeItem('user');
-    localStorage.removeItem('token');
+    localStorage.removeItem("user");
+    localStorage.removeItem("token");
     setUser(null);
-    navigate('/login');
+    navigate("/login");
   };
 
   useEffect(() => {
-    document.addEventListener('mousedown', handleClickOutside);
-    return () => document.removeEventListener('mousedown', handleClickOutside);
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
-
 
   // Gọi API mỗi khi searchTerm thay đổi (debounce nhẹ nếu muốn)
   useEffect(() => {
@@ -171,8 +167,12 @@ const Header = () => {
             World's Fastest Online Shopping Destination
           </div>
           <div className="flex items-center gap-4">
-            <a href="#" className="hover:text-gray-700">Help?</a>
-            <a href="#" className="hover:text-gray-700">Track Order?</a>
+            <a href="#" className="hover:text-gray-700">
+              Help?
+            </a>
+            <a href="#" className="hover:text-gray-700">
+              Track Order?
+            </a>
             <div className="relative flex items-center gap-1 cursor-pointer hover:text-gray-700">
               English
               <i className="fas fa-chevron-down text-[10px]"></i>
@@ -194,50 +194,48 @@ const Header = () => {
 
         {/* Search Bar */}
         <div className="flex-1 flex justify-center ml-30">
-        <div className="relative w-[500px] z-50">
-  <input
-    type="text"
-    placeholder="Search Products..."
-    className="w-full border border-gray-200 rounded-md py-2 pl-4 pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400"
-    value={searchTerm}
-    onChange={(e) => setSearchTerm(e.target.value)}
-  />
-  <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-[#212529]">
-    <i className="fas fa-search text-sm"></i>
-  </div>
+          <div className="relative w-[500px] z-50">
+            <input
+              type="text"
+              placeholder="Search Products..."
+              className="w-full border border-gray-200 rounded-md py-2 pl-4 pr-10 text-sm focus:outline-none focus:ring-1 focus:ring-green-400 focus:border-green-400"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+            <div className="absolute inset-y-0 right-3 flex items-center pointer-events-none text-[#212529]">
+              <i className="fas fa-search text-sm"></i>
+            </div>
 
-  {/* Dropdown sản phẩm gợi ý */}
- {searchTerm && products.length > 0 && (
-  <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md max-h-[300px] overflow-y-auto z-50">
-    {products.map((product: any) => (
-      <Link
-        to={`/product/${product._id}`}
-        key={product._id}
-        className="flex items-center gap-3 px-4 py-2 hover:bg-green-100 text-sm text-gray-800"
-        onClick={() => setSearchTerm("")}
-      >
-        <img
-          src={product.images?.[0] || "/default-product.jpg"}
-          alt={product.name}
-          className="w-12 h-12 object-cover rounded border"
-        />
-        <div>
-          <div className="font-medium">{product.name}</div>
-        </div>
-      </Link>
-    ))}
-  </div>
-)}
+            {/* Dropdown sản phẩm gợi ý */}
+            {searchTerm && products.length > 0 && (
+              <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md max-h-[300px] overflow-y-auto z-50">
+                {products.map((product: any) => (
+                  <Link
+                    to={`/product/${product._id}`}
+                    key={product._id}
+                    className="flex items-center gap-3 px-4 py-2 hover:bg-green-100 text-sm text-gray-800"
+                    onClick={() => setSearchTerm("")}
+                  >
+                    <img
+                      src={product.images?.[0] || "/default-product.jpg"}
+                      alt={product.name}
+                      className="w-12 h-12 object-cover rounded border"
+                    />
+                    <div>
+                      <div className="font-medium">{product.name}</div>
+                    </div>
+                  </Link>
+                ))}
+              </div>
+            )}
 
-
-  {/* Không tìm thấy */}
-  {searchTerm && products.length === 0 && (
-    <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md text-sm text-gray-500 px-4 py-2">
-      Không tìm thấy sản phẩm.
-    </div>
-  )}
-</div>
-
+            {/* Không tìm thấy */}
+            {searchTerm && products.length === 0 && (
+              <div className="absolute top-full left-0 mt-1 w-full bg-white border border-gray-200 rounded-md shadow-md text-sm text-gray-500 px-4 py-2">
+                Không tìm thấy sản phẩm.
+              </div>
+            )}
+          </div>
         </div>
 
         {/* User Actions */}
@@ -255,8 +253,9 @@ const Header = () => {
               </div>
 
               <div
-                className={`absolute top-full right-0 mt-2 w-48 bg-white border rounded shadow-lg z-50 text-sm translate-x-[170px] transition-opacity duration-200 ${open ? "opacity-100 visible" : "opacity-0 invisible"
-                  }`}
+                className={`absolute top-full right-0 mt-2 w-48 bg-white border rounded shadow-lg z-50 text-sm translate-x-[170px] transition-opacity duration-200 ${
+                  open ? "opacity-100 visible" : "opacity-0 invisible"
+                }`}
               >
                 <button
                   onClick={() => {
@@ -277,6 +276,16 @@ const Header = () => {
                   Đơn mua
                 </button>
                 <button
+                  onClick={() => {
+                    navigate("/user/change-password");
+                    setOpen(false);
+                  }}
+                  className="w-full text-left px-4 py-2 hover:bg-green-100 transition duration-200"
+                >
+                  Đổi mật khẩu
+                </button>
+
+                <button
                   onClick={handleLogout}
                   className="w-full text-left px-4 py-2 hover:bg-red-100 transition duration-200"
                 >
@@ -285,14 +294,16 @@ const Header = () => {
               </div>
             </div>
 
-
             <div className="text-left">
               {!user ? (
                 <>
                   <Link to="/login" className="text-xs block hover:underline">
                     Đăng nhập
                   </Link>
-                  <Link to="/register" className="text-xs font-medium block hover:underline">
+                  <Link
+                    to="/register"
+                    className="text-xs font-medium block hover:underline"
+                  >
                     Đăng ký
                   </Link>
                 </>
@@ -304,7 +315,6 @@ const Header = () => {
                   >
                     Xin chào, {user.username}
                   </div>
-
                 </>
               )}
             </div>
@@ -321,18 +331,18 @@ const Header = () => {
 
           {/* Cart */}
           <Link to="/cart" className="text-xs block hover:underline">
-
-            <div className="flex items-center gap-2 hover:text-gray-900 cursor-pointer" onClick={handleClickCart}>
+            <div
+              className="flex items-center gap-2 hover:text-gray-900 cursor-pointer"
+              onClick={handleClickCart}
+            >
               <i className="fas fa-shopping-bag text-2xl text-gray-800"></i>
 
               <div>
                 <div className="text-xs">3-ITEMS</div>
                 <div className="text-xs font-medium">Cart</div>
               </div>
-
             </div>
           </Link>
-
         </div>
       </div>
 
@@ -361,7 +371,7 @@ const Header = () => {
                       <li className="p-2 text-gray-500">No categories found</li>
                     ) : (
                       categories
-                        .filter((cat) => cat.name !== 'Danh mục mặc định')
+                        .filter((cat) => cat.name !== "Danh mục mặc định")
                         .map((cat) => (
                           <Link
                             key={cat._id}
@@ -381,11 +391,21 @@ const Header = () => {
 
           {/* Center - Navigation Links */}
           <nav className="flex gap-x-8 justify-between font-medium px-4">
-            <Link to="/" className="hover:text-green-600">Home</Link>
-            <Link to="/products" className="hover:text-green-600">Products</Link>
-            <Link to="/blog" className="hover:text-green-600">Blog</Link>
-            <Link to="/pages" className="hover:text-green-600">Pages</Link>
-            <Link to="/offers" className="hover:text-green-600">Offers</Link>
+            <Link to="/" className="hover:text-green-600">
+              Home
+            </Link>
+            <Link to="/products" className="hover:text-green-600">
+              Products
+            </Link>
+            <Link to="/blog" className="hover:text-green-600">
+              Blog
+            </Link>
+            <Link to="/pages" className="hover:text-green-600">
+              Pages
+            </Link>
+            <Link to="/offers" className="hover:text-green-600">
+              Offers
+            </Link>
           </nav>
 
           {/* Right - Location */}
@@ -397,9 +417,7 @@ const Header = () => {
         </div>
       </div>
     </div>
-
   );
-
 };
 
 export default Header;

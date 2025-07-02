@@ -19,6 +19,7 @@ import Order from "pages/User/order";
 import CheckPaymentVNPay from "pages/Checkout/CheckPaymentVNPay";
 import UserCoupon from "pages/User/UserCoupon";
 import ProfileEdit from "pages/User/ProfileEdit";
+import ChangePassword from "pages/User/ChangePassword";
 
 export const router = createBrowserRouter([
   {
@@ -102,6 +103,10 @@ export const router = createBrowserRouter([
           {
             path: "coupon",
             element: <UserCoupon />,
+          },
+          {
+            path: "change-password",
+            element: <ChangePassword />,
           },
         ],
       },
