@@ -1,11 +1,12 @@
 import { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 import { message, Popconfirm } from "antd";
 import { forceDeleteBlogCategory, getDeletedBlogCategories, restoreBlogCategory } from "services/blogcategory/blogcategories.service";
 
 const BlogCategoryDeleted = () => {
   const [categories, setCategories] = useState<any[]>([]);
+  const navigate = useNavigate();
 
   const fetchDeletedCategories = async () => {
     try {
@@ -13,7 +14,7 @@ const BlogCategoryDeleted = () => {
       setCategories(res.data.data || []);
     } catch (err) {
       console.error("Lỗi khi lấy danh mục đã xóa:", err);
-      message.error("Không thể lấy danh mục đã xóa");
+      // message.error("Không thể lấy danh mục đã xóa");
     }
   };
 
@@ -23,18 +24,30 @@ const BlogCategoryDeleted = () => {
 
   const handleRestore = async (slug: string) => {
     try {
-      await restoreBlogCategory(slug);
-      message.success("Khôi phục thành công");
-      fetchDeletedCategories();
-    } catch (err) {
-      message.error("Lỗi khi khôi phục");
+      const res = await restoreBlogCategory(slug);
+      const data = res.data;
+
+      if (data.success) {
+        message.success(data.message || "Khôi phục thành công");
+        navigate("/admin/blog-category-list");
+        fetchDeletedCategories();
+      } else {
+        message.error(data.message || "Khôi phục thất bại");
+      }
+    } catch (err: any) {
+      console.error("Lỗi khi khôi phục:", err);
+      message.error(
+        err?.response?.data?.message || "Lỗi không xác định khi khôi phục"
+      );
     }
   };
+
 
   const handleForceDelete = async (slug: string) => {
     try {
       await forceDeleteBlogCategory(slug);
       message.success("Xóa vĩnh viễn thành công");
+      navigate("/admin/blog-category-list");
       fetchDeletedCategories();
     } catch (err) {
       message.error("Lỗi khi xóa vĩnh viễn");

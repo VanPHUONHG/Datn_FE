@@ -39,12 +39,6 @@ const BlogCategoryList = () => {
     <div className="p-6 bg-white rounded-lg shadow-md">
       <div className="mb-6 flex justify-between">
         <Link
-          to="/admin/blog-category-add"
-          className="px-4 py-2 rounded-lg bg-green-100 text-green-700 hover:bg-green-200 border border-green-300 shadow transition"
-        >
-          Thêm danh mục blog
-        </Link>
-        <Link
           to="/admin/blog-category-deleted"
           className="px-4 py-2 rounded-lg bg-red-100 text-red-700 hover:bg-red-200 border border-red-300 shadow transition"
         >
