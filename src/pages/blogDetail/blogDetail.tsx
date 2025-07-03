@@ -63,7 +63,7 @@ const BlogDetail = () => {
         </main>
 
         <aside className="w-full max-w-xs">
-          {/* Search
+          Search
           <form className="relative text-gray-800 mb-5 flex items-center">
             <input
               type="search"
@@ -74,7 +74,7 @@ const BlogDetail = () => {
             <button type="submit" className="absolute right-2 top-2 text-gray-400">
               <i className="fas fa-search"></i>
             </button>
-          </form> */}
+          </form>
 
           {/* Recent Articles */}
           <div className="mb-7 border border-gray-200 rounded p-4">
