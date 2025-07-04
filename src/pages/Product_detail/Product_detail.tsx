@@ -268,8 +268,10 @@ const ProductDetail = () => {
                     onClick={() => {
                       const sameColorVariants = variants.filter(v => v.color === variant.color);
                       const allImages = sameColorVariants.flatMap(v => v.images?.length ? v.images : [v.image]);
-                      const uniqueImages = Array.from(new Set(allImages.filter(img => !!img)));
-                      setVariantImages(uniqueImages);
+     const uniqueImages = Array.from(  new Set(
+    allImages.filter((img) => !!img && img !== variant.image) // ❌ Loại ảnh chính
+  ));
+                        setVariantImages(uniqueImages);
                       setSelectedColor(variant.color);
                       setCurrentImage(uniqueImages[0]);
 

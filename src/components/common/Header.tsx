@@ -390,22 +390,12 @@ const Header = () => {
           </div>
 
           {/* Center - Navigation Links */}
-          <nav className="flex gap-x-8 justify-between font-medium px-4">
-            <Link to="/" className="hover:text-green-600">
-              Home
-            </Link>
-            <Link to="/products" className="hover:text-green-600">
-              Products
-            </Link>
-            <Link to="/blog" className="hover:text-green-600">
-              Blog
-            </Link>
-            <Link to="/pages" className="hover:text-green-600">
-              Pages
-            </Link>
-            <Link to="/offers" className="hover:text-green-600">
-              Offers
-            </Link>
+         <nav className="flex gap-x-8 justify-between font-medium px-4">
+            <Link to="/" className="hover:text-green-600">Trang chủ</Link>
+            <Link to="/products" className="hover:text-green-600">Sản phẩm</Link>
+            <Link to="/blog" className="hover:text-green-600">Tin tức</Link>
+            <Link to="/sanpham_banchay" className="hover:text-green-600">Bán chạy nhất</Link>
+            <Link to="/lien_he" className="hover:text-green-600">Liên hệ</Link>
           </nav>
 
           {/* Right - Location */}
