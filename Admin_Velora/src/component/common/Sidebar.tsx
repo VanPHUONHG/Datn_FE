@@ -78,7 +78,7 @@ const AdminSidebar = () => {
       ],
     },
     {
-      key: 'sub8',
+      key: 'sub9',
       label: 'Quản lý khuyến mãi',
       icon: <GiftOutlined />,
       children: [
