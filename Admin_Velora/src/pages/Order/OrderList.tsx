@@ -40,6 +40,7 @@ const OrderList = () => {
                             "Tên tài khoản",
                             "SĐT",
                             "Tổng tiền",
+                            "Ngày đặt",
                             "Trạng thái",
                             "Thao tác",
                         ].map((header) => (
@@ -78,7 +79,15 @@ const OrderList = () => {
                                 <td className="border px-4 py-2">
                                     {order.finalAmount.toLocaleString()} ₫
                                 </td>
-
+                                <td className="border px-4 py-2">
+                                    {order.createdAt
+                                        ? new Date(order.createdAt).toLocaleDateString("vi-VN", {
+                                            day: "2-digit",
+                                            month: "2-digit",
+                                            year: "numeric",
+                                        })
+                                        : "N/A"}
+                                </td>
                                 <td className="border px-4 py-2 capitalize">
                                     {order.status}
                                 </td>

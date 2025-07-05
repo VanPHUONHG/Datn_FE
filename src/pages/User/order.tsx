@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { cancelOrderService, getOrdersByUserService } from 'services/order/order.service';
+import { cancelOrderService, confirmReceivedOrderService, getOrdersByUserService } from 'services/order/order.service';
 import type { IOrder } from 'types/order';
 import dayjs from 'dayjs';
 import { useNavigate } from 'react-router-dom';
@@ -64,6 +64,21 @@ const Order = () => {
     const startIndex = (currentPage - 1) * PAGE_SIZE;
     const currentOrders = orders.slice(startIndex, startIndex + PAGE_SIZE);
 
+    const handleMarkAsReceived = async (orderId: string) => {
+        try {
+            const res = await confirmReceivedOrderService(orderId);
+            toast.success(res.message || "Đã xác nhận đã nhận hàng");
+
+            // Cập nhật UI
+            setOrders((prevOrders) =>
+                prevOrders.map((order) =>
+                    order._id === orderId ? { ...order, status: "completed" } : order
+                )
+            );
+        } catch (err: any) {
+            toast.error(err.message || "Không thể xác nhận đơn hàng");
+        }
+    };
 
     return (
         <div className="p-4">
@@ -134,6 +149,14 @@ const Order = () => {
                                                     className="text-sm px-3 py-1 border border-red-400 text-white bg-red-400 rounded hover:bg-red-600 transition"
                                                 >
                                                     Hủy
+                                                </button>
+                                            )}
+                                            {order.status === "shipped" && (
+                                                <button
+                                                    onClick={() => handleMarkAsReceived(order._id)}
+                                                    className="text-sm px-3 py-1 border border-blue-500 text-white bg-blue-500 rounded hover:bg-blue-600 transition"
+                                                >
+                                                    Đã nhận hàng
                                                 </button>
                                             )}
                                         </td>

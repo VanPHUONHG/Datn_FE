@@ -90,3 +90,25 @@ export const cancelOrderService = async (orderId: string) => {
         throw error.response?.data || { message: "Không thể hủy đơn hàng" };
     }
 };
+
+
+//Xác nhận đơn hàng đã đc nhận khi đag ở trạng thái shipped
+export const confirmReceivedOrderService = async (orderId: string) => {
+    try {
+        const token = localStorage.getItem("token");
+
+        const response = await axios.put(
+            `${API_URL}/orders/${orderId}/confirm`,
+            {}, // Không cần truyền body
+            {
+                headers: {
+                    Authorization: `Bearer ${token}`,
+                },
+            }
+        );
+
+        return response.data; // { success, message, data: updatedOrder }
+    } catch (error: any) {
+        throw error.response?.data || { message: "Không thể xác nhận đã nhận hàng" };
+    }
+};
