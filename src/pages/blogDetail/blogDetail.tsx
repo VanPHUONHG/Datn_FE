@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { useParams, Link } from "react-router-dom";
 import { getBlogBySlug } from "services/blog/blog.service";
-
 interface Blog {
   _id: string;
   title: string;
@@ -29,67 +28,64 @@ const BlogDetail = () => {
   if (!blog) return <div className="text-center py-10">Đang tải...</div>;
 
   return (
-    <div>
-      {/* Breadcrumb */}
-      <div className="flex items-center justify-between max-w-7xl mx-auto px-4 py-2">
-        <span className="text-gray-500 font-semibold text-sm ml-11">Blog Page</span>
-        <div className="flex items-center gap-2 text-gray-500 mr-2">
-          <Link to="/" className="text-sm hover:text-green-500">Home</Link>
-          <span className="text-gray-400 text-sm">›</span>
-          <span className="text-green-500 font-medium text-sm">{blog.title}</span>
+    <div className="bg-gray-50 min-h-screen pb-16">
+    
+      <div className="bg-white border-b border-gray-200 py-4">
+        <div className="max-w-5xl mx-auto px-4 flex justify-between items-center text-sm text-gray-500">
+          <span>Blog Page</span>
+          <div className="flex items-center gap-2">
+            <Link to="/" className="hover:text-green-600">Home</Link>
+            <span>›</span>
+            <span className="text-green-600 font-medium">{blog.title}</span>
+          </div>
         </div>
       </div>
 
-      <div className="bg-white text-gray-900 font-sans text-[13px] leading-[18px] max-w-7xl mx-auto px-4 py-6 flex flex-col lg:flex-row gap-8">
-        {/* Left main content */}
-        <main className="flex-1 max-w-4xl">
+      
+      <div className="max-w-5xl mx-auto px-4 mt-10 space-y-8">
+       
+        <div className="rounded-lg overflow-hidden transition-shadow duration-300 ease-in-out shadow-md hover:shadow-xl border-2 border-gray-200 hover:border-green-400">
           <img
             src={blog.thumbnail}
             alt={blog.title}
-            className="w-full h-auto object-cover rounded mb-3"
+            className="w-full h-[300px] object-cover transition-transform duration-300 hover:scale-105"
           />
-          <p className="mt-3 text-base text-gray-500">
-            {new Date(blog.publishedAt).toLocaleDateString()} - {blog.category?.name}
-          </p>
-          <h2 className="mt-2 font-semibold text-lg">{blog.title}</h2>
-          <div
-            className="mt-4 text-sm leading-relaxed text-gray-700 space-y-3"
-            dangerouslySetInnerHTML={{ __html: blog.content }}
-          />
-          <p className="mt-4 text-sm text-gray-600">
-            Vui lòng <a href="#" className="text-blue-700 underline">đăng nhập</a> hoặc{" "}
-            <a href="#" className="text-blue-700 underline">đăng ký</a> để bình luận bài viết.
-          </p>
-        </main>
+        </div>
 
-        <aside className="w-full max-w-xs">
-          Search
-          <form className="relative text-gray-800 mb-5 flex items-center">
-            <input
-              type="search"
-              name="search"
-              placeholder="Search Our Blog"
-              className="w-full border border-gray-300 rounded px-3 py-2 text-[14px] focus:outline-none focus:ring-1 focus:ring-green-600"
-            />
-            <button type="submit" className="absolute right-2 top-2 text-gray-400">
-              <i className="fas fa-search"></i>
-            </button>
-          </form>
+       
+        <div className="text-sm text-gray-500 flex items-center gap-4">
+          <span>🗓 {new Date(blog.publishedAt).toLocaleDateString("vi-VN")}</span>
+          {blog.category?.name && (
+            <span className="px-2 py-1 bg-green-100 text-green-700 rounded text-xs font-medium">
+              {blog.category.name}
+            </span>
+          )}
+        </div>
 
-          {/* Recent Articles */}
-          <div className="mb-7 border border-gray-200 rounded p-4">
-            <h4 className="text-lg font-semibold py-2">Recent Articles</h4>
-            <ul className="text-xs text-gray-600">
-              <li className="text-sm text-gray-500">Coming soon...</li>
-            </ul>
-          </div>
+        <h1 className="text-3xl font-bold text-gray-900">{blog.title}</h1>
 
-          {/* Categories */}
-          <div className="border border-gray-200 rounded p-4">
-            <h4 className="text-lg font-semibold mb-4">Categories</h4>
-            <p className="text-sm text-gray-500">Đang cập nhật từ API...</p>
-          </div>
-        </aside>
+    
+        <div
+          className="prose prose-sm sm:prose lg:prose-lg max-w-none text-gray-800"
+          dangerouslySetInnerHTML={{ __html: blog.content }}
+        />
+
+        <hr className="my-10 border-gray-300" />
+
+   
+        {/* <div className="space-y-2">
+          <h3 className="text-xl font-semibold text-gray-800">📝 Bài viết liên quan</h3>
+          <ul className="text-gray-600 text-sm list-disc list-inside">
+            <li>Coming soon...</li>
+          </ul>
+        </div>
+
+   
+        <div className="mt-8 text-sm text-gray-600 bg-white border rounded px-4 py-3">
+          Vui lòng{" "}
+          <a href="#" className="text-blue-600 underline">đăng nhập</a> hoặc{" "}
+          <a href="#" className="text-blue-600 underline">đăng ký</a> để bình luận bài viết.
+        </div> */}
       </div>
     </div>
   );
