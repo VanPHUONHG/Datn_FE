@@ -8,7 +8,7 @@ import { getAllCategories } from "services/category/category.service";
 import { message } from "antd";
 
 
-type ProductFormInput = Omit<Product, "images"| "category_id"> & {
+type ProductFormInput = Omit<Product, "images" | "category_id"> & {
   images: string;
   category_id: string;
 };
@@ -24,52 +24,52 @@ const ProductEdit = () => {
   } = useForm<ProductFormInput>();
   const nav = useNavigate();
   const params = useParams()
-useEffect(() => {
-  const getProducts = async () => {
-    if (!params.id) return;
+  useEffect(() => {
+    const getProducts = async () => {
+      if (!params.id) return;
+      try {
+        const product = await getProductById(params.id);
+        reset({
+          ...product,
+          images: product.images.join(", "),
+          category_id: product.category_id?._id || "",
+        });
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    getProducts();
+  }, [params.id, reset]);
+
+  useEffect(() => {
+    const fetchCategory = async () => {
+      try {
+        const categories = await getAllCategories();
+        setCategories(categories);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetchCategory();
+  }, []);
+  const onSubmit = async (formData: ProductFormInput) => {
+    const productData: Partial<Product> = {
+      ...formData,
+      images: formData.images.split(",").map((url) => url.trim()),
+      category_id: { _id: formData.category_id } as any,
+      updatedAt: new Date().toISOString(),
+    };
+
+
     try {
-      const product = await getProductById(params.id);
-      reset({
-        ...product,
-        images: product.images.join(", "),
-        category_id: product.category_id?._id || "",
-      });
+      await updateProduct(params.id as string, productData);
+      message.success("Cập nhật thành công");
+      nav("/admin/product-list");
     } catch (error) {
       console.log(error);
+
     }
   };
-  getProducts();
-}, [params.id, reset]);
-
-   useEffect(() => {
-      const fetchCategory = async () => {
-        try {
-          const categories = await getAllCategories();
-          setCategories(categories);
-        } catch (error) {
-          console.log(error);
-        }
-      };
-      fetchCategory();
-    }, []);
-const onSubmit = async (formData: ProductFormInput) => {
-const productData: Partial<Product> = {
-  ...formData,
-  images: formData.images.split(",").map((url) => url.trim()),
-  category_id: { _id: formData.category_id } as any,
-  updatedAt: new Date().toISOString(),
-};
-
-
-  try {
-    await updateProduct(params.id as string, productData);
-    message.success("Cập nhật thành công");
-    nav("/admin/product-list");
-  } catch (error) {
-    console.log(error);
-    
-  }
-};
 
 
   return (
@@ -78,54 +78,63 @@ const productData: Partial<Product> = {
       <form className="grid grid-cols-1 md:grid-cols-2 gap-6" onSubmit={handleSubmit(onSubmit)}>
         <div>
           <label className="block font-semibold mb-1">Tên sản phẩm</label>
-          <input {...register("name", { required: true })} className="w-full border rounded p-2 focus:outline-none focus:ring" placeholder="Tên sản phẩm"/>
+          <input {...register("name", { required: true })} className="w-full border rounded p-2 focus:outline-none focus:ring" placeholder="Tên sản phẩm" />
           {errors.name && <p className="text-red-500 text-sm">Tên không được để trống</p>}
         </div>
 
         <div>
           <label className="block font-semibold mb-1">URL hình ảnh (cách nhau dấu ,)</label>
-          <input {...register("images", { required: true })}className="w-full border rounded p-2 focus:outline-none focus:ring"placeholder="https://... , https://..."/>
+          <input {...register("images", { required: true })} className="w-full border rounded p-2 focus:outline-none focus:ring" placeholder="https://... , https://..." />
           {errors.images && <p className="text-red-500 text-sm">Không được để trống</p>}
         </div>
 
         <div>
           <label className="block font-semibold mb-1">Giá gốc (VNĐ)</label>
-          <input {...register("price", { required: true, valueAsNumber: true , min:{ value:0 , message: "Giá kho ko âm" } })}type="number"className="w-full border rounded p-2 focus:outline-none focus:ring"placeholder="100000"/>
+          <input {...register("price", { required: true, valueAsNumber: true, min: { value: 0, message: "Giá kho ko âm" } })} type="number" className="w-full border rounded p-2 focus:outline-none focus:ring" placeholder="100000" />
           {errors.price && <p className="text-red-500 text-sm">Không được để trống</p>}
         </div>
 
         <div>
           <label className="block font-semibold mb-1">Giá khuyến mãi (VNĐ)</label>
-          <input {...register("discount_price", { required: true, valueAsNumber: true , validate: (value) => value < getValues("price") || "Giá khuyến mãi phải nhỏ hơn giá gốc" })} type="number"className="w-full border rounded p-2 focus:outline-none focus:ring"placeholder="90000"/>
+          <input {...register("discount_price", { required: true, valueAsNumber: true, validate: (value) => value < getValues("price") || "Giá khuyến mãi phải nhỏ hơn giá gốc" })} type="number" className="w-full border rounded p-2 focus:outline-none focus:ring" placeholder="90000" />
           {errors.discount_price && <p className="text-red-500 text-sm">Giá khuyến mãi phải nhỏ hơn giá gốc</p>}
         </div>
 
-      
-      
+
+
         <div>
           <label className="block font-semibold mb-1">Xuất xứ</label>
-          <input {...register("origin", { required: true })}className="w-full border rounded p-2 focus:outline-none focus:ring"placeholder="Việt Nam"
+          <input {...register("origin", { required: true })} className="w-full border rounded p-2 focus:outline-none focus:ring" placeholder="Việt Nam"
           />
           {errors.origin && <p className="text-red-500 text-sm">Không được để trống</p>}
         </div>
 
         <div>
+          <label className="block font-semibold mb-1">Thương hiệu</label>
+          <input
+            {...register("brand", { required: true })}
+            className="w-full border rounded p-2 focus:outline-none focus:ring"
+            placeholder="VD: Nike, Adidas..."
+          />
+          {errors.brand && <p className="text-red-500 text-sm">Không được để trống</p>}
+        </div>
+        <div>
           <label className="block font-semibold mb-1">Danh mục</label>
-        <select {...register("category_id", { required: true })} className="w-full border rounded p-2 focus:outline-none focus:ring">
-  <option value="">-- Chọn danh mục --</option>
-  {categories.map((item) => (
-    <option key={item._id} value={item._id}>
-      {item.name}
-    </option>
-  ))}
-</select>
+          <select {...register("category_id", { required: true })} className="w-full border rounded p-2 focus:outline-none focus:ring">
+            <option value="">-- Chọn danh mục --</option>
+            {categories.map((item) => (
+              <option key={item._id} value={item._id}>
+                {item.name}
+              </option>
+            ))}
+          </select>
           {errors.category_id && <p className="text-red-500 text-sm">Phải chọn danh mục</p>}
         </div>
 
-      
+
         <div className="md:col-span-2">
           <label className="block font-semibold mb-1">Mô tả sản phẩm</label>
-          <textarea {...register("description", { required: true })} className="w-full border rounded p-2 h-24 focus:outline-none focus:ring" placeholder="Mô tả chi tiết sản phẩm..."/>
+          <textarea {...register("description", { required: true })} className="w-full border rounded p-2 h-24 focus:outline-none focus:ring" placeholder="Mô tả chi tiết sản phẩm..." />
           {errors.description && <p className="text-red-500 text-sm">Không được để trống</p>}
         </div>
 

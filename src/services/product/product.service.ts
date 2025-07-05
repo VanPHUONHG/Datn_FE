@@ -24,3 +24,18 @@ export const getProductDetail = async (id: string) => {
     throw error;
   }
 };
+
+
+
+// Lấy danh sách sản phẩm mới nhất
+export const getNewestProducts = async (limit = 8) => {
+  try {
+    const response = await axios.get(`${API_URL}/products/productnew`, {
+      params: { limit },
+    });
+    return response.data.data;
+  } catch (error) {
+    console.error("Error fetching newest products:", error);
+    throw error;
+  }
+};
