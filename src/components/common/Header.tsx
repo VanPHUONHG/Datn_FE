@@ -19,6 +19,7 @@ const Header = () => {
 
   const [searchTerm, setSearchTerm] = useState("");
   const [products, setProducts] = useState([]);
+  const wrapperRef = useRef<HTMLDivElement>(null);
 
   //Xử lý click để nhấn ở icon user
   useEffect(() => {
@@ -150,6 +151,19 @@ const Header = () => {
     return () => clearTimeout(delayDebounce);
   }, [searchTerm]);
 
+  //Xử lý click ra ngoài sẽ bị ẩn cái chữ trong tìm kiếm và sản phẩm đang hiện ở tìm kiếm đó
+  useEffect(() => {
+    const handleClickOutsideSearch = (event: MouseEvent) => {
+      if (wrapperRef.current && !wrapperRef.current.contains(event.target as Node)) {
+        setSearchTerm("");       // Xóa nội dung đang nhập
+        setProducts([]);         // Ẩn gợi ý sản phẩm
+      }
+    };
+
+    document.addEventListener("mousedown", handleClickOutsideSearch);
+    return () => document.removeEventListener("mousedown", handleClickOutsideSearch);
+  }, []);
+
   return (
     <div className="bg-gradient-to-r from-green-50 via-white to-green-50 border-b border-gray-100 text-xs text-gray-600">
       {/* Top Bar */}
@@ -194,7 +208,7 @@ const Header = () => {
 
         {/* Search Bar */}
         <div className="flex-1 flex justify-center ml-30">
-          <div className="relative w-[500px] z-50">
+          <div className="relative w-[500px] z-50" ref={wrapperRef}>
             <input
               type="text"
               placeholder="Search Products..."
@@ -253,9 +267,8 @@ const Header = () => {
               </div>
 
               <div
-                className={`absolute top-full right-0 mt-2 w-48 bg-white border rounded shadow-lg z-50 text-sm translate-x-[170px] transition-opacity duration-200 ${
-                  open ? "opacity-100 visible" : "opacity-0 invisible"
-                }`}
+                className={`absolute top-full right-0 mt-2 w-48 bg-white border rounded shadow-lg z-50 text-sm translate-x-[170px] transition-opacity duration-200 ${open ? "opacity-100 visible" : "opacity-0 invisible"
+                  }`}
               >
                 <button
                   onClick={() => {
@@ -390,7 +403,7 @@ const Header = () => {
           </div>
 
           {/* Center - Navigation Links */}
-         <nav className="flex gap-x-8 justify-between font-medium px-4">
+          <nav className="flex gap-x-8 justify-between font-medium px-4">
             <Link to="/" className="hover:text-green-600">Trang chủ</Link>
             <Link to="/products" className="hover:text-green-600">Sản phẩm</Link>
             <Link to="/blog" className="hover:text-green-600">Tin tức</Link>

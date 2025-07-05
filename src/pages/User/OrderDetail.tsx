@@ -166,25 +166,39 @@ const OrderDetail = () => {
                             <div><span className="font-semibold">Ghi chú:</span> {order.note || 'Không có'}</div>
                         )}
                         <div><span className="font-semibold">Trạng thái:</span> {translateStatus(order.status)}</div>
-                     <div className="text-lg font-bold text-green-600">
-  Tổng tiền: {order.finalAmount.toLocaleString()} đ
-  <span className="text-sm font-normal text-gray-600 block">
-    (đã bao gồm 32.000đ phí ship)
-  </span>
 
-  {order.discountAmount > 0 ? (
-    <div className="text-sm text-red-500 mt-1">
-      Đã áp mã giảm giá <strong>{order.coupon?.code || "chưa rõ"}</strong>, được giảm <strong>{order.discountAmount.toLocaleString()}đ</strong>
-    </div>
-  ) : (
-    <div className="text-sm text-gray-500 mt-1 italic">
-      Không áp mã giảm giá
-    </div>
-  )}
-</div>
 
 
                     </div>
+                    <div className="w-full col-span-full  rounded-md p-4 bg-white space-y-2 text-sm">
+                        {/* Thành tiền */}
+                        <div className="flex justify-between py-1 border-b border-gray-200">
+                            <div className="font-semibold">Thành tiền:</div>
+                            <div>{order.totalAmount.toLocaleString()} VND</div>
+                        </div>
+
+                        {/* Vận chuyển */}
+                        <div className="flex justify-between py-1 border-b border-gray-200">
+                            <div className="font-semibold">Vận chuyển</div>
+                            <div>32,000 VND</div>
+                        </div>
+
+                        {/* Tổng */}
+                        <div className="flex justify-between py-1 border-b border-gray-200">
+                            <div className="font-semibold text-base">Total:</div>
+                            <div className="text-base font-semibold">{order.finalAmount.toLocaleString()} VND</div>
+                        </div>
+
+                        {/* Mã giảm giá nếu có */}
+                        {order.discountAmount > 0 && order.coupon?.code && (
+                            <div className="text-sm text-red-500 italic mt-1 text-right">
+                                Đã áp mã giảm giá <strong>{order.coupon.code}</strong>, được giảm <strong>{order.discountAmount.toLocaleString()}đ</strong>
+                            </div>
+                        )}
+                    </div>
+
+
+
                 </div>
                 {order.status === 'pending' && (
                     <div className="text-center mt-6 flex justify-center gap-4">
